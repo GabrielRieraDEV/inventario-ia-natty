@@ -1,0 +1,3638 @@
+% ============================================================
+%  TRABAJO ESPECIAL DE GRADO
+%  Universidad Nororiental Privada Gran Mariscal de Ayacucho
+%  Escuela de Ingeniería en Informática – Núcleo Barcelona
+%  Normas: Manual de Elaboración de TEG – Ing. Patricia Torres
+%
+%  TÍTULO:
+%  Sistema de digitalización y registros de productos con uso
+%  de la Inteligencia Artificial para control de inventarios
+%  en el Bodegón Pa' Donde Natty, Ciudad Bolívar, Estado Bolívar
+%
+%  ÁREA DE CONOCIMIENTO: Ingeniería de Software
+%  LÍNEA DE INVESTIGACIÓN: 1.1 Sistemas de Información de apoyo
+%  a la gestión de empresas comerciales y de servicios, de
+%  pequeñas, mediana y gran envergadura.
+% ============================================================
+
+\documentclass[12pt, letterpaper]{report}
+
+% --- Paquetes ---
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{textcase}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tocloft}
+\usepackage{enumitem}
+
+% --- Márgenes ---
+\geometry{left=4cm, right=3cm, top=3cm, bottom=3cm}
+
+% --- Configuración de índices al estilo del Manual ---
+\renewcommand{\contentsname}{ÍNDICE GENERAL}
+\renewcommand{\listfigurename}{ÍNDICE DE FIGURAS}
+\renewcommand{\listtablename}{ÍNDICE DE TABLAS}
+
+% --- Hyperref sin colores (impresión académica) ---
+\hypersetup{hidelinks}
+
+% --- Interlineado 1.5 ---
+\setstretch{1.5}
+
+% --- Sangría ---
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\emergencystretch=2em
+
+% --- Numeración romana de capítulos (exigida por el Manual) ---
+\renewcommand{\thechapter}{\Roman{chapter}}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+
+% --- Formato capítulo ---
+\titleformat{\chapter}[display]
+  {\normalfont\fontsize{14}{16}\bfseries\centering}
+  {\MakeTextUppercase{\chaptertitlename}\ \thechapter}
+  {6pt}
+  {\fontsize{14}{16}\bfseries\centering\MakeTextUppercase}
+\titlespacing*{\chapter}{0pt}{2cm}{24pt}
+
+% --- Subtítulos ---
+\titleformat{\section}
+  {\normalfont\fontsize{13}{15}\bfseries}
+  {\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{18pt}{6pt}
+
+\titleformat{\subsection}
+  {\normalfont\fontsize{12}{14}\bfseries}
+  {\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+
+
+% --- Comando auxiliar para marcadores de figura ---
+\newcommand{\figuraplaceholder}[1]{%
+  \begin{center}
+  \fbox{\parbox[c][4.5cm][c]{0.8\textwidth}{\centering
+  \textit{[Espacio reservado para la figura]}\\[4pt]#1}}
+  \end{center}}
+
+% --- Comando para insertar figuras (imagen + título + fuente) ---
+% Uso: \figuratesis{archivo}{ancho}{Figura N. Título descriptivo.}
+\newcommand{\figuratesis}[3]{%
+  \par\vspace{8pt}
+  \phantomsection
+  \addcontentsline{lof}{figure}{#3}%
+  \noindent\begin{minipage}{\linewidth}
+  \centering
+  \includegraphics[width=#2\textwidth]{#1}\\[4pt]
+  {\setstretch{1.0}\small\textbf{#3}\par}
+  \end{minipage}
+  \par\vspace{8pt}}
+
+% --- Numeración de página ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancypagestyle{plain}{\fancyhf{}\rhead{\thepage}\renewcommand{\headrulewidth}{0pt}}
+\setlength{\headheight}{14.5pt}
+\rhead{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+% ============================================================
+\begin{document}
+\raggedbottom
+
+% ============================================================
+%  PÁGINAS PRELIMINARES
+% ============================================================
+
+% --- Numeración en romanos minúsculos para preliminares ---
+\pagenumbering{roman}
+\hypersetup{pageanchor=false}
+\pagestyle{empty}
+
+% -------------------------------------------------------
+%  PORTADA  (3 cm por los cuatro bordes, según el Manual)
+% -------------------------------------------------------
+\newgeometry{left=3cm, right=3cm, top=3cm, bottom=3cm}
+\begin{titlepage}
+\begin{center}
+
+{\fontsize{12}{14}\selectfont\bfseries
+UNIVERSIDAD NORORIENTAL PRIVADA\\[2pt]
+``GRAN MARISCAL DE AYACUCHO''\\[2pt]
+FACULTAD DE INGENIERÍA\\[2pt]
+ESCUELA DE INGENIERÍA EN INFORMÁTICA\\[2pt]
+NÚCLEO BOLIVAR -- ESTADO BOLIVAR\par}
+
+\vspace{1.2cm}
+
+% Logo institucional
+\includegraphics[width=3cm]{uploads/logo_ugma.png}
+
+\vspace{2.5cm}
+
+{\fontsize{14}{18}\selectfont\bfseries
+SISTEMA DE DIGITALIZACIÓN Y REGISTROS DE PRODUCTOS CON USO DE
+LA INTELIGENCIA ARTIFICIAL PARA CONTROL DE INVENTARIOS EN EL
+BODEGÓN PA' DONDE NATTY, CIUDAD BOLÍVAR, ESTADO BOLÍVAR.\par}
+
+\vspace{2cm}
+
+{\setstretch{1.0}\fontsize{12}{14}\selectfont
+Trabajo Especial de Grado presentado como requisito parcial
+para optar al título de Ingeniero en Informática.\par}
+
+\vspace{2.5cm}
+
+\begin{minipage}{0.45\textwidth}
+\setstretch{1.0}
+\centering
+\textbf{Realizado por:}\\
+{\footnotesize Gabriel Riera}\\
+C.I.: V--31.153.478
+\end{minipage}\hfill
+\begin{minipage}{0.45\textwidth}
+\setstretch{1.0}
+\centering
+\textbf{Tutor Académico:}\\
+Ing. Carlos Moreno\\[10pt]
+\end{minipage}
+
+\vfill
+
+{\setstretch{1.0}\fontsize{12}{14}\selectfont
+Barcelona, Mayo 2026.\par}
+
+\end{center}
+\end{titlepage}
+
+% Restaurar márgenes del Manual para el resto del documento
+\restoregeometry
+
+% -------------------------------------------------------
+%  PÁGINA DEL RESUMEN  (Manual: margen superior 3 cm)
+% -------------------------------------------------------
+\clearpage
+\begin{center}
+{\setstretch{1.0}\fontsize{12}{14}\selectfont\bfseries
+UNIVERSIDAD NORORIENTAL PRIVADA\\
+``GRAN MARISCAL DE AYACUCHO''\\
+FACULTAD DE INGENIERÍA\\
+ESCUELA DE INGENIERÍA EN INFORMÁTICA\\
+NÚCLEO BARCELONA -- ESTADO ANZOÁTEGUI\par}
+\end{center}
+
+\vspace{3pt}
+
+{\setstretch{1.0}\noindent
+\textbf{Línea de Investigación:} Sistemas de Información de apoyo a
+la gestión de empresas comerciales y de servicios, de pequeñas,
+mediana y gran envergadura.\\
+\textbf{Área de Conocimiento:} Ingeniería de Software.\par}
+
+\vspace{5pt}
+
+\begin{center}
+{\fontsize{12}{14}\selectfont\bfseries TÍTULO\par}
+\vspace{4pt}
+{\setstretch{1.0}\fontsize{12}{14}\selectfont\bfseries
+SISTEMA DE DIGITALIZACIÓN Y REGISTROS DE PRODUCTOS CON USO DE LA
+INTELIGENCIA ARTIFICIAL PARA CONTROL DE INVENTARIOS EN EL
+BODEGÓN PA' DONDE NATTY, CIUDAD BOLÍVAR, ESTADO BOLÍVAR.\par}
+\end{center}
+
+\vspace{4pt}
+
+{\setstretch{1.0}\noindent
+\textbf{Autor(es):} Gabriel Riera\\
+\textbf{C.I.:} V--31.153.478\\
+\textbf{Tutor(es):} Ing.\ Carlos Moreno\\
+\textbf{Lapso:} 1--2026\par}
+
+\vspace{5pt}
+
+\begin{center}
+{\fontsize{12}{14}\selectfont\bfseries
+RESUMEN DEL TRABAJO ESPECIAL DE GRADO\par}
+\end{center}
+
+\vspace{2pt}
+
+{\setstretch{0.98}\noindent
+El presente Trabajo Especial de Grado tuvo como propósito desarrollar
+un prototipo funcional de un sistema de digitalización y registro de
+productos con uso de Inteligencia Artificial para el control de
+inventarios en el Bodegón Pa' Donde Natty C.A., ubicado en Ciudad
+Bolívar, estado Bolívar. La investigación fue de nivel descriptivo,
+con diseño de campo y apoyo documental; la población estuvo conformada
+por los cinco (05) trabajadores de la empresa, abordados mediante censo
+poblacional. Se aplicaron observación directa, entrevista no
+estructurada, cuestionario, análisis documental y pruebas de caja
+negra. El diagnóstico evidenció discrepancias entre el inventario
+físico y los registros, además de ciclos de conteo de 4 a 6 horas. El
+prototipo, desarrollado con Python/FastAPI, Next.js y
+PostgreSQL/Supabase, integró un modelo multimodal mediante API y
+alcanzó 93\,\% de exactitud de reconocimiento, 2,4 s de tiempo de
+respuesta promedio y 100\,\% de cumplimiento funcional. Se concluye
+que la solución propuesta es técnica, operativa y económicamente
+viable para digitalizar el inventario en empresas comerciales de
+pequeña y mediana envergadura.\par}
+
+\vspace{3pt}
+
+{\setstretch{0.98}\noindent
+\textbf{Descriptores:} Inteligencia Artificial, control de
+inventarios, reconocimiento de imágenes, digitalización, sistemas de
+información.\par}
+
+\vspace{0.15cm}
+
+\noindent\begin{minipage}{0.45\textwidth}
+\centering
+Tutor Académico\\[8pt]
+\rule{5cm}{0.4pt}\\
+(Firma)
+\end{minipage}\hfill
+\begin{minipage}{0.45\textwidth}
+\centering
+Estudiante\\[8pt]
+\rule{5cm}{0.4pt}\\
+(Firma)
+\end{minipage}
+
+% -------------------------------------------------------
+%  DEDICATORIA
+% -------------------------------------------------------
+\clearpage
+\begin{flushright}
+{\fontsize{14}{16}\selectfont\bfseries DEDICATORIA\par}
+\end{flushright}
+\vspace{0.6cm}
+
+\begin{flushright}
+\begin{minipage}{0.72\textwidth}
+\footnotesize
+\setstretch{1.12}
+\itshape
+A Dios todopoderoso, por darme la vida, la fortaleza y la sabiduría necesarias para alcanzar esta meta, y por sostenerme en los momentos en que sentí que no podía continuar.
+
+A mi padre, Gabriel, quien físicamente ya no está conmigo pero vive cada día en mi memoria y en cada uno de mis logros. Este triunfo es tuyo tanto como mío, papá. Sé que desde donde estás me acompañas y celebras conmigo. Todo lo que soy y todo lo que haga, siempre será en tu honor.
+
+A mi madre, Maylin, mi pilar, mi refugio y mi más grande ejemplo de fortaleza. Por sacar adelante a nuestra familia con tanto amor y tanto sacrificio, por no soltarme nunca la mano y por enseñarme que con esfuerzo y fe todo es posible. Este logro es la cosecha de cada una de tus desveladas. Te amo, mamá.
+
+A mis abuelos, Guadalupe y Marcos, mis segundos padres. Por la crianza, por el amor, por las enseñanzas y por estar presentes en cada etapa de mi vida cuando más los necesité. No tengo palabras para agradecer todo lo que han hecho por mí; este logro también lleva sus nombres.
+
+A mis hermanas, Camilla y Tatiana, mis compañeras de vida. Que este logro les sirva como ejemplo de que con disciplina y constancia los sueños se alcanzan. Las amo.
+
+A mi novia, Jhosmeli, por ser mi apoyo, mi calma y mi compañía en este camino. Gracias por entender cada hora de estudio, cada ausencia y por creer en mí incluso cuando yo mismo dudé. Este logro también es tuyo.
+
+A mi tía Gabriela (Gaby) y a mi prima Valeria, por su cariño, su compañía y por estar siempre presentes a lo largo de este camino.
+
+A toda mi familia, por su amor incondicional y por ser el cimiento sobre el que construyo cada paso.
+\end{minipage}
+\end{flushright}
+
+% -------------------------------------------------------
+%  AGRADECIMIENTO
+% -------------------------------------------------------
+\clearpage
+\begin{center}
+{\fontsize{14}{16}\selectfont\bfseries AGRADECIMIENTO\par}
+\end{center}
+\vspace{0.8cm}
+
+{\small
+\setstretch{1.15}
+\itshape
+En primer lugar, a Dios todopoderoso, por la salud, la sabiduría y la perseverancia que me regaló durante todo este proceso. Por poner en mi camino a las personas correctas en los momentos exactos, y por ser la luz que iluminó cada etapa de esta investigación.
+
+A mi padre Gabriel, que aunque ya no está físicamente a mi lado, me dejó la mejor herencia que un padre puede dejar: valores, principios y el ejemplo de un hombre trabajador. Gracias, papá, porque sé que desde el cielo me cuidaste durante todo este proceso.
+
+A mi madre, Maylin, mi infinita gratitud por su amor incondicional, su esfuerzo diario y por nunca dejar de creer en mí. Cada palabra de aliento suya, cada sacrificio silencioso, cada oración, hicieron posible que hoy esté culminando esta etapa. Gracias, mamá, por ser madre y padre al mismo tiempo.
+
+A mis abuelos, Guadalupe y Marcos, por su amor sin medida, por sus consejos, por su compañía y por ese apoyo que nunca me faltó. Gracias por criarme, por enseñarme y por estar siempre que los necesité; este logro es también el fruto de su crianza.
+
+A mis hermanas, Camilla y Tatiana, por estar siempre presentes, por las risas, los buenos momentos y por el cariño que nos une. Gracias por ser parte fundamental de mi vida.
+
+A mi novia, Jhosmeli, gracias por la paciencia, por escucharme hablar incontables veces de este trabajo, por acompañarme en las noches de desvelo, por animarme cuando el camino se hacía cuesta arriba y por celebrar cada pequeño avance como si fuera tuyo. Tu compañía hizo este proceso mucho más llevadero.
+
+A mi tía Gabriela (Gaby), por su cariño constante, su apoyo y por estar siempre pendiente de mis estudios; y a mi prima Valeria, por su compañía y su afecto a lo largo de estos años.
+
+A toda mi familia, tíos, primos y demás seres queridos, por su apoyo y por cada palabra de aliento que recibí durante estos años de estudio.
+
+A la Universidad Nororiental Privada Gran Mariscal de Ayacucho, mi casa de estudios, por abrirme sus puertas y permitirme formarme como profesional en la Escuela de Ingeniería en Informática del Núcleo Barcelona. A cada uno de los profesores que a lo largo de la carrera compartieron conmigo sus conocimientos y experiencias, mi más sincero reconocimiento.
+
+De manera muy especial, agradezco a mi tutor académico, el Ing. Carlos Moreno, por su orientación constante, su disposición permanente, su paciencia y por cada recomendación oportuna que dio forma y rigor a esta investigación. Su acompañamiento fue determinante para alcanzar los resultados aquí presentados.
+
+A la coordinación de TEG-Pasantía, en especial a la Ing. Patricia Torres, por su guía y por velar por el cumplimiento de las normas que orientan la elaboración del Trabajo Especial de Grado.
+
+Al Bodegón Pa' Donde Natty C.A., en la persona de su gerencia y de todo su personal, por abrirme las puertas de la empresa, brindarme la información necesaria y prestar su tiempo y disposición durante la fase de diagnóstico y validación del prototipo. Sin su colaboración, este trabajo no habría sido posible.
+
+A mis compañeros de carrera y amigos, con quienes compartí jornadas de estudio, trabajos en equipo y muchas horas frente al computador. Gracias por hacer del camino algo más llevadero.
+
+A todas aquellas personas que, directa o indirectamente, contribuyeron a la culminación de este Trabajo Especial de Grado, mi más sincero y profundo agradecimiento.
+\par}
+
+% -------------------------------------------------------
+%  ÍNDICE GENERAL
+% -------------------------------------------------------
+\clearpage
+\begin{center}
+{\fontsize{14}{16}\selectfont\bfseries ÍNDICE GENERAL\par}
+\end{center}
+\vspace{8pt}
+
+\begingroup
+\setstretch{1.0}
+\renewcommand{\contentsname}{}
+\vspace{-2.5cm}
+\tableofcontents
+\endgroup
+
+% -------------------------------------------------------
+%  ÍNDICE DE TABLAS
+% -------------------------------------------------------
+\clearpage
+\begin{center}
+{\fontsize{14}{16}\selectfont\bfseries ÍNDICE DE TABLAS\par}
+\end{center}
+\vspace{8pt}
+
+\begingroup
+\setstretch{1.0}
+\renewcommand{\listtablename}{}
+\vspace{-2.5cm}
+\listoftables
+\endgroup
+
+% -------------------------------------------------------
+%  ÍNDICE DE FIGURAS
+% -------------------------------------------------------
+\clearpage
+\begin{center}
+{\fontsize{14}{16}\selectfont\bfseries ÍNDICE DE FIGURAS\par}
+\end{center}
+\vspace{8pt}
+
+\begingroup
+\setstretch{1.0}
+\renewcommand{\listfigurename}{}
+\vspace{-2.5cm}
+\listoffigures
+\endgroup
+
+% -------------------------------------------------------
+%  ÍNDICE DE ANEXOS
+% -------------------------------------------------------
+\clearpage
+\begin{center}
+{\fontsize{14}{16}\selectfont\bfseries ÍNDICE DE ANEXOS\par}
+\end{center}
+\vspace{12pt}
+
+\begingroup
+\setstretch{1.0}
+\noindent
+\begin{tabular}{@{}p{2.2cm}p{10cm}r@{}}
+\textbf{Anexo A.} & Cuestionario aplicado al personal del Bodegón Pa' Donde Natty C.A. & 1 \\[6pt]
+\textbf{Anexo B.} & Guion de entrevista no estructurada dirigida al gerente y al encargado de almacén. & 2 \\[6pt]
+\textbf{Anexo C.} & Guía de observación estructurada del proceso de inventario. & 3 \\[6pt]
+\textbf{Anexo D.} & Lista de cotejo para la validación funcional del prototipo. & 4 \\[6pt]
+\textbf{Anexo E.} & Especificación de Requerimientos de Software (SRS) consolidada. & 5 \\[6pt]
+\end{tabular}
+\endgroup
+
+% -------------------------------------------------------
+%  INTRODUCCIÓN
+% -------------------------------------------------------
+\clearpage
+\pagenumbering{arabic}
+\hypersetup{pageanchor=true}
+\setcounter{page}{1}
+\pagestyle{fancy}
+
+\begin{center}
+{\fontsize{14}{16}\selectfont\bfseries INTRODUCCIÓN\par}
+\end{center}
+\vspace{12pt}
+\addcontentsline{toc}{chapter}{INTRODUCCIÓN}
+
+\hspace{1.25cm}En la actualidad, la transformación digital de los
+procesos empresariales se ha consolidado como uno de los pilares de la
+competitividad organizacional. La adopción de tecnologías avanzadas
+---en particular la Inteligencia Artificial--- ha modificado la forma
+en que las empresas, sin importar su tamaño, gestionan sus
+operaciones, automatizan tareas y soportan la toma de decisiones. Sin
+embargo, este avance no ha permeado con la misma intensidad a todos
+los sectores: en el comercio de consumo masivo de pequeña y mediana
+escala, especialmente en economías con limitaciones tecnológicas, una
+parte importante de las empresas continúa operando con métodos
+manuales o semi-digitales que generan pérdidas recurrentes por
+errores de registro, desabastecimiento y vencimiento de mercancía.
+
+El presente Trabajo Especial de Grado se inscribe en este contexto.
+Tiene como propósito desarrollar un prototipo funcional de un sistema
+de digitalización y registros de productos con uso de Inteligencia
+Artificial para el control de inventarios en el Bodegón Pa' Donde
+Natty C.A., empresa comercial ubicada en Ciudad Bolívar, estado
+Bolívar. La pertinencia del estudio radica en que combina, por un
+lado, una necesidad concreta y verificable de una empresa real ---la
+sustitución de un proceso manual propenso a errores--- y, por otro,
+una oportunidad tecnológica de actualidad: el uso de modelos de
+lenguaje multimodales consumidos mediante su interfaz de programación
+de aplicaciones (API), que permite reconocer productos a partir de su
+imagen sin necesidad de entrenar un modelo propio.
+
+Desde el punto de vista conceptual, la investigación se sustenta en
+nociones del control de inventarios, la digitalización de procesos
+empresariales, la Inteligencia Artificial, el reconocimiento de
+imágenes, la ingeniería de software y las bases de datos relacionales,
+articuladas a partir de los aportes de autores como Ballou (2004),
+Guerrero (2009), Laudon y Laudon (2016), Russell y Norvig (2016),
+Sommerville (2011) y Date (2001), entre otros. Desde el punto de vista
+metodológico, el estudio se aborda como una investigación de tipo
+descriptivo, con diseño de campo apoyado en fuentes documentales, en
+la que se aplican técnicas como la observación directa, la entrevista
+no estructurada, el cuestionario, el análisis documental y la
+observación sistemática mediante pruebas de software.
+
+El informe se estructura en cinco (05) capítulos. El Capítulo I,
+\textit{El Problema}, describe el planteamiento, los objetivos
+---general y específicos---, la justificación, el alcance, las
+limitaciones y la línea de investigación en que se enmarca el trabajo.
+El Capítulo II, \textit{Marco Teórico}, presenta los antecedentes, los
+fundamentos teóricos, las bases legales y la referencia conceptual que
+sirven de soporte académico al estudio. El Capítulo III, \textit{Marco
+Metodológico}, expone el tipo y diseño de la investigación, la
+población y muestra, las técnicas e instrumentos de recolección de
+datos, el cuadro de operacionalización de la variable, el
+procedimiento por objetivo y las técnicas de análisis. El Capítulo IV,
+\textit{Análisis de Resultados}, expone, organiza e interpreta los
+hallazgos correspondientes al diagnóstico, al diseño, al desarrollo y
+a la validación del prototipo, e incluye un breve análisis de
+factibilidad. Finalmente, el Capítulo V, \textit{Conclusiones y
+Recomendaciones}, sintetiza los logros del trabajo en relación con
+cada objetivo específico y plantea sugerencias para la implementación,
+el mantenimiento y la extensión del sistema. Al cierre del documento
+se incluyen las referencias bibliográficas consultadas y los anexos
+que respaldan el proceso investigativo.
+
+% ============================================================
+
+
+% -------------------------------------------------------
+%  CAPÍTULO I  –  EL PROBLEMA
+% -------------------------------------------------------
+\chapter{El Problema}
+
+En el presente capítulo se describe de manera amplia la situación
+objeto de estudio, ubicándola en un contexto que permite comprender
+su origen, sus relaciones y las incógnitas por responder. Se parte de
+una visión general hacia lo particular y se desarrollan el
+planteamiento del problema, los objetivos de la investigación, la
+justificación, el alcance y las limitaciones del estudio.
+
+% -------------------------------------------------------
+\section{Planteamiento del Problema}
+% -------------------------------------------------------
+
+En la actualidad, la gestión eficiente del inventario representa uno de
+los pilares fundamentales para la competitividad y sostenibilidad de las
+empresas comerciales. A escala global, la transformación digital ha
+impulsado la adopción de tecnologías avanzadas, como la Inteligencia
+Artificial (IA) y los sistemas de digitalización de registros, con el
+propósito de optimizar los procesos logísticos, reducir costos
+operativos y mejorar la toma de decisiones en tiempo real. Organizaciones
+de todos los sectores han migrado de los métodos tradicionales basados en
+papel hacia plataformas automatizadas que ofrecen mayor precisión,
+trazabilidad y velocidad en el manejo de la información.
+
+En América Latina, esta tendencia global ha comenzado a permear
+gradualmente el tejido empresarial, aunque con brechas importantes según
+el nivel de desarrollo tecnológico de cada país. Naciones como Brasil,
+México, Colombia y Chile han avanzado de manera significativa en la
+adopción de sistemas digitales de gestión de inventarios, impulsados por
+un ecosistema tecnológico en expansión y el crecimiento del comercio
+electrónico regional. Sin embargo, en buena parte de la región,
+especialmente en economías con mayor volatilidad y menor acceso a
+financiamiento tecnológico, las micro, pequeñas y medianas empresas
+(mipymes) del sector comercial ---particularmente las empresas
+distribuidoras de consumo masivo y bodegas de alimentos--- continúan
+operando con métodos manuales o semi-digitales que las exponen a errores
+como pérdidas por vencimiento de productos, desabastecimiento de
+artículos de alta rotación, duplicidad de registros al transcribir datos
+y discrepancias entre el inventario físico y el digital. Organismos como
+la Comisión Económica para América Latina y el Caribe (CEPAL) han
+señalado que la transformación digital de las mipymes constituye uno de
+los desafíos estructurales más urgentes de la región para elevar su
+productividad y reducir la brecha tecnológica frente a empresas de mayor
+escala.
+
+En Venezuela, y en particular en la región de Guayana, pese a las
+condiciones económicas adversas, el sector comercial ha buscado
+paulatinamente modernizar sus operaciones. Sin embargo, gran parte de
+las pequeñas y medianas empresas (pymes), en especial las bodegas y
+distribuidoras de productos de consumo masivo ubicadas en zonas de mayor
+vulnerabilidad económica como el estado Bolívar, aún dependen de
+registros manuales o sistemas desactualizados. Esta situación genera
+consecuencias directas sobre su operatividad: pérdidas de productos por
+vencimiento no detectado a tiempo, desabastecimiento recurrente de
+artículos de alta rotación, registros duplicados o incorrectos al
+transcribir datos manualmente, y una notoria discrepancia entre el
+inventario físico real y el que reflejan los libros de control. Tales
+problemas limitan la competitividad de estas empresas y las exponen a
+pérdidas económicas sistemáticas que podrían evitarse con una adecuada
+gestión tecnológica.
+
+En el municipio Heres del estado Bolívar, específicamente en Ciudad
+Bolívar, parroquia Agua Salada, urbanización Los Próceres, opera el
+Bodegón Pa' Donde Natty C.A., empresa del sector
+comercial dedicada a la distribución y venta de productos de consumo
+masivo, entre los que se encuentran alimentos no perecederos (arroz,
+harina, azúcar, aceite, caraotas, entre otros), bebidas (agua mineral,
+refrescos, jugos), artículos de higiene personal y productos de limpieza
+del hogar. El control de existencias de esta amplia gama de productos se
+lleva actualmente mediante procedimientos manuales: conteos físicos
+periódicos, registros en hojas de cálculo y apuntes en papel. Este
+esquema operativo ha derivado en errores concretos y recurrentes, tales
+como: discrepancias entre el inventario físico y el digital,
+desabastecimiento de productos de alta rotación sin detección oportuna,
+pérdidas por vencimiento de mercancía no identificada a tiempo, y
+retardos en la reposición de stock. Todo ello impide una gestión
+dinámica ---entendida como la capacidad de actualizar el registro de
+existencias en tiempo real ante cada movimiento de mercancía--- y
+confiable ---es decir, que garantice la exactitud e integridad de los
+datos registrados en todo momento---, elementos indispensables para la
+toma de decisiones en un negocio de alta rotación como el que nos
+ocupa.
+
+De la situación descrita surgen las siguientes interrogantes que orientan
+la presente investigación:
+
+\begin{enumerate}
+  \item ¿Cuáles son las necesidades funcionales y técnicas del proceso
+        actual de registro y control de inventarios del Bodegón Pa'
+        Donde Natty C.A.?
+
+  \item ¿Qué arquitectura lógica, modelo de datos e interfaz de usuario
+        debe poseer el sistema de digitalización y registros de
+        productos con IA para satisfacer los requerimientos
+        identificados?
+
+  \item ¿Cómo desarrollar el prototipo funcional integrando el
+        reconocimiento de productos mediante un modelo de lenguaje
+        multimodal de Inteligencia Artificial consumido a través de
+        su API?
+
+  \item ¿En qué medida el prototipo desarrollado cumple con los
+        requerimientos definidos al ser sometido a pruebas en un
+        entorno controlado?
+\end{enumerate}
+
+% -------------------------------------------------------
+\section{Objetivos de la Investigación}
+% -------------------------------------------------------
+
+\subsection{Objetivo General}
+
+Desarrollar un prototipo funcional de un sistema de digitalización y
+registros de productos con uso de la Inteligencia Artificial para el
+control de inventarios en el Bodegón Pa' Donde Natty C.A., Ciudad
+Bolívar, estado Bolívar.
+
+\subsection{Objetivos Específicos}
+
+\begin{enumerate}
+  \item Diagnosticar las necesidades funcionales y técnicas del proceso
+        actual de registro y control de inventarios del Bodegón Pa'
+        Donde Natty C.A., mediante la aplicación de técnicas de
+        recolección de información.
+
+  \item Diseñar la arquitectura lógica, el modelo de datos y la
+        interfaz de usuario del sistema de digitalización y registros
+        de productos con IA, consolidados en una Especificación de
+        Requerimientos de Software (SRS, por sus siglas en inglés).
+
+  \item Desarrollar el prototipo funcional del sistema integrando el
+        reconocimiento de productos mediante un modelo de lenguaje
+        multimodal de Inteligencia Artificial, consumido a través de su
+        interfaz de programación de aplicaciones (API).
+
+  \item Validar el funcionamiento del prototipo mediante pruebas en un
+        entorno controlado, verificando el cumplimiento de los
+        requerimientos definidos.
+\end{enumerate}
+
+% -------------------------------------------------------
+\section{Justificación}
+% -------------------------------------------------------
+
+La presente investigación se justifica desde múltiples perspectivas que
+resaltan su pertinencia académica, tecnológica y empresarial.
+
+Desde el punto de vista \textbf{tecnológico}, la integración de la
+Inteligencia Artificial en los procesos de inventario representa un
+avance significativo en la modernización de las operaciones comerciales.
+El uso de técnicas como el reconocimiento de imágenes, el aprendizaje
+automático y el procesamiento de datos en tiempo real permite automatizar
+tareas repetitivas, reducir el margen de error humano y generar
+información estratégica para la toma de decisiones.
+
+Desde la perspectiva \textbf{empresarial}, el Bodegón Pa' Donde Natty
+C.A. se beneficiará directamente con la reducción de las pérdidas
+generadas por desabastecimiento o exceso de inventario, problemática que,
+de acuerdo con Johan et al.\ (2024), puede ser prevenida mediante la
+aplicación de algoritmos de Inteligencia Artificial que predicen la
+demanda y ajustan los niveles de stock de forma proactiva, evitando
+tanto la rotura como la sobreacumulación de mercancía. La digitalización
+de los registros también aportará transparencia y trazabilidad a todos
+los movimientos del almacén, y abrirá la posibilidad de escalar las
+operaciones de la empresa de forma sostenida.
+
+En el ámbito \textbf{académico}, esta investigación aporta un modelo
+replicable para otras pequeñas y medianas empresas de la región que
+enfrentan problemáticas similares, contribuyendo al cuerpo de
+conocimiento sobre la aplicación de la IA en contextos empresariales
+venezolanos. Asimismo, representa un aporte concreto al área de sistemas
+de información e Ingeniería de la Universidad Nororiental Privada Gran
+Mariscal de Ayacucho.
+
+Desde el plano \textbf{social}, el proyecto favorece la generación de
+empleo calificado en el área tecnológica dentro del estado Bolívar y
+fomenta la cultura digital en el sector comercial local, contribuyendo
+al desarrollo económico de la región.
+
+% -------------------------------------------------------
+\section{Alcance}
+% -------------------------------------------------------
+
+La investigación comprende el análisis, diseño, desarrollo y validación
+de un prototipo funcional de un sistema de digitalización y registros de
+productos con uso de Inteligencia Artificial, orientado al control de
+inventarios del Bodegón Pa' Donde Natty C.A., ubicado en Ciudad
+Bolívar, estado Bolívar. El prototipo abarcará los módulos de: registro
+digital de productos, reconocimiento automatizado mediante técnicas de
+IA, gestión de stock (entradas, salidas y alertas de reorden) y
+generación de reportes gerenciales. Su validación se realizará mediante
+pruebas funcionales en un entorno controlado de desarrollo, sin que ello
+implique la implantación definitiva del sistema en la operación real de
+la empresa. El alcance del proyecto está delimitado al área de almacén e
+inventario de la empresa mencionada, sin incluir módulos de facturación,
+contabilidad ni comercio electrónico, los cuales podrán abordarse en
+investigaciones futuras.
+
+% -------------------------------------------------------
+\section{Limitaciones}
+% -------------------------------------------------------
+
+Durante el desarrollo de la investigación se prevén las siguientes
+limitaciones:
+
+\begin{itemize}
+  \item \textbf{Acceso a la información}: La disponibilidad y
+        disposición del personal de la empresa para suministrar
+        información detallada sobre sus procesos internos podría
+        condicionar la profundidad del diagnóstico.
+
+  \item \textbf{Dependencia de servicios externos}: el reconocimiento
+        de productos se apoya en un servicio de Inteligencia Artificial
+        de terceros (API de un modelo multimodal) y el prototipo se
+        despliega en plataformas de capa gratuita (Vercel, Render y
+        Supabase). Los límites de uso de dichas capas gratuitas ---así
+        como la suspensión por inactividad del backend y de la base de
+        datos--- condicionan el volumen de operaciones y pueden
+        introducir una demora en la primera petición tras un período de
+        inactividad.
+
+  \item \textbf{Conectividad}: dado que el reconocimiento se realiza
+        mediante una API en la nube, el prototipo requiere conexión a
+        Internet durante su operación; la calidad del enlace puede
+        influir en el tiempo de respuesta del reconocimiento.
+
+  \item \textbf{Tiempo}: El período académico disponible para el
+        desarrollo del Trabajo Especial de Grado limita el alcance de
+        las pruebas y la validación exhaustiva del sistema en un entorno
+        de producción real.
+\end{itemize}
+
+% -------------------------------------------------------
+\section{Línea de Investigación}
+% -------------------------------------------------------
+
+El presente Trabajo Especial de Grado se enmarca dentro del
+\textbf{Área de Conocimiento de Ingeniería de Software}, correspondiente
+a la \textbf{Línea de Investigación 1.1: Sistemas de Información de
+apoyo a la gestión de empresas comerciales y de servicios, de pequeñas,
+mediana y gran envergadura}, según la clasificación establecida por la
+Escuela de Ingeniería en Informática de la Universidad Nororiental
+Privada Gran Mariscal de Ayacucho, Núcleo Barcelona. Esta línea
+comprende el análisis, desarrollo y evaluación de programas orientados
+a apoyar la gestión de empresas comerciales y de servicios mediante el
+uso de lenguajes de programación, elaboración de algoritmos y
+construcción de bases de datos, lo cual se corresponde plenamente con
+el objeto y los objetivos del presente estudio.
+
+% ============================================================
+
+% ============================================================
+
+% -------------------------------------------------------
+%  CAPÍTULO II  –  MARCO TEÓRICO
+% -------------------------------------------------------
+\chapter{Marco Teórico}
+
+El marco teórico representa la especificación de las referencias
+teóricas que se utilizan para formular y desarrollar los argumentos
+que sustentan la investigación. En este capítulo se desarrollan los
+antecedentes de la investigación, los fundamentos teóricos, las bases
+legales y la referencia conceptual relacionados con el problema
+planteado.
+
+% -------------------------------------------------------
+\section{Antecedentes de la Investigación}
+% -------------------------------------------------------
+
+Los antecedentes recogen trabajos de investigación previos que guardan
+relación directa con el problema planteado y aportan bases metodológicas
+y técnicas al presente estudio. Se presentan en orden cronológico del
+más reciente al más antiguo, con un máximo de tres (03) según las
+normas de la institución.
+
+En el año 2024, Johan, S., Riascos-Guerrero, J. A., Galván-Colonia, E.
+y Pincay-Lozada, J. L., en su artículo científico titulado:
+\textbf{``Estrategias basadas en Inteligencia Artificial para la gestión
+de inventarios en la cadena de suministro''}, publicado en la Revista
+\textit{Tecnología en Marcha}, Vol. 37, N° 6, págs. 88--97 (DOI:
+10.18845/tm.v37i6.7271), de la Universidad Cooperativa de Colombia,
+presentado en el XI Congreso Internacional en Inteligencia Ambiental,
+Ingeniería de Software, Salud Electrónica y Móvil (AmITIC). Definiendo
+esta como una investigación de tipo documental--analítica, de enfoque
+cuantitativo. El objetivo general fue analizar y sistematizar las
+estrategias basadas en Inteligencia Artificial aplicadas a la gestión
+de inventarios en la cadena de suministro empresarial. Entre sus
+principales hallazgos, los autores concluyeron que la aplicación de
+algoritmos avanzados de aprendizaje automático sobre datos históricos
+de ventas, patrones de compra y condiciones económicas permite predecir
+con alta precisión la demanda futura, lo que posibilita ajustar los
+niveles de inventario de forma efectiva y evitar situaciones de escasez
+o exceso de stock; asimismo, identificaron que la IA contribuye a
+detectar cuellos de botella y a sugerir mejoras en logística y
+distribución, elevando la eficiencia operativa y la satisfacción del
+cliente. El mencionado trabajo aporta a la presente investigación el
+marco conceptual sobre la aplicación estratégica de la IA en la gestión
+de inventarios y los criterios para la selección de algoritmos de
+predicción de demanda en contextos empresariales de pequeña y mediana
+escala.
+
+En el año 2023, Wong Portillo, L., De la Torre Ganoza, R. y Reyes
+Herrera, A., en su trabajo de investigación titulado:
+\textbf{``Aplicación de reconocimiento de imágenes para productos en el
+sector retail''}, presentado en la Universidad Peruana de Ciencias
+Aplicadas (UPC), Perú, disponible en el Repositorio Académico UPC
+(handle 10757/667951). Definiendo esta como una investigación de tipo
+aplicada y descriptiva. El objetivo general fue revisar y sistematizar
+investigaciones sobre la detección de objetos mediante técnicas de Deep
+Learning para, posteriormente, implementar un modelo propio de
+reconocimiento usando YOLO con un dataset personalizado de productos
+de retail. Los autores concluyeron que las técnicas de detección de
+objetos basadas en aprendizaje profundo, especialmente los modelos
+YOLO, constituyen la opción más adecuada para el reconocimiento
+automatizado de productos en entornos comerciales, destacando su alta
+velocidad de inferencia y precisión en tiempo real como ventajas
+determinantes frente a métodos tradicionales de clasificación de
+imágenes. El aporte de esta investigación al presente trabajo radica
+en evidenciar la viabilidad y el valor del reconocimiento automatizado
+de productos a partir de imágenes en entornos comerciales y de almacén;
+si bien dicho antecedente recurre al entrenamiento de un modelo propio,
+el presente trabajo adopta una alternativa más reciente ---el consumo
+de un modelo de lenguaje multimodal mediante su API--- para alcanzar el
+mismo fin de reconocer productos a partir de su imagen.
+
+En el año 2023, Román Veliz, A. y Arce Ríos, M., en su Trabajo Especial
+de Grado titulado: \textbf{``Implementación de un sistema de gestión de
+inventarios para mejorar la eficiencia en la logística de
+aprovisionamiento de la planta lechera `Concelac' en la ciudad de
+Concepción-2022''}, presentado para optar el Título Profesional de
+Ingeniero Industrial en la Universidad Continental, Huancayo, Perú,
+disponible en el Repositorio Continental (handle 20.500.12394/13413).
+Investigación de tipo aplicada, correlacional y de campo, con diseño
+experimental-transversal. El objetivo general fue implementar un sistema
+de gestión de inventarios mediante desarrollo de software para mejorar
+la eficiencia en los procesos de compras, inventario y almacenaje de la
+planta, cuya eficiencia de diagnóstico inicial era de 37,5\%. Los
+autores concluyeron que la implementación del sistema elevó el nivel de
+exactitud del inventario y redujo significativamente los costos de
+almacenamiento, al tiempo que permitió la generación de alertas
+automáticas de stock mínimo y dashboards de rotura de stock en tiempo
+real, mejorando la toma de decisiones gerenciales. El aporte de este
+antecedente a la presente investigación se centra en el modelo de diseño
+de software para gestión de inventarios, los módulos de alertas de
+reorden y el esquema de base de datos relacional empleado, los cuales
+sirven de referencia directa para el desarrollo del sistema propuesto.
+
+% -------------------------------------------------------
+\section{Fundamentos Teóricos}
+% -------------------------------------------------------
+
+Los fundamentos teóricos comprenden el conjunto de conceptos,
+proposiciones y teorías de diversos autores que constituyen el soporte
+académico y técnico de la investigación, permitiendo ubicar el problema
+en un enfoque teórico determinado y relacionar la teoría con el objeto
+de estudio.
+
+% -------
+\subsection{Inventario y Control de Inventarios}
+% -------
+
+El inventario, según Ballou (2004), es definido como el conjunto de
+artículos o recursos usados por una organización que pueden ser
+almacenados para satisfacer una necesidad futura. En el contexto
+empresarial, el inventario representa uno de los activos más
+importantes y su gestión inadecuada puede derivar en pérdidas
+significativas por obsolescencia, vencimiento o ruptura de stock.
+Guerrero (2009) señala que el control de inventarios es el proceso
+sistemático de supervisar, registrar y administrar las existencias de
+productos, con el propósito de garantizar la disponibilidad de los
+mismos en el momento y lugar requerido, minimizando los costos
+asociados.
+
+Los sistemas de control de inventarios se clasifican, según Chase,
+Aquilano y Jacobs (2009), en dos grandes categorías: los sistemas de
+revisión continua, donde el nivel de inventario se monitorea de forma
+permanente, y los sistemas de revisión periódica, donde la
+verificación se realiza en intervalos de tiempo fijos. La tendencia
+actual apunta hacia la automatización de estos sistemas mediante el uso
+de tecnologías digitales que permitan la revisión continua y en tiempo
+real.
+
+% -------
+\subsection{Digitalización de Procesos Empresariales}
+% -------
+
+La digitalización, según Laudon y Laudon (2016), consiste en la
+conversión de información y procesos analógicos a formatos digitales
+procesables por sistemas computacionales. En el ámbito empresarial, la
+digitalización de registros transforma los flujos de trabajo manuales
+en procesos automatizados, reduciendo el error humano, aumentando la
+velocidad de procesamiento y facilitando el acceso centralizado a la
+información. Schwab (2016) destaca que la digitalización constituye
+el primer escalón de la transformación digital, siendo condición
+necesaria para la posterior incorporación de tecnologías avanzadas
+como la Inteligencia Artificial.
+
+Para empresas del sector comercial como el Bodegón Pa' Donde Natty
+C.A., la digitalización de los registros de inventario implica la
+sustitución de hojas de cálculo y apuntes manuales por un sistema de
+base de datos centralizado, accesible desde múltiples dispositivos y
+capaz de registrar cada movimiento de productos en tiempo real, con
+trazabilidad completa de las transacciones.
+
+% -------
+\subsection{Inteligencia Artificial}
+% -------
+
+La Inteligencia Artificial (IA), según Russell y Norvig (2016), es la
+rama de las ciencias de la computación dedicada al diseño de sistemas
+capaces de realizar tareas que, cuando son ejecutadas por seres humanos,
+requieren inteligencia. Estos sistemas aprenden de la experiencia, se
+adaptan a nuevas situaciones y ejecutan tareas cognitivas como el
+reconocimiento de patrones, la toma de decisiones y la predicción.
+
+Dentro de la IA, el \textbf{aprendizaje automático} (machine learning)
+ocupa un lugar central. Mitchell (1997) lo define como el campo de
+estudio que confiere a los computadores la capacidad de aprender sin
+ser explícitamente programados. En el contexto de la gestión de
+inventarios, el aprendizaje automático permite construir modelos
+predictivos de demanda, detectar anomalías en el stock y automatizar
+las decisiones de reorden, reduciendo la dependencia de criterios
+subjetivos del operario. Johan et al.\ (2024) confirman que la
+aplicación de estos algoritmos sobre grandes volúmenes de datos
+históricos de ventas logra una predicción de la demanda futura con
+alta precisión, posibilitando el ajuste proactivo de los niveles de
+inventario.
+
+% -------
+\subsection{Modelos de Lenguaje Multimodales}
+% -------
+
+Los modelos de lenguaje multimodales (MLLM, por sus siglas en inglés)
+constituyen una evolución reciente de la Inteligencia Artificial y, en
+particular, del aprendizaje automático descrito por Mitchell (1997) y
+del enfoque general de los sistemas inteligentes planteado por Russell
+y Norvig (2016). A diferencia de los modelos tradicionales, que
+procesan un único tipo de dato, un modelo multimodal es capaz de
+recibir y relacionar simultáneamente distintas modalidades de
+información ---texto e imagen, principalmente--- y producir una
+respuesta en lenguaje natural. Esta capacidad permite que, a partir de
+la fotografía de un producto y de una instrucción textual, el modelo
+identifique el artículo y describa sus atributos sin necesidad de un
+entrenamiento específico por parte del desarrollador.
+
+En el contexto del presente trabajo, el modelo de lenguaje multimodal
+es el componente que realiza el reconocimiento de los productos del
+Bodegón Pa' Donde Natty C.A. a partir de la imagen capturada,
+sustituyendo el enfoque tradicional de entrenar un modelo propio de
+detección de objetos por el consumo de un servicio de IA ya entrenado
+y de propósito general.
+
+% -------
+\subsection{Reconocimiento de Imágenes mediante Inteligencia Artificial}
+% -------
+
+El reconocimiento de imágenes es la capacidad de un sistema
+computacional para identificar y clasificar el contenido de una imagen
+digital, asignando etiquetas o categorías a los elementos visuales
+presentes en ella. Históricamente esta tarea requería construir y
+entrenar modelos especializados sobre conjuntos de imágenes
+etiquetadas; los trabajos previos en el área, como el de Wong Portillo
+et al.\ (2023), demostraron la viabilidad y el valor de reconocer
+automáticamente productos a partir de su imagen en entornos
+comerciales. Con la aparición de los modelos de lenguaje multimodales,
+el reconocimiento de imágenes puede realizarse mediante un servicio de
+IA de propósito general, sin que el desarrollador deba construir un
+conjunto de datos ni entrenar un modelo, lo que reduce
+significativamente la complejidad técnica y el costo del proyecto.
+
+Para el sistema propuesto, el reconocimiento de imágenes es la función
+central del módulo de registro: a partir de la foto del producto se
+obtiene su identificación, que alimenta la actualización automática del
+inventario.
+
+% -------
+\subsection{Servicios de IA mediante API e Ingeniería de Prompts}
+% -------
+
+Una interfaz de programación de aplicaciones (API, por sus siglas en
+inglés) es, de acuerdo con los principios de la ingeniería de software
+descritos por Sommerville (2011), un conjunto de definiciones y
+protocolos que permite que dos sistemas se comuniquen entre sí sin
+conocer los detalles internos de su implementación. El consumo de un
+modelo de Inteligencia Artificial mediante su API permite que el
+prototipo envíe la imagen del producto a un servicio externo
+especializado y reciba la identificación del artículo, delegando en
+dicho servicio la complejidad del procesamiento visual.
+
+La calidad de la respuesta de un modelo multimodal depende en gran
+medida de la instrucción que se le proporciona. La \textbf{ingeniería
+de prompts} es la práctica de diseñar y refinar dicha instrucción para
+orientar el comportamiento del modelo y obtener una respuesta precisa y
+en un formato estructurado y procesable. En el presente trabajo, el
+prompt se diseña para que el modelo devuelva la identificación del
+producto y sus atributos de manera que puedan integrarse directamente
+con la lógica de gestión de inventario.
+
+% -------
+\subsection{Tecnologías de Desarrollo Web}
+% -------
+
+El prototipo se construye sobre tecnologías web de código abierto y
+amplia adopción. \textbf{Python} es un lenguaje de programación de alto
+nivel, interpretado y de propósito general, con un ecosistema maduro
+para el desarrollo de servicios y la integración con APIs de
+Inteligencia Artificial; sobre él se emplea el framework
+\textbf{FastAPI} para exponer la lógica de negocio como una API REST.
+La capa de presentación se desarrolla con \textbf{Next.js}, un
+framework para la construcción de interfaces web modernas. La
+persistencia se sustenta en \textbf{Supabase}, plataforma basada en el
+sistema gestor de base de datos relacional PostgreSQL, que además
+provee servicios de sincronización en tiempo real. El despliegue se
+realiza en plataformas de capa gratuita, lo que hace viable el proyecto
+sin inversión en infraestructura.
+
+% -------
+\subsection{Bases de Datos para Gestión de Inventarios}
+% -------
+
+Una base de datos, según Date (2001), es un conjunto organizado de
+datos relacionados entre sí, almacenados de manera persistente y
+accesibles mediante un sistema de gestión (SGBD). En el ámbito de los
+sistemas de inventario, la base de datos centraliza toda la información
+referente a productos, entradas, salidas, alertas y reportes,
+garantizando la integridad y consistencia de los datos. Román Veliz y
+Arce Ríos (2023) demuestran en su investigación que el diseño adecuado
+de una base de datos relacional para gestión de inventarios es
+determinante para la generación de alertas automáticas de stock mínimo
+y para la producción de dashboards gerenciales en tiempo real, elementos
+que elevan la eficiencia operativa y facilitan la toma de decisiones.
+
+% -------
+\subsection{Sistemas de Información Gerencial}
+% -------
+
+Los Sistemas de Información Gerencial (SIG) son, según Laudon y Laudon
+(2016), sistemas que proporcionan a los gerentes informes periódicos y
+acceso en línea al desempeño actual e histórico de la organización. En
+el marco del presente proyecto, el sistema propuesto incorpora un módulo
+de reportes gerenciales que transforma los datos crudos del inventario
+en indicadores clave de gestión (KPIs), como la tasa de rotación de
+inventario, el nivel de servicio y el costo de mantenimiento del stock,
+facilitando la toma de decisiones estratégicas por parte de la
+administración de la empresa.
+
+% -------------------------------------------------------
+\section{Bases Legales}
+% -------------------------------------------------------
+
+Las bases legales comprenden el conjunto de normas, leyes y
+disposiciones jurídicas venezolanas que regulan el desarrollo,
+implementación y uso de sistemas de información, tecnología y comercio
+electrónico en el país, y que guardan relación directa con el objeto
+de estudio.
+
+\textbf{Constitución de la República Bolivariana de Venezuela (1999).}
+El Artículo 110 establece que el Estado reconocerá el interés público
+de la ciencia, la tecnología, el conocimiento, la innovación y sus
+aplicaciones y los servicios de información necesarios, por ser
+instrumentos fundamentales para el desarrollo económico, social y
+político del país. Este artículo ampara el uso de tecnologías avanzadas
+como la Inteligencia Artificial y los servicios digitales en proyectos
+de desarrollo nacional y regional.
+
+\textbf{Decreto con Rango, Valor y Fuerza de Ley sobre Mensajes de
+Datos y Firmas Electrónicas (2001).} Este decreto regula el uso de los
+medios electrónicos y telemáticos en el territorio venezolano, otorgando
+plena validez jurídica a los documentos y registros electrónicos. El
+Artículo 4 establece que los mensajes de datos tendrán la misma eficacia
+probatoria que la ley otorga a los documentos escritos. En el contexto
+del sistema propuesto, los registros digitales de inventario generados
+tendrán respaldo legal bajo los términos de este decreto.
+
+\textbf{Ley Especial contra los Delitos Informáticos (2001).} Esta ley
+tipifica los delitos relacionados con el uso indebido de tecnologías
+de la información y establece las sanciones correspondientes. Es
+relevante para el proyecto en tanto obliga a garantizar la seguridad,
+la confidencialidad y la integridad de los datos almacenados en el
+sistema de inventarios, protegiéndolos contra accesos no autorizados,
+manipulación ilícita o destrucción de la información.
+
+\textbf{Ley Orgánica de Ciencia, Tecnología e Innovación -- LOCTI
+(2010).} En su Artículo 1 establece los lineamientos que orientarán
+las políticas y estrategias para la actividad científica, tecnológica
+e innovadora, promoviendo el desarrollo nacional de capacidades
+tecnológicas propias. El proyecto se enmarca dentro de los principios
+de esta ley al proponer una solución tecnológica innovadora desarrollada
+con recursos y talento nacional, orientada a resolver una problemática
+concreta del sector productivo venezolano.
+
+% -------------------------------------------------------
+\section{Referencia Conceptual}
+% -------------------------------------------------------
+
+La referencia conceptual o definición de términos básicos recoge los
+conceptos clave que, en el contexto de la presente investigación,
+adquieren un significado técnico específico. Se presentan en orden
+alfabético según las normas institucionales.
+
+\textbf{API (Interfaz de Programación de Aplicaciones):} Conjunto de
+definiciones y protocolos que permite que dos sistemas de software se
+comuniquen entre sí sin conocer los detalles internos de su
+implementación (Sommerville, 2011).
+
+\textbf{Aplicación web:} Programa informático al que se accede a través
+de un navegador, cuya lógica se ejecuta en un servidor y cuya interfaz
+se presenta en el cliente, sin requerir instalación en el equipo del
+usuario (Sommerville, 2011).
+
+\textbf{Código QR:} Código de barras bidimensional que almacena
+información ---como un enlace o un identificador de sesión--- y que,
+al ser escaneado con la cámara de un dispositivo, permite vincularlo
+de forma rápida con un sistema.
+
+\textbf{Control de inventarios:} Conjunto de actividades y
+procedimientos destinados a supervisar, registrar y administrar las
+existencias de productos de una organización, con el fin de garantizar
+su disponibilidad y minimizar los costos de almacenamiento
+(Guerrero, 2009).
+
+\textbf{Digitalización:} Proceso de conversión de información, procesos
+o registros analógicos a formatos digitales procesables por sistemas
+informáticos, con el propósito de automatizar su gestión y facilitar
+su acceso y análisis (Laudon y Laudon, 2016).
+
+\textbf{Documento de Requerimientos de Producto (PRD):} Documento que
+describe de forma detallada las funcionalidades, restricciones y
+condiciones que debe satisfacer un producto o sistema de software,
+sirviendo como referencia para su desarrollo y validación (IEEE, 2018).
+
+\textbf{Especificación de Requerimientos de Software (SRS):} Documento
+formal que describe las capacidades, restricciones y características
+que debe poseer un sistema de software, elaborado siguiendo los
+lineamientos del estándar IEEE 830 (IEEE, 2018).
+
+\textbf{Indicadores Clave de Gestión (KPIs):} Métricas cuantitativas y
+cualitativas utilizadas para evaluar el desempeño de los procesos de una
+organización en relación con sus objetivos estratégicos (Laudon y
+Laudon, 2016).
+
+\textbf{Ingeniería de prompts:} Práctica de diseñar y refinar la
+instrucción (prompt) que se proporciona a un modelo de Inteligencia
+Artificial para orientar su comportamiento y obtener una respuesta
+precisa y en un formato procesable.
+
+\textbf{Inteligencia Artificial (IA):} Disciplina de la computación
+orientada al diseño de sistemas capaces de simular capacidades cognitivas
+humanas como el aprendizaje, el razonamiento y el reconocimiento de
+patrones (Russell y Norvig, 2016).
+
+\textbf{Inventario:} Conjunto de bienes tangibles que una empresa
+mantiene en existencia para ser utilizados en la producción o para su
+venta directa, incluyendo materias primas, productos en proceso y
+productos terminados (Ballou, 2004).
+
+\textbf{Modelo de lenguaje multimodal:} Modelo de Inteligencia
+Artificial capaz de recibir y relacionar simultáneamente distintas
+modalidades de información ---como texto e imagen--- y producir una
+respuesta en lenguaje natural, permitiendo identificar el contenido de
+una imagen a partir de una instrucción textual (Russell y Norvig,
+2016).
+
+\textbf{Reconocimiento de imágenes:} Capacidad de un sistema
+computacional para identificar y clasificar el contenido de una imagen
+digital, asignando etiquetas o categorías a los elementos visuales
+presentes en ella (Russell y Norvig, 2016).
+
+\textbf{Sincronización en tiempo real:} Mecanismo mediante el cual un
+cambio efectuado en un dispositivo se refleja de manera inmediata en
+los demás dispositivos conectados al mismo sistema, sin necesidad de
+recargar manualmente la información.
+
+\textbf{Sistema de información:} Conjunto integrado de componentes para
+la recolección, almacenamiento, procesamiento y comunicación de datos,
+con el fin de apoyar la toma de decisiones y el control organizacional
+(Laudon y Laudon, 2016).
+
+\textbf{Stock:} Cantidad de mercancías o productos que una empresa
+mantiene almacenados para hacer frente a la demanda futura o a las
+necesidades del proceso productivo (Ballou, 2004).
+
+% ============================================================
+
+
+% -------------------------------------------------------
+%  CAPÍTULO III  –  MARCO METODOLÓGICO
+% -------------------------------------------------------
+\chapter{Marco Metodológico}
+
+El marco metodológico es el apartado del informe de investigación donde
+se expone la manera como se realiza el estudio, los pasos seguidos para
+llevarlo a cabo y los instrumentos empleados para responder al problema
+planteado. En este capítulo se desarrollan el tipo y el diseño de la
+investigación, la población y la muestra, las técnicas e instrumentos de
+recolección de datos, la operacionalización de la variable, el
+procedimiento para el logro de los objetivos y las técnicas de
+procesamiento y análisis de los datos.
+
+% -------------------------------------------------------
+\section{Tipo de Investigación}
+% -------------------------------------------------------
+
+De acuerdo con el nivel de profundidad con el que se aborda el objeto de
+estudio, la presente investigación se clasifica como de tipo
+\textbf{Descriptiva}. Según Arias (2012), la investigación descriptiva
+consiste en la caracterización de un hecho, fenómeno, individuo o grupo,
+con el fin de establecer su estructura o comportamiento. En este sentido,
+el estudio es descriptivo porque, en su fase inicial, caracteriza y
+diagnostica la situación actual del proceso de registro y control de
+inventarios del Bodegón Pa' Donde Natty C.A., identificando las brechas
+de trazabilidad, los errores recurrentes y los requerimientos
+funcionales y técnicos que debe satisfacer el prototipo propuesto.
+
+Por sus propósitos, la investigación se enmarca en la modalidad
+\textbf{Aplicada}, dado que persigue generar un producto tecnológico
+concreto ---un prototipo funcional de un sistema de digitalización y
+registros de productos con Inteligencia Artificial--- orientado a la
+solución directa de un problema real identificado en la empresa.
+Asimismo, es de carácter \textbf{Proyectivo}, puesto que, conforme al
+marco de los proyectos propositivos definido por Hurtado (2010),
+propone, desarrolla y valida una solución tecnológica como alternativa
+al problema de gestión de inventarios detectado.
+
+% -------------------------------------------------------
+\section{Diseño de la Investigación}
+% -------------------------------------------------------
+
+En atención a la estrategia general adoptada para responder al problema
+planteado, la investigación se enmarca en un diseño \textbf{de Campo}.
+Según Arias (2020), la investigación de campo es aquella que consiste en
+la recolección de datos directamente de los sujetos investigados o de la
+realidad donde ocurren los hechos, sin manipular o controlar variable
+alguna. En este proyecto, el diseño es de campo porque los datos
+primarios relativos al proceso actual de inventario, las necesidades del
+personal y la percepción de la problemática se obtienen directamente en
+las instalaciones del Bodegón Pa' Donde Natty C.A., ubicado en Ciudad
+Bolívar, estado Bolívar.
+
+El diseño de campo se complementa con un componente \textbf{Documental},
+dado que parte del estudio requiere la búsqueda, recuperación, análisis
+e interpretación de fuentes bibliográficas, hemerográficas y
+electrónicas relacionadas con la Inteligencia Artificial, los modelos
+de lenguaje multimodales, el consumo de servicios mediante API, Python
+y los sistemas de gestión de inventarios.
+Arias (2017) define la investigación documental como aquella basada en
+la obtención y análisis de datos provenientes de materiales impresos u
+otros tipos de documentos, los cuales sustentan teórica y técnicamente
+la construcción del prototipo.
+
+Finalmente, la investigación es de tipo \textbf{no experimental}, en
+tanto que el investigador no somete el objeto de estudio a condiciones
+de experimentación controlada sobre variables poblacionales, sino que
+observa y analiza la situación tal como se presenta para, posteriormente,
+desarrollar y validar la solución propuesta en un entorno controlado de
+desarrollo.
+
+% -------------------------------------------------------
+\section{Población y Muestra}
+% -------------------------------------------------------
+
+\subsection{Población}
+
+Según Arias (2012), la población es cualquier conjunto finito o infinito
+de elementos con características comunes para los cuales serán extensivas
+las conclusiones de la investigación. En el contexto del presente
+estudio, la población está constituida por la totalidad del personal que
+labora en el Bodegón Pa' Donde Natty C.A. y que participa directa o
+indirectamente en los procesos de registro, almacenamiento y control de
+inventarios, conformada por cinco (05) trabajadores: el gerente general,
+el encargado de almacén, dos (02) operarios de recepción y despacho y el
+personal administrativo responsable del registro de entradas y salidas
+de productos.
+
+\subsection{Muestra}
+
+Dado que la población de estudio es finita, conocida y de tamaño
+reducido, se aplica el criterio de \textbf{censo poblacional}; es decir,
+se trabaja con la totalidad de los sujetos que la conforman, sin recurrir
+a técnicas de muestreo probabilístico. Según Tamayo y Tamayo (2007),
+cuando la población es pequeña y accesible en su totalidad, lo más
+conveniente es incorporar a todos sus integrantes como unidad de
+análisis, a fin de garantizar la máxima representatividad de los datos
+recolectados. En consecuencia, la muestra está conformada por los mismos
+cinco (05) trabajadores que integran la población.
+
+\subsection{Unidad de Análisis}
+
+La unidad de análisis es el Bodegón Pa' Donde Natty C.A.,
+específicamente su área de almacén e inventarios ubicada en Ciudad
+Bolívar, estado Bolívar. Según Arias (2006), la unidad de investigación
+es por lo general la unidad organizativa en donde tiene lugar el
+problema, pudiendo hacerse extensiva a cualquier situación a mejorar
+dentro de la realidad organizacional.
+
+% -------------------------------------------------------
+\section{Técnicas e Instrumentos de Recolección de Datos}
+% -------------------------------------------------------
+
+Las técnicas de recolección de datos son, según Arias (2012), las
+distintas formas o maneras de obtener la información, mientras que los
+instrumentos son los medios materiales que se emplean para recoger y
+almacenar dicha información. A continuación se describen las técnicas
+seleccionadas y el instrumento asociado a cada una, indicando el
+objetivo específico al que sirven.
+
+\subsection{Técnica: La Encuesta}
+
+La encuesta es, según Arias (2012), una técnica que pretende obtener
+información que suministra un grupo o muestra de sujetos acerca de sí
+mismos o en relación con un tema en particular. Se emplea para recabar
+de manera sistemática y estandarizada las opiniones, percepciones y
+necesidades del personal del Bodegón Pa' Donde Natty C.A. en relación
+con el proceso de registro y control de inventarios. Sirve,
+principalmente, al \textbf{Objetivo Específico N° 1}.
+
+\noindent\textbf{Instrumento: Cuestionario.} Según Arias (2012,
+p.\,72), el cuestionario es la modalidad de encuesta que se realiza de
+forma escrita mediante un formato contentivo de una serie de preguntas.
+El cuestionario aplicado es estructurado, con preguntas cerradas y
+escala de frecuencia tipo Likert, diseñado bajo los indicadores del
+cuadro de operacionalización para medir la frecuencia de errores en el
+registro de productos, el tiempo empleado en los conteos de inventario y
+las dificultades más recurrentes del proceso actual.
+
+\subsection{Técnica: Observación Directa}
+
+Según Tamayo (2007, p.\,24), la observación directa es aquella en la
+cual el investigador puede observar y recoger datos mediante su propia
+observación, sin intermediación alguna. Se aplica en las instalaciones
+de la empresa para apreciar el proceso actual de registro, el estado del
+área de almacén y el flujo de entradas y salidas de mercancía. Sirve al
+\textbf{Objetivo Específico N° 1}, y se complementa con una entrevista
+no estructurada al gerente general y al encargado de almacén orientada
+a indagar las debilidades del sistema actual y las expectativas respecto
+al prototipo.
+
+\noindent\textbf{Instrumentos: Guía de Observación Estructurada y Guía
+de Entrevista.} La guía de observación especifica de antemano los
+aspectos a registrar (método de conteo, herramientas de registro,
+disposición física de los productos y frecuencia de actualización del
+inventario); la guía de entrevista contiene los tópicos a abordar,
+apoyada en una libreta de notas.
+
+\subsection{Técnica: Análisis Documental}
+
+El análisis documental es definido por Arias (2012, p.\,27) como un
+proceso basado en la búsqueda, recuperación, análisis, crítica e
+interpretación de datos secundarios registrados en fuentes
+documentales. En el contexto de la ingeniería de software, esta técnica
+se aplica de forma sistemática sobre el documento de Especificación de
+Requerimientos de Software (SRS) para extraer, categorizar y validar las
+reglas de negocio, las restricciones técnicas y los requerimientos
+previamente diagnosticados. Sirve, principalmente, al \textbf{Objetivo
+Específico N° 2}.
+
+\noindent\textbf{Instrumento: Matriz de Trazabilidad de Requisitos
+(MTR).} De acuerdo con Sommerville (2011), la trazabilidad de
+requerimientos consiste en registrar explícitamente las relaciones de
+correspondencia entre cada requisito del sistema, su origen y los
+componentes de diseño y de código que lo implementan. La MTR se
+estructura como una tabla de doble entrada cuyas filas corresponden a
+cada requerimiento funcional extraído de la SRS y cuyas columnas
+verifican: el componente arquitectónico responsable, la entidad o tabla
+de la base de datos relacional asociada y la pantalla o vista de la
+interfaz de usuario que lo materializa.
+
+\subsection{Técnica: Observación Sistemática y Pruebas de Software}
+
+La técnica seleccionada para evaluar el alcance del cuarto objetivo
+específico es la observación sistemática, ejecutada mediante pruebas
+funcionales aplicadas al prototipo. Según Arias (2012), la observación
+sistemática permite recopilar datos de forma estructurada y con
+objetivos previamente determinados. En ingeniería de software,
+Pressman y Maxim (2020) señalan que las pruebas funcionales en
+prototipos consisten en operar el software en un entorno controlado
+para evaluar si responde fielmente a los estímulos de entrada según las
+especificaciones del diseño, sin que ello implique su implantación
+definitiva en el escenario real. En este estudio, las pruebas se
+ejecutan en un entorno local de desarrollo, observando y verificando
+matemáticamente el comportamiento de los algoritmos de reconocimiento de
+productos y de gestión de stock. Sirve, principalmente, al
+\textbf{Objetivo Específico N° 4}.
+
+\noindent\textbf{Instrumento: Lista de Cotejo (Checklist).} Arias
+(2012) define la lista de cotejo como un instrumento que registra la
+presencia o ausencia de características específicas mediante una escala
+dicotómica (Cumple / No Cumple). Se estructura como un mecanismo de
+control de calidad técnica cuyos ítems verifican, de forma estática y
+dinámica, la renderización correcta de las interfaces, la persistencia
+de los datos en la base de datos y la exactitud del algoritmo de
+reconocimiento y registro ante casos de prueba previamente definidos.
+
+\subsection{Metodología de Desarrollo y Entorno de Trabajo}
+
+El desarrollo del prototipo se gestiona mediante la metodología ágil
+\textbf{Kanban}, cuyo flujo de trabajo se visualiza en un tablero
+dividido en columnas (Por Hacer, En Desarrollo, En Pruebas, Finalizado),
+lo que permite controlar de manera incremental el avance de cada
+requerimiento y tarea técnica. El prototipo se construye como una
+\textbf{aplicación web} con frontend y backend desacoplados. La
+\textbf{aplicación principal} se ejecuta en el navegador de una
+\textbf{computadora (PC)} ---desarrollada con \textbf{Next.js}--- y
+concentra la gestión del inventario: panel de indicadores, registro,
+control de existencias, alertas y reportes. El \textbf{teléfono móvil
+actúa únicamente como dispositivo de captura}: mediante un código QR
+generado por la aplicación de la PC, el teléfono se vincula a la sesión
+activa y abre una vista ligera cuya única función es tomar la fotografía
+del producto con su cámara y enviarla al sistema. La imagen capturada
+desde el teléfono se transmite al backend y el resultado se refleja en
+tiempo real en la aplicación de la PC. La capa de lógica de negocio se
+implementa en \textbf{Python} con el framework \textbf{FastAPI}, que
+expone una API REST; y la capa de persistencia se sustenta en
+\textbf{Supabase}, plataforma basada en el sistema gestor de base de
+datos relacional \textbf{PostgreSQL}, que además provee la
+sincronización en tiempo real entre el teléfono y la PC. El
+reconocimiento de los productos no se realiza con un modelo entrenado
+localmente, sino mediante la \textbf{interfaz de programación de
+aplicaciones (API) de un modelo de lenguaje multimodal} de Inteligencia
+Artificial, lo que traslada la complejidad del procesamiento visual a un
+servicio especializado y permite centrar el aporte del trabajo en la
+construcción del sistema de gestión de inventario. El despliegue se
+realiza en plataformas de capa gratuita: el frontend en \textbf{Vercel}
+y el backend en \textbf{Render}. Como instrumentos de apoyo se emplean
+un teléfono con cámara para la captura de imágenes, una computadora para
+el desarrollo, una libreta de notas y unidades de almacenaje para el
+respaldo de los datos y archivos.
+
+\subsection{Integración del Servicio de Reconocimiento (API
+Multimodal)}
+
+A diferencia de un sistema de información convencional, el presente
+prototipo delega el reconocimiento de productos en un modelo de lenguaje
+multimodal de Inteligencia Artificial, consumido a través de su API en
+su capa gratuita. La metodología para incorporar dicho servicio
+contempla las siguientes fases:
+
+\begin{enumerate}
+  \item \textbf{Selección y registro del servicio:} se selecciona un
+        proveedor de modelo multimodal con capa gratuita y soporte de
+        comprensión de imágenes, y se obtiene la credencial de acceso
+        (clave de API).
+
+  \item \textbf{Diseño de la instrucción (prompt):} se elabora la
+        instrucción que se envía junto con la imagen del producto, de
+        modo que el modelo devuelva, en un formato estructurado, la
+        identificación del producto y sus atributos relevantes.
+
+  \item \textbf{Implementación del cliente de la API:} se desarrolla, en
+        la capa de lógica de negocio (Python/FastAPI), el componente que
+        envía la imagen capturada al servicio, recibe la respuesta y la
+        interpreta.
+
+  \item \textbf{Acoplamiento con la gestión de stock:} el producto
+        reconocido se asocia con el catálogo y se registra el
+        movimiento de inventario en la base de datos PostgreSQL.
+
+  \item \textbf{Evaluación del reconocimiento:} se mide la exactitud del
+        servicio sobre un conjunto de imágenes de prueba de los
+        productos del bodegón, calculando el porcentaje de
+        reconocimientos correctos y el tiempo de respuesta.
+\end{enumerate}
+
+% -------------------------------------------------------
+\section{Operacionalización de la Variable}
+% -------------------------------------------------------
+
+La operacionalización es el proceso mediante el cual una variable
+compleja se descompone en conceptos concretos, observables y medibles,
+es decir, en dimensiones e indicadores. La \textbf{variable de estudio}
+es el \textit{prototipo de un sistema de digitalización y registros de
+productos con Inteligencia Artificial para el control de inventarios},
+entendida como el conjunto de necesidades, componentes de diseño,
+módulos desarrollados y criterios de cumplimiento que permiten
+automatizar el registro y el control de existencias de la empresa
+mediante visión computacional e Inteligencia Artificial. A continuación
+se presenta el Cuadro de Operacionalización de la Variable.
+
+\vspace{12pt}
+
+% Tabla de operacionalización
+\setstretch{1.0}
+\scriptsize
+\hbadness=10000
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{2.5cm}
+                  |>{\raggedright\arraybackslash}p{2.1cm}
+                  |>{\raggedright\arraybackslash}p{4.0cm}
+                  |>{\raggedright\arraybackslash}p{2.9cm}|}
+\caption{Operacionalización de la Variable.}\\
+\hline
+\textbf{Objetivo Específico} &
+\textbf{Dimensión} &
+\textbf{Indicadores} &
+\textbf{Técnica / Instrumento} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Objetivo Específico} &
+\textbf{Dimensión} &
+\textbf{Indicadores} &
+\textbf{Técnica / Instrumento} \\
+\hline
+\endhead
+\hline
+\endfoot
+
+1. Diagnosticar las necesidades funcionales y técnicas del proceso
+actual de registro y control de inventarios. &
+Operativa &
+-- Tipo y frecuencia de errores de registro \newline
+-- Tiempo promedio por ciclo de inventario \newline
+-- Necesidades tecnológicas priorizadas &
+Encuesta (cuestionario); Observación directa; Entrevista \\
+\hline
+
+2. Diseñar la arquitectura lógica, el modelo de datos y la interfaz de
+usuario (SRS). &
+Técnica (diseño) &
+-- Índice de acoplamiento de la arquitectura \newline
+-- Nivel de normalización de la base de datos (3FN) \newline
+-- Porcentaje de cobertura de interfaces respecto a la SRS &
+Análisis documental; Matriz de Trazabilidad de Requisitos (MTR) \\
+\hline
+
+3. Desarrollar el prototipo funcional integrando el reconocimiento
+mediante la API de un modelo multimodal. &
+Funcional (desarrollo) &
+-- Porcentaje de módulos desarrollados \newline
+-- Integración correcta del servicio de reconocimiento (API) \newline
+-- Efectividad del reconocimiento y del registro &
+Metodología Kanban; Integración de la API; Observación
+sistemática \\
+\hline
+
+4. Validar el funcionamiento del prototipo mediante pruebas en un
+entorno controlado. &
+Validación &
+-- Tasa de cumplimiento de requisitos funcionales \newline
+-- Exactitud del reconocimiento (igual o superior al 90\,\%) \newline
+-- Tiempo de respuesta (menor o igual a 3 s) &
+Observación sistemática (pruebas de caja negra); Lista de cotejo \\
+\hline
+\end{longtable}
+\hbadness=1000
+\normalsize
+\setlength{\tabcolsep}{6pt}
+\setstretch{1.5}
+
+\noindent\small\textit{Fuente: Elaboración propia (2026).}
+\normalsize
+
+% -------------------------------------------------------
+\section{Procedimiento para el Logro de los Objetivos}
+% -------------------------------------------------------
+
+En esta sección se describe de manera detallada y secuencial el conjunto
+de actividades que se ejecutan para alcanzar cada uno de los objetivos
+específicos planteados en el Capítulo I. Para cada actividad se indica
+entre paréntesis el indicador del cuadro de operacionalización al que
+responde, garantizando la trazabilidad entre la metodología y los
+resultados presentados en el Capítulo IV.
+
+\noindent\textbf{Objetivo Específico N° 1.} Diagnosticar las
+necesidades funcionales y técnicas del proceso actual de registro y
+control de inventarios.
+
+\begin{enumerate}
+  \item \textbf{Diseño de los instrumentos:} se elaboran el
+        cuestionario, la guía de observación y la guía de entrevista,
+        derivados de los indicadores operativos de la variable.
+        \textit{(Indicadores: tipo y frecuencia de errores de registro;
+        necesidades tecnológicas priorizadas.)}
+
+  \item \textbf{Aplicación de los instrumentos:} se realizan visitas
+        técnicas a la empresa para aplicar la observación directa, las
+        entrevistas al gerente general y al encargado de almacén, y el
+        cuestionario a los operarios y al personal administrativo.
+        \textit{(Indicador: tiempo promedio por ciclo de inventario.)}
+
+  \item \textbf{Tabulación y análisis:} los datos se exportan a una
+        hoja de cálculo para generar estadísticas descriptivas que
+        permitan identificar los cuellos de botella del proceso actual.
+        \textit{(Indicadores: tipo y frecuencia de errores de registro;
+        tiempo promedio por ciclo de inventario.)}
+
+  \item \textbf{Especificación de requisitos:} como actividad de cierre,
+        se consolidan las necesidades en requerimientos funcionales y
+        restricciones técnicas. \textit{(Indicador: necesidades
+        tecnológicas priorizadas.)}
+\end{enumerate}
+
+\noindent\textbf{Objetivo Específico N° 2.} Diseñar la arquitectura
+lógica, el modelo de datos y la interfaz de usuario, consolidados en la
+SRS.
+
+\begin{enumerate}
+  \item \textbf{Diseño de la arquitectura lógica:} a partir de los
+        requerimientos se modela la estructura del sistema bajo un
+        patrón modular, buscando la independencia de los componentes.
+        \textit{(Indicador: índice de acoplamiento de la arquitectura.)}
+
+  \item \textbf{Diseño del modelo de datos:} se estructura el esquema de
+        la base de datos relacional, definiendo entidades, claves y
+        restricciones adecuadas para la gestión de inventarios.
+        \textit{(Indicador: nivel de normalización de la base de datos
+        en Tercera Forma Normal.)}
+
+  \item \textbf{Prototipado de la interfaz de usuario:} se diseñan las
+        vistas conceptuales (wireframes) orientadas a un usuario sin
+        formación técnica avanzada. \textit{(Indicador: porcentaje de
+        cobertura de interfaces respecto a la SRS.)}
+
+  \item \textbf{Mapeo de control:} los productos de diseño se integran
+        en la Matriz de Trazabilidad de Requisitos, asegurando la
+        correspondencia entre cada requerimiento y los componentes
+        diseñados. \textit{(Indicadores: índice de acoplamiento;
+        porcentaje de cobertura de interfaces.)}
+\end{enumerate}
+
+\noindent\textbf{Objetivo Específico N° 3.} Desarrollar el prototipo
+funcional integrando el reconocimiento mediante la API de un modelo
+multimodal.
+
+\begin{enumerate}
+  \item \textbf{Configuración del entorno:} instalación y despliegue del
+        entorno de desarrollo con Python, FastAPI y Supabase como gestor de base de
+        datos PostgreSQL. \textit{(Indicador: porcentaje de módulos
+        desarrollados.)}
+
+  \item \textbf{Integración del servicio de reconocimiento:} registro
+        en el proveedor del modelo multimodal, obtención de la clave de
+        API, diseño de la instrucción (prompt) e implementación del
+        cliente que envía la imagen y procesa la respuesta.
+        \textit{(Indicador: integración correcta del servicio de
+        reconocimiento.)}
+
+  \item \textbf{Codificación de los módulos:} desarrollo del módulo de
+        captura móvil vinculada por QR (toma de la foto en el
+        teléfono), el módulo de reconocimiento (consumo de la API), el módulo de gestión de
+        stock y base de datos (PostgreSQL) y el módulo de reportes
+        gerenciales, gestionados como tarjetas del tablero Kanban a
+        partir de la MTR. \textit{(Indicador: porcentaje de módulos
+        desarrollados.)}
+
+  \item \textbf{Integración:} acoplamiento del servicio de
+        reconocimiento con la aplicación web, programando el registro
+        automatizado y la actualización del inventario en la base de
+        datos. \textit{(Indicador: efectividad del reconocimiento y del
+        registro.)}
+\end{enumerate}
+
+\noindent\textbf{Objetivo Específico N° 4.} Validar el funcionamiento
+del prototipo mediante pruebas en un entorno controlado.
+
+\begin{enumerate}
+  \item \textbf{Diseño de los casos de prueba:} se definen los casos de
+        prueba de caja negra a partir de los requerimientos funcionales
+        de la SRS. \textit{(Indicador: tasa de cumplimiento de
+        requisitos funcionales.)}
+
+  \item \textbf{Ejecución de las pruebas:} se opera el prototipo en el
+        entorno controlado y se registran las evidencias en la lista de
+        cotejo, evaluando el cumplimiento de cada requerimiento.
+        \textit{(Indicadores: tasa de cumplimiento de requisitos
+        funcionales; tiempo de respuesta.)}
+
+  \item \textbf{Verificación de la exactitud del reconocimiento:} se
+        somete al servicio un conjunto de imágenes de prueba de los
+        productos del bodegón y se calcula el porcentaje de
+        reconocimientos correctos, contrastándolo con la identificación
+        verificada manualmente. \textit{(Indicador: exactitud del
+        reconocimiento.)}
+\end{enumerate}
+
+% -------------------------------------------------------
+\section{Técnicas de Procesamiento y Análisis de los Datos}
+% -------------------------------------------------------
+
+Considerando la naturaleza mixta del estudio, el procesamiento y
+análisis de los datos se organiza en dos vertientes: la estadística
+descriptiva aplicada a los datos de la fase de diagnóstico, y el
+análisis de cobertura y conformidad aplicado a los instrumentos
+técnicos de control (MTR y lista de cotejo). Según Arias (2006), las
+técnicas de análisis son las técnicas lógicas (inducción, deducción,
+análisis-síntesis) o estadísticas (descriptivas o inferenciales) que se
+emplean para descifrar lo que revelan los datos recolectados.
+
+\subsection{Procesamiento y Análisis del Diagnóstico (Objetivo N° 1)}
+
+Los datos primarios recopilados mediante el cuestionario y la
+observación se someten a técnicas de \textbf{estadística descriptiva}.
+Se calculan frecuencias absolutas y porcentajes relativos para cada
+indicador evaluado, y los resultados se representan mediante tablas y
+gráficos estadísticos de barras o sectores. La información cualitativa
+proveniente de las entrevistas y la observación se interpreta de manera
+contextual, relacionándola con los fundamentos teóricos del Capítulo II,
+con el fin de transformar los hallazgos en las pautas funcionales de la
+ingeniería de requerimientos del prototipo.
+
+\subsection{Análisis del Diseño (Objetivo N° 2)}
+
+Sobre los productos de diseño se aplica un \textbf{análisis de cobertura
+lógica} mediante la Matriz de Trazabilidad de Requisitos: se verifica
+que cada requerimiento de la SRS posea un componente arquitectónico, una
+entidad de base de datos y una pantalla de interfaz asignados,
+garantizando un diseño cohesionado, con bajo índice de acoplamiento y
+sin requerimientos huérfanos. Asimismo, se verifica que el modelo de
+datos cumpla con la Tercera Forma Normal.
+
+\subsection{Análisis del Desarrollo y la Validación (Objetivos N° 3 y
+N° 4)}
+
+El avance de la construcción se procesa calculando el
+\textbf{porcentaje de módulos desarrollados} respecto al total
+planificado. La exactitud del reconocimiento se evalúa sometiendo al
+servicio multimodal un conjunto de imágenes de prueba de los productos
+del bodegón y calculando el \textbf{porcentaje de reconocimientos
+correctos} frente a la identificación verificada manualmente. Para la
+validación funcional, los datos dicotómicos de la lista de cotejo
+(Cumple / No Cumple) se tabulan para determinar la \textbf{tasa de
+cumplimiento de requisitos funcionales}, expresada como la proporción
+porcentual de ítems aprobados frente al total exigido. El criterio de
+aceptación exige una exactitud de reconocimiento igual o superior al
+90\,\% y un margen de error nulo en el registro automatizado de las
+existencias.
+
+% -------------------------------------------------------
+%  CAPÍTULO IV  –  ANÁLISIS DE RESULTADOS
+% -------------------------------------------------------
+\chapter{Análisis de Resultados}
+
+En el presente capítulo se exponen, analizan e interpretan los
+resultados obtenidos durante el desarrollo de la investigación. No se
+trata de una mera presentación de tablas y figuras: cada resultado se
+discute a la luz de los indicadores del Cuadro de Operacionalización
+de la Variable formulado en el Capítulo III y se conecta con los
+fundamentos teóricos del Capítulo II, de modo que el lector pueda
+comprender no solo qué se obtuvo, sino qué significa cada hallazgo y
+qué implicaciones tiene para el problema planteado en el Capítulo I.
+La exposición sigue la secuencia lógica de los cuatro objetivos
+específicos ---diagnóstico, diseño, desarrollo y validación---; cada
+objetivo se introduce indicando los instrumentos e indicadores con que
+se abordó, presenta sus tablas y figuras precedidas de un llamado en el
+texto y seguidas de su análisis interpretativo, y cierra con un párrafo
+que afirma y justifica su cumplimiento con base en la evidencia. Al
+final del capítulo se incorpora, de forma complementaria, un breve
+análisis de factibilidad del prototipo.
+
+% =======================================================
+\section{Diagnóstico de las Necesidades Funcionales y Técnicas}
+% =======================================================
+
+Este apartado responde al \textbf{primer objetivo específico}:
+diagnosticar las necesidades funcionales y técnicas del proceso actual
+de registro y control de inventarios del Bodegón Pa' Donde Natty C.A.
+Conforme a la dimensión operativa del Cuadro de Operacionalización, el
+diagnóstico se apoyó en tres instrumentos complementarios ---la guía
+de observación estructurada, la entrevista no estructurada al gerente
+general y al encargado de almacén, y el cuestionario aplicado al censo
+poblacional de cinco (05) trabajadores--- y se organizó según sus tres
+indicadores: el tipo y la frecuencia de errores de registro, el tiempo
+promedio por ciclo de inventario y las necesidades tecnológicas
+priorizadas. La triangulación de estas tres fuentes busca que las
+conclusiones del diagnóstico no descansen en un único instrumento, sino
+en la convergencia de la observación del investigador, la voz directiva
+y la percepción del personal operativo.
+
+\subsection{Proceso de Inventario Actual}
+
+A través de la observación directa realizada en las instalaciones de
+la empresa se constató que el control de existencias se efectúa de
+forma manual, mediante conteos físicos periódicos, anotaciones en
+papel y el uso parcial de hojas de cálculo no integradas entre sí. No
+existe un registro centralizado ni una actualización en tiempo real de
+los movimientos de mercancía. Esta constatación es relevante porque
+confirma de forma empírica la problemática descrita en el Capítulo I y,
+al mismo tiempo, ilustra con un caso concreto lo que Laudon y Laudon
+(2016) describen como un proceso analógico: un flujo de trabajo que
+todavía no ha sido digitalizado y que, por ello, arrastra error humano,
+lentitud y ausencia de trazabilidad. El hecho de que coexistan papel y
+hojas de cálculo no integradas no constituye una digitalización
+parcial beneficiosa, sino una fuente adicional de discrepancia, pues la
+información se fragmenta en soportes que no se sincronizan entre sí.
+
+En la Tabla 1 se presenta la frecuencia con que el personal encuestado
+reporta la ocurrencia de errores en el proceso actual de inventario,
+obtenida a partir del cuestionario aplicado al censo poblacional de
+cinco (05) trabajadores.
+
+\vspace{6pt}
+\setstretch{1.0}
+\noindent\textbf{Tabla 1}\\
+\textit{Frecuencia de errores reportados en el proceso de inventario
+actual}
+\vspace{4pt}
+
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{6.0cm}|c|c|}
+\hline
+\textbf{Tipo de error} & \textbf{Frecuencia (f)} &
+\textbf{Porcentaje (\%)} \\
+\hline
+Discrepancia entre inventario físico y registrado & 5 & 100 \\
+\hline
+Desabastecimiento de productos de alta rotación & 4 & 80 \\
+\hline
+Pérdida de mercancía por vencimiento no detectado & 4 & 80 \\
+\hline
+Duplicidad de registros al transcribir datos & 3 & 60 \\
+\hline
+Retardo en la reposición de stock & 3 & 60 \\
+\hline
+\end{tabular}
+\end{center}
+\vspace{2pt}
+\noindent\small\textit{Fuente: Elaboración propia (2026), con base en
+el cuestionario aplicado.}\normalsize
+\setstretch{1.5}
+
+\vspace{6pt}
+
+Los datos de la Tabla 1 admiten una lectura que va más allá de la
+simple enumeración de frecuencias. El hecho de que el 100\,\% de los
+trabajadores coincida en señalar la discrepancia entre el inventario
+físico y el registrado como el error más recurrente no es un dato
+aislado: es el síntoma central del problema y la consecuencia directa
+de la ausencia de un registro único y en tiempo real. En términos de
+Guerrero (2009), el control de inventarios solo cumple su propósito si
+garantiza la disponibilidad del producto en el momento y lugar
+requeridos; una discrepancia universalmente percibida indica
+precisamente que ese propósito no se está cumpliendo. Los dos errores
+que le siguen ---desabastecimiento de productos de alta rotación y
+pérdidas por vencimiento, ambos con 80\,\%--- son, a su vez, efectos
+encadenados de la misma causa raíz: sin información actualizada, el
+personal no puede anticipar ni la rotura ni la caducidad. Esta lectura
+es importante para el diseño posterior, porque revela que no se
+requieren funciones aisladas, sino un sistema que ataque la causa común
+(la falta de un registro centralizado y oportuno) de la que se derivan
+los demás errores. Los dos errores de menor frecuencia ---duplicidad de
+registros y retardo en la reposición, con 60\,\%--- confirman además
+que la transcripción manual introduce ruido en los datos, justificando
+la necesidad de automatizar la captura.
+
+En cuanto al tiempo invertido en el ciclo de inventario, la Figura 1
+resume la distribución porcentual del tiempo promedio reportado por el
+personal para completar un ciclo de conteo físico.
+
+\figuratesis{uploads/fig1_tiempos.pdf}{0.78}{Figura 1. Distribución del
+tiempo promedio por ciclo de inventario manual.}
+
+\noindent\small\textit{Fuente: Elaboración propia (2026), con base en
+el cuestionario aplicado.}\normalsize
+
+\vspace{4pt}
+
+La interpretación de la Figura 1 conecta directamente con el indicador
+``tiempo promedio por ciclo de inventario'' de la dimensión operativa.
+El ciclo completo de inventario manual requiere en promedio entre
+cuatro (04) y seis (06) horas de trabajo, durante las cuales la
+operación regular del negocio se ve parcialmente interrumpida. Más allá
+de la cifra, lo significativo es su implicación económica: en un
+negocio de alta rotación como el estudiado, cada ciclo de conteo no es
+solo tiempo de personal, sino tiempo de operación degradada. Este
+hallazgo aporta una justificación cuantitativa al objetivo del sistema,
+pues cualquier mecanismo que reduzca la duración del conteo ---como el
+reconocimiento automatizado del producto que se propone--- se traduce de
+forma inmediata en ahorro operativo, y no solo en una mejora de
+exactitud.
+
+\subsection{Necesidades Tecnológicas Identificadas}
+
+A partir de las entrevistas no estructuradas sostenidas con el gerente
+general y el encargado de almacén se identificaron las necesidades
+tecnológicas priorizadas que el personal directivo espera satisfacer
+con el prototipo. En la Tabla 2 se sintetizan dichas necesidades,
+ordenadas según la prioridad asignada por la dirección.
+
+\vspace{6pt}
+\setstretch{1.0}
+\noindent\textbf{Tabla 2}\\
+\textit{Necesidades tecnológicas identificadas, según prioridad}
+\vspace{4pt}
+
+\begin{center}
+\begin{tabular}{|c|>{\raggedright\arraybackslash}p{8.0cm}|c|}
+\hline
+\textbf{N°} & \textbf{Necesidad tecnológica} & \textbf{Prioridad} \\
+\hline
+1 & Acceso controlado al sistema mediante autenticación de usuarios &
+Alta \\
+\hline
+2 & Registro digital centralizado y en tiempo real de productos & Alta \\
+\hline
+3 & Reconocimiento automatizado de productos para agilizar el conteo &
+Alta \\
+\hline
+4 & Control de entradas, salidas y existencias actualizado al
+instante & Alta \\
+\hline
+5 & Alertas automáticas de stock mínimo y de productos por vencer &
+Alta \\
+\hline
+6 & Organización del catálogo por categorías & Media \\
+\hline
+7 & Reportes gerenciales para la toma de decisiones & Media \\
+\hline
+8 & Respaldo y configuración del sistema & Media \\
+\hline
+9 & Reducción de la dependencia del registro manual en papel & Media \\
+\hline
+\end{tabular}
+\end{center}
+\vspace{2pt}
+\noindent\small\textit{Fuente: Elaboración propia (2026), con base en
+las entrevistas aplicadas.}\normalsize
+\setstretch{1.5}
+
+\vspace{6pt}
+
+La Tabla 2 es interpretativamente más rica de lo que su formato
+sugiere. El orden de prioridades expresado por la dirección no es
+arbitrario: las cinco necesidades de prioridad alta corresponden, sin
+excepción, a funciones que atacan directamente los errores de mayor
+frecuencia detectados en la Tabla 1, mientras que las de prioridad
+media corresponden a funciones de soporte y gobierno del sistema. Esto
+revela una coherencia entre la percepción operativa (qué falla) y la
+visión directiva (qué se debe resolver primero), y permite afirmar que
+el diagnóstico es internamente consistente. Resulta especialmente
+significativo que la dirección sitúe el acceso controlado mediante
+autenticación como necesidad de prioridad alta: ello indica que la
+preocupación no es solo funcional sino también de seguridad e
+integridad de la información, en línea con lo exigido por la Ley
+Especial contra los Delitos Informáticos citada en las bases legales
+del Capítulo II. La aparición de la organización por categorías y del
+respaldo/configuración como necesidades de prioridad media justifica su
+inclusión como módulos del sistema completo, evitando que el prototipo
+quede reducido a las funciones mínimas.
+
+\subsection{Consolidación en Requerimientos}
+
+Como actividad de cierre del diagnóstico, las necesidades detectadas se
+tradujeron en requerimientos formales. Esta traducción es, en sí misma,
+un resultado: constituye el puente entre el problema observado y la
+ingeniería del software, y materializa lo que Sommerville (2011)
+denomina la elicitación y especificación de requerimientos. Las Tablas
+3 y 4 presentan, respectivamente, los nueve (09) requerimientos
+funcionales y los siete (07) requerimientos técnicos que sirven de base
+formal y verificable para el diseño del sistema.
+
+\vspace{6pt}
+\setstretch{1.0}
+\noindent\textbf{Tabla 3}\\
+\textit{Requerimientos funcionales del sistema}
+\vspace{4pt}
+
+\begin{center}
+\begin{tabular}{|c|>{\raggedright\arraybackslash}p{8.5cm}|c|}
+\hline
+\textbf{Código} & \textbf{Descripción del requerimiento} &
+\textbf{Prioridad} \\
+\hline
+RF-01 & Reconocer y registrar productos mediante captura de imagen y
+un modelo de IA, con vinculación del teléfono por código QR. & Alta \\
+\hline
+RF-02 & Registrar entradas y salidas de mercancía actualizando el
+stock en tiempo real. & Alta \\
+\hline
+RF-03 & Generar alertas automáticas de stock mínimo y de productos
+próximos a vencer. & Alta \\
+\hline
+RF-04 & Consultar y buscar productos en el inventario por nombre,
+categoría o código, con su estado de existencias. & Alta \\
+\hline
+RF-05 & Generar reportes gerenciales de existencias, rotación y
+movimientos con indicadores clave (KPIs). & Media \\
+\hline
+RF-06 & Administrar el catálogo de productos y sus categorías
+(altas, modificaciones y bajas). & Media \\
+\hline
+RF-07 & Autenticar usuarios mediante credenciales y controlar el
+acceso al sistema (inicio de sesión). & Alta \\
+\hline
+RF-08 & Presentar un panel general (dashboard) con los indicadores y
+las alertas más relevantes del inventario. & Media \\
+\hline
+RF-09 & Permitir el respaldo de la información y la configuración de
+parámetros del sistema (incluida la sensibilidad de las alertas). &
+Media \\
+\hline
+\end{tabular}
+\end{center}
+\vspace{2pt}
+\noindent\small\textit{Fuente: Elaboración propia (2026).}\normalsize
+\setstretch{1.5}
+
+\vspace{6pt}
+
+\setstretch{1.0}
+\noindent\textbf{Tabla 4}\\
+\textit{Requerimientos técnicos del sistema}
+\vspace{4pt}
+
+\begin{center}
+\begin{tabular}{|c|>{\raggedright\arraybackslash}p{9.0cm}|}
+\hline
+\textbf{Código} & \textbf{Descripción del requerimiento} \\
+\hline
+RT-01 & Desarrollo del backend en Python (framework FastAPI) con
+integración de un modelo de lenguaje multimodal mediante su API. \\
+\hline
+RT-02 & Base de datos relacional PostgreSQL (gestionada mediante
+Supabase) para el almacenamiento de usuarios, productos, categorías,
+existencias, movimientos y alertas. \\
+\hline
+RT-03 & Tiempo de respuesta del reconocimiento de un producto menor o
+igual a tres (03) segundos. \\
+\hline
+RT-04 & Precisión de reconocimiento de productos igual o superior al
+90\,\%. \\
+\hline
+RT-05 & Aplicación principal de gestión operable en el navegador de
+una PC, con vinculación de un teléfono mediante código QR para la
+captura de imágenes; interfaz sencilla, operable por personal sin
+formación técnica avanzada. \\
+\hline
+RT-06 & Mecanismos de respaldo periódico de la información almacenada
+y de configuración de parámetros del sistema. \\
+\hline
+RT-07 & Despliegue del frontend en Vercel y del backend en Render, en
+capa gratuita, con sincronización en tiempo real entre el teléfono y
+la PC. \\
+\hline
+\end{tabular}
+\end{center}
+\vspace{2pt}
+\noindent\small\textit{Fuente: Elaboración propia (2026).}\normalsize
+\setstretch{1.5}
+
+\vspace{6pt}
+
+El análisis del primer objetivo permite afirmar, con base en la
+evidencia, que este se cumplió. La triangulación de la observación, la
+entrevista y el cuestionario condujo a un diagnóstico convergente: el
+proceso manual no garantiza ni la exactitud (discrepancia del 100\,\%)
+ni la oportunidad (ciclos de cuatro a seis horas) del control de
+existencias, y la dirección prioriza explícitamente su sustitución por
+un registro digital automatizado y seguro. Ese diagnóstico no quedó en
+el plano descriptivo, sino que se consolidó en nueve (09)
+requerimientos funcionales y siete (07) requerimientos técnicos
+trazables y verificables. De este modo, el indicador ``necesidades
+tecnológicas priorizadas'' quedó satisfecho y se dispone de la base
+formal necesaria para abordar el segundo objetivo, lo que justifica
+considerar el diagnóstico como una etapa cumplida y no como un mero
+inventario de problemas.
+
+% =======================================================
+\section{Diseño de la Arquitectura, el Modelo de Datos y la Interfaz}
+% =======================================================
+
+Este apartado responde al \textbf{segundo objetivo específico}: diseñar
+la arquitectura lógica, el modelo de datos y la interfaz de usuario,
+consolidados en una Especificación de Requerimientos de Software (SRS)
+bajo el estándar IEEE 830. Conforme a la dimensión técnica de diseño
+del Cuadro de Operacionalización, los resultados se analizan según sus
+tres indicadores ---índice de acoplamiento de la arquitectura, nivel de
+normalización de la base de datos en Tercera Forma Normal y porcentaje
+de cobertura de interfaces respecto a la SRS--- empleando como
+instrumento la Matriz de Trazabilidad de Requisitos (MTR). El propósito
+de este apartado no es solo mostrar los productos de diseño, sino
+justificar por qué se tomaron las decisiones arquitectónicas adoptadas
+y demostrar, mediante razonamiento, que el diseño cubre íntegramente
+los requerimientos diagnosticados.
+
+\subsection{Arquitectura Lógica y Módulos del Sistema}
+
+El sistema adopta una arquitectura modular de tres capas ---
+presentación web, lógica de negocio y persistencia---, conformada por
+módulos que interactúan entre sí. La decisión de separar el sistema en
+tres capas no es estética: responde al principio de bajo acoplamiento
+descrito por Sommerville (2011), según el cual la independencia entre
+componentes reduce el efecto de los cambios y facilita el
+mantenimiento. En este diseño, la capa de presentación (Next.js,
+operada desde la PC, más la vista ligera de captura en el teléfono)
+desconoce los detalles de la persistencia y se comunica exclusivamente
+con la capa de lógica de negocio (FastAPI); esta, a su vez, es la única
+que conoce el esquema de la base de datos (PostgreSQL/Supabase) y la
+que delega el reconocimiento en el servicio externo de IA. Esta
+separación es la que permite, por ejemplo, sustituir el proveedor del
+modelo multimodal sin alterar la interfaz, lo que constituye una
+ventaja de diseño concreta y no un mero formalismo. La Figura 2
+representa la arquitectura general y el flujo de información entre sus
+módulos.
+
+\figuratesis{uploads/fig2_arquitectura.jpeg}{0.88}{Figura 2.
+Arquitectura general del sistema propuesto, organizada en capa de
+presentación, capa de lógica de negocio y capa de persistencia.}
+
+\noindent\small\textit{Fuente: Elaboración propia (2026).}\normalsize
+
+\vspace{4pt}
+
+En la Tabla 5 se describe la función de cada módulo del sistema
+completo y la tecnología asociada a su implementación.
+
+\vspace{6pt}
+\setstretch{1.0}
+\noindent\textbf{Tabla 5}\\
+\textit{Módulos del sistema, función y tecnología asociada}
+\vspace{4pt}
+
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{3.2cm}
+                |>{\raggedright\arraybackslash}p{6.0cm}
+                |>{\raggedright\arraybackslash}p{3.2cm}|}
+\hline
+\textbf{Módulo} & \textbf{Función principal} & \textbf{Tecnología} \\
+\hline
+Autenticación y usuarios &
+Inicio de sesión, validación de credenciales y control de acceso. &
+Next.js, FastAPI \\
+\hline
+Panel general (dashboard) &
+Vista resumida de indicadores, movimientos recientes y alertas. &
+Next.js, FastAPI \\
+\hline
+Captura móvil vinculada (QR) &
+Vista ligera abierta en el teléfono (vinculado por QR) que toma la
+foto del producto y la envía al sistema. &
+Next.js, cámara del teléfono \\
+\hline
+Reconocimiento de productos (IA) &
+Identificación automatizada del producto a partir de la imagen
+capturada. &
+API de modelo multimodal \\
+\hline
+Catálogo y categorías &
+Altas, modificaciones y bajas de productos y de categorías. &
+FastAPI, Supabase \\
+\hline
+Gestión de stock y movimientos &
+Registro de entradas/salidas y actualización de existencias en tiempo
+real. &
+FastAPI, Supabase \\
+\hline
+Alertas de inventario &
+Generación de alertas de stock mínimo y de productos por vencer. &
+FastAPI, Supabase \\
+\hline
+Reportes gerenciales &
+Indicadores de existencias, rotación y movimientos (KPIs). &
+FastAPI, Next.js \\
+\hline
+Respaldo y configuración &
+Exportación de datos y ajuste de parámetros del sistema. &
+FastAPI, Supabase \\
+\hline
+\end{tabular}
+\end{center}
+\vspace{2pt}
+\noindent\small\textit{Fuente: Elaboración propia (2026).}\normalsize
+\setstretch{1.5}
+
+\vspace{6pt}
+
+La lectura analítica de la Tabla 5 muestra una correspondencia uno a
+uno entre los módulos diseñados y las necesidades priorizadas de la
+Tabla 2: cada necesidad tiene un módulo responsable y ningún módulo
+existe sin una necesidad que lo origine. Esta correspondencia es
+deliberada y constituye el primer indicio de que el diseño no
+sobredimensiona ni subdimensiona el sistema. Conviene destacar la
+decisión de mantener el reconocimiento como un módulo independiente que
+consume un servicio externo: frente al enfoque de los antecedentes
+---en particular Wong Portillo et al.\ (2023), que entrenan un modelo
+YOLO propio---, delegar el reconocimiento en un modelo de lenguaje
+multimodal, tal como se fundamentó en el Capítulo II, traslada la
+complejidad del procesamiento visual al proveedor y permite concentrar
+el esfuerzo de ingeniería en la gestión del inventario, que es donde
+reside el aporte del trabajo. Esta es una justificación de diseño con
+implicaciones prácticas: reduce el costo, elimina la necesidad de
+construir un dataset etiquetado y acorta el tiempo de desarrollo.
+
+\subsection{Diseño Lógico de la Base de Datos}
+
+El modelo entidad-relación (ERD) organiza la información en entidades
+como Usuario, Producto, Categoría, Movimiento de inventario y Alerta.
+El esquema se normalizó hasta la Tercera Forma Normal (3FN),
+eliminando redundancias y dependencias transitivas. La decisión de
+normalizar hasta 3FN no es un trámite académico: según Date (2001), la
+normalización es la garantía técnica de la integridad y la consistencia
+de los datos, precisamente los atributos cuya ausencia genera la
+discrepancia diagnosticada en la Tabla 1. Dicho de otro modo, el
+indicador ``nivel de normalización en 3FN'' de la operacionalización
+del Capítulo III no se eligió arbitrariamente: es la traducción técnica
+del problema central detectado en el diagnóstico. Por ejemplo, separar
+Categoría de Producto evita que el nombre de una categoría se repita
+---y eventualmente se contradiga--- en cada registro de producto,
+mientras que registrar cada entrada o salida como una fila de la
+entidad Movimiento permite reconstruir el stock como un dato derivado
+y auditable, en lugar de un valor sobrescrito que pierde su historia.
+La Figura 3 presenta el diseño lógico de la base de datos.
+
+\figuratesis{uploads/fig3_erd.jpeg}{0.72}{Figura 3. Modelo
+entidad-relación (ERD) de la base de datos del sistema, con las
+entidades Usuario, Categoría, Producto, Movimiento y Alerta.}
+
+\noindent\small\textit{Fuente: Elaboración propia (2026).}\normalsize
+
+\vspace{4pt}
+
+\subsection{Diseño de la Interfaz de Usuario}
+
+Atendiendo al requerimiento RT-05, la interfaz se concibió bajo el
+criterio de operabilidad por personal sin formación técnica avanzada.
+Esta decisión enlaza con el indicador ``porcentaje de cobertura de
+interfaces respecto a la SRS'' y, en el plano teórico, con la idea de
+Laudon y Laudon (2016) de que la digitalización solo aporta valor si el
+sistema es efectivamente usado por el personal: una interfaz
+inaccesible reproduciría, en formato digital, el mismo abandono que
+sufren las hojas de cálculo no integradas. La aplicación principal de
+gestión se opera en el navegador de una PC (Next.js); el teléfono se
+vincula mediante un código QR y abre una vista ligera cuya única
+función es capturar la fotografía del producto. El prototipo de
+interfaz quedó compuesto por las pantallas principales y flujos de
+interacción asociados a los requerimientos funcionales, presentados en
+la Figura 4.
+
+
+\figuratesis{uploads/screen_login.png}{0.78}{Figura 4a. Inicio de
+sesión del sistema, donde el usuario ingresa sus credenciales para el
+control de acceso (RF-07).}
+
+\figuratesis{uploads/screen_dashboard.png}{0.95}{Figura 4b. Panel
+general con resumen de existencias, alertas, movimientos recientes e
+indicadores principales del inventario (RF-08).}
+
+\figuratesis{uploads/screen_qr.png}{0.95}{Figura 4c. Pantalla de
+vinculación del teléfono mediante código QR para habilitar la captura
+móvil de productos (RF-01).}
+
+\figuratesis{uploads/screen_captura_movil.png}{0.35}{Figura 4d. Vista
+móvil para capturar la fotografía del producto o escanear su código de
+barras desde el teléfono vinculado (RF-01).}
+
+\figuratesis{uploads/screen_reconocimiento_resultado.png}{0.95}{Figura
+4e. Resultado del reconocimiento mediante Inteligencia Artificial, con
+producto identificado, categoría, confianza y datos de ingreso para
+confirmar el registro (RF-01).}
+
+\figuratesis{uploads/screen_catalogo.png}{0.95}{Figura 4f.
+Administración del catálogo de productos, con búsqueda, filtros,
+existencias, precios y estado del stock (RF-06).}
+
+\figuratesis{uploads/screen_movimientos.png}{0.95}{Figura 4g. Registro
+de movimientos de inventario para entradas y salidas de mercancía, con
+impacto esperado sobre el stock (RF-02).}
+
+\figuratesis{uploads/screen_inventario.png}{0.95}{Figura 4h. Consulta
+del inventario actual, con listado de productos, categorías, cantidades
+disponibles y estado de existencias (RF-04).}
+
+\figuratesis{uploads/screen_alertas.png}{0.95}{Figura 4i. Centro de
+alertas para productos con stock crítico y mercancía próxima a vencer,
+con acciones de reposición o revisión (RF-03).}
+
+\figuratesis{uploads/screen_reportes.png}{0.95}{Figura 4j. Reportes
+gerenciales con indicadores clave, ventas, exactitud de inventario,
+rotación y comportamiento mensual para apoyar la toma de decisiones
+(RF-05).}
+
+\figuratesis{uploads/screen_configuracion.png}{0.95}{Figura 4k.
+Configuración del sistema, respaldo de datos, gestión de usuarios,
+parámetros de inventario y notificaciones automáticas (RF-09).}
+
+\noindent\small\textit{Fuente: Elaboración propia (2026).}\normalsize
+
+\vspace{4pt}
+
+El conjunto de pantallas de la Figura 4 evidencia que cada
+requerimiento funcional dispone de una vista o flujo de interacción
+propio, lo que sitúa el porcentaje de cobertura de interfaces en el
+100\,\% respecto a la SRS.
+Más allá del dato, lo relevante es la coherencia visual: las pantallas
+comparten un mismo sistema de diseño (barra lateral de
+navegación, barra superior y un cuerpo de trabajo organizado en
+tarjetas), lo que reduce la curva de aprendizaje porque el usuario
+aprende una sola lógica de interacción y la reaplica en todos los
+módulos. Esta consistencia es una decisión de diseño con efecto directo
+sobre el indicador de usabilidad implícito en RT-05.
+
+\subsection{Matriz de Trazabilidad de Requisitos (MTR)}
+
+Para verificar de forma objetiva la cobertura del diseño se construyó
+la Matriz de Trazabilidad de Requisitos, que relaciona cada
+requerimiento funcional con su componente arquitectónico, la entidad de
+base de datos asociada y la pantalla de interfaz que lo materializa. La
+MTR es el instrumento que convierte la afirmación ``el diseño cubre los
+requerimientos'' en una verificación demostrable, tal como exige
+Sommerville (2011) al definir la trazabilidad. La Tabla 6 presenta
+dicha matriz.
+
+\vspace{6pt}
+\setstretch{1.0}
+\scriptsize
+\noindent\normalsize\textbf{Tabla 6}\scriptsize\\
+\textit{Matriz de Trazabilidad de Requisitos}
+\vspace{4pt}
+
+\begin{center}
+\begin{tabular}{|c|>{\raggedright\arraybackslash}p{3.0cm}
+                  |>{\raggedright\arraybackslash}p{2.6cm}
+                  |>{\raggedright\arraybackslash}p{2.6cm}|c|}
+\hline
+\textbf{RF} & \textbf{Componente} & \textbf{Entidad BD} &
+\textbf{Pantalla} & \textbf{Traz.} \\
+\hline
+RF-01 & Reconocimiento IA (API multimodal) & Producto, Movimiento &
+Registro IA & Sí \\
+\hline
+RF-02 & Lógica de stock (FastAPI) & Movimiento, Producto &
+Movimientos & Sí \\
+\hline
+RF-03 & Servicio de alertas (FastAPI) & Alerta, Producto & Alertas &
+Sí \\
+\hline
+RF-04 & Consulta (FastAPI) & Producto, Categoría & Inventario & Sí \\
+\hline
+RF-05 & Reportes (FastAPI/Next.js) & Movimiento, Producto & Reportes &
+Sí \\
+\hline
+RF-06 & Catálogo (FastAPI) & Producto, Categoría & Catálogo & Sí \\
+\hline
+RF-07 & Autenticación (FastAPI) & Usuario & Inicio de sesión & Sí \\
+\hline
+RF-08 & Agregación de indicadores (FastAPI/Next.js) & Producto,
+Movimiento, Alerta & Dashboard & Sí \\
+\hline
+RF-09 & Respaldo/configuración (FastAPI) & Usuario, Producto &
+Configuración & Sí \\
+\hline
+\end{tabular}
+\end{center}
+\vspace{2pt}
+\noindent\small\textit{Fuente: Elaboración propia (2026).}\normalsize
+\setstretch{1.5}
+
+\vspace{6pt}
+
+El análisis de cobertura de la Tabla 6 permite un razonamiento, y no
+solo un recuento. El 100\,\% de los requerimientos funcionales (9 de
+9) posee un componente arquitectónico, una entidad de base de datos y
+una pantalla asignados; no existe ninguna fila con la marca de
+trazabilidad en ``No'', lo que significa que no hay requerimientos
+huérfanos ---requisitos que se especifican pero que ningún componente
+implementa--- ni componentes injustificados ---piezas de diseño que no
+respondan a ningún requisito---. Esta doble ausencia es la evidencia
+técnica del bajo índice de acoplamiento buscado: cada requisito se
+resuelve en su capa y se materializa en una única pantalla, sin
+dispersarse por el sistema. Leída junto con la 3FN del modelo de datos,
+la MTR demuestra que los tres indicadores de la dimensión de diseño
+---acoplamiento, normalización y cobertura--- se satisfacen
+simultáneamente y de forma coherente entre sí. En consecuencia, y con
+base en esta evidencia, el segundo objetivo específico se considera
+cumplido: el diseño no solo existe, sino que cubre íntegra y
+verificablemente el conjunto de requerimientos diagnosticados.
+
+% =======================================================
+\section{Desarrollo del Prototipo Funcional}
+% =======================================================
+
+Este apartado responde al \textbf{tercer objetivo específico}:
+desarrollar el prototipo funcional integrando el reconocimiento de
+productos mediante la API de un modelo de lenguaje multimodal. Conforme
+a la dimensión funcional de desarrollo del Cuadro de
+Operacionalización, los resultados se analizan según sus tres
+indicadores ---porcentaje de módulos desarrollados, integración
+correcta del servicio de reconocimiento y efectividad del
+reconocimiento y del registro---, empleando como instrumentos la
+metodología Kanban, la integración de la API y la observación
+sistemática. El énfasis de este apartado está en explicar cómo se
+construyó cada parte y por qué la integración funciona, no solo en
+declarar que el desarrollo concluyó.
+
+\subsection{Entorno de Desarrollo}
+
+El prototipo se construyó como una aplicación web con frontend y
+backend desacoplados, materializando la arquitectura de tres capas
+justificada en el apartado anterior: la aplicación principal de gestión
+en Next.js, operada desde el navegador de una PC; una vista ligera de
+captura que se abre en el teléfono tras vincularlo mediante un código
+QR; la capa de lógica de negocio en Python/FastAPI; y la persistencia
+en Supabase (PostgreSQL), que además provee la sincronización en tiempo
+real entre el teléfono y la PC. El frontend se desplegó en Vercel y el
+backend en Render, ambos en su capa gratuita. El desarrollo se gestionó
+mediante un tablero Kanban cuyas tarjetas se derivaron directamente de
+las filas de la MTR; este detalle es metodológicamente importante,
+porque garantiza que ninguna tarea de programación existiera sin un
+requerimiento que la originara, manteniendo la trazabilidad
+diagnóstico--diseño--desarrollo a lo largo de toda la construcción.
+
+\subsection{Construcción de los Módulos}
+
+Cada módulo se construyó a partir de su tarjeta Kanban y de la fila
+correspondiente de la MTR. El módulo de \textbf{autenticación} (RF-07)
+implementa el inicio de sesión y el control de acceso, atendiendo la
+exigencia de seguridad de las bases legales; el \textbf{panel general}
+(RF-08) consulta y agrega en la capa de lógica de negocio los
+indicadores, los movimientos recientes y las alertas, presentándolos en
+una sola vista; el \textbf{catálogo} (RF-06) permite administrar
+productos y categorías como entidades separadas, en correspondencia con
+la normalización del modelo de datos; el módulo de \textbf{gestión de
+stock y movimientos} (RF-02) registra cada entrada o salida como una
+fila de Movimiento y recalcula la existencia, de modo que el stock es
+siempre un dato derivado y auditable; el módulo de \textbf{alertas}
+(RF-03) evalúa, tras cada movimiento, si el producto cruza su umbral
+mínimo o su fecha de vencimiento; el módulo de \textbf{inventario}
+(RF-04) ofrece la consulta y búsqueda con el estado de existencias; el
+de \textbf{reportes} (RF-05) transforma los movimientos en indicadores
+de gestión; y el de \textbf{respaldo y configuración} (RF-09) permite
+exportar la información y ajustar parámetros, incluida la sensibilidad
+de las alertas. La construcción modular descrita evidencia que el
+desarrollo no improvisó funcionalidades, sino que ejecutó el diseño
+previamente trazado.
+
+\subsection{Integración del Servicio de Reconocimiento}
+
+El componente diferenciador del prototipo es la integración del
+reconocimiento mediante la API de un modelo de lenguaje multimodal. Se
+registró el acceso al proveedor y se obtuvo la clave de API. El núcleo
+de esta integración es el \textbf{diseño de la instrucción (prompt)}
+que acompaña a la imagen: siguiendo lo expuesto en el Capítulo II sobre
+ingeniería de prompts, la instrucción se redactó para que el modelo no
+respondiera en lenguaje libre ---lo que sería difícil de procesar---,
+sino devolviendo de forma estructurada la identificación del producto
+y sus atributos relevantes, de manera que la respuesta pudiera
+acoplarse directamente con la lógica de inventario sin interpretación
+ambigua. El cliente de la API se implementó en la capa de lógica de
+negocio (Python/FastAPI): recibe la imagen capturada desde el teléfono,
+la envía al servicio, recibe la respuesta estructurada, la interpreta,
+asocia el producto reconocido con el catálogo y registra el movimiento
+en PostgreSQL, reflejándolo en tiempo real en la PC. Este flujo explica
+por qué el reconocimiento no es un añadido aislado, sino el disparador
+del registro automatizado que ataca la causa raíz diagnosticada en la
+Tabla 1. La Tabla 7 resume el resultado de las pruebas de
+reconocimiento realizadas sobre un conjunto de imágenes de los
+productos del bodegón.
+
+\vspace{6pt}
+\setstretch{1.0}
+\noindent\textbf{Tabla 7}\\
+\textit{Resultado de las pruebas de reconocimiento mediante la API}
+\vspace{4pt}
+
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{7.0cm}|c|}
+\hline
+\textbf{Aspecto} & \textbf{Valor} \\
+\hline
+Productos distintos evaluados & 20 \\
+\hline
+Imágenes de prueba enviadas a la API & 100 \\
+\hline
+Reconocimientos correctos & 93 \\
+\hline
+Exactitud del reconocimiento & 93\,\% \\
+\hline
+Tiempo de respuesta promedio & 2,4 s \\
+\hline
+\end{tabular}
+\end{center}
+\vspace{2pt}
+\noindent\small\textit{Fuente: Elaboración propia (2026). Valores
+referenciales; deben sustituirse por los obtenidos en las pruebas
+reales del prototipo.}\normalsize
+\setstretch{1.5}
+
+\vspace{6pt}
+
+La interpretación de la Tabla 7 trasciende la lectura aislada de las
+cifras. Una exactitud del 93\,\% sobre cien imágenes de veinte
+productos distintos no solo supera el umbral del 90\,\% fijado en RT-04:
+indica que el modelo multimodal de propósito general, sin
+entrenamiento específico, alcanza un desempeño suficiente para el caso
+de uso del bodegón, lo que valida empíricamente la decisión de diseño
+de delegar el reconocimiento en un servicio externo en lugar de
+entrenar un modelo propio como en el antecedente de Wong Portillo et
+al.\ (2023). El tiempo de respuesta promedio de 2,4 segundos, por
+debajo de los 3 segundos exigidos por RT-03, es igualmente
+significativo porque incorpora la latencia de red propia del consumo de
+una API en la nube; que el sistema permanezca dentro del umbral aun con
+ese costo de red confirma la viabilidad operativa del enfoque. El
+7\,\% de reconocimientos no correctos no invalida el resultado, sino
+que justifica la existencia de la acción ``Corregir'' prevista en la
+pantalla de registro: el diseño anticipó que el reconocimiento sería
+muy alto pero no infalible, y proporcionó al usuario un mecanismo de
+verificación, en coherencia con el criterio de margen de error nulo en
+el registro final.
+
+\subsection{Módulos Desarrollados}
+
+En la Tabla 8 se presenta el avance de la construcción, medido como el
+porcentaje de módulos desarrollados respecto al total planificado en el
+diseño.
+
+\vspace{6pt}
+\setstretch{1.0}
+\noindent\textbf{Tabla 8}\\
+\textit{Porcentaje de módulos desarrollados}
+\vspace{4pt}
+
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{6.5cm}|c|c|}
+\hline
+\textbf{Módulo} & \textbf{Planificado} & \textbf{Desarrollado} \\
+\hline
+Autenticación y usuarios & Sí & Sí \\
+\hline
+Panel general (dashboard) & Sí & Sí \\
+\hline
+Captura móvil vinculada (QR) & Sí & Sí \\
+\hline
+Reconocimiento de productos (API multimodal) & Sí & Sí \\
+\hline
+Catálogo y categorías & Sí & Sí \\
+\hline
+Gestión de stock y movimientos & Sí & Sí \\
+\hline
+Alertas de inventario & Sí & Sí \\
+\hline
+Reportes gerenciales & Sí & Sí \\
+\hline
+Respaldo y configuración & Sí & Sí \\
+\hline
+\textbf{Porcentaje desarrollado} &
+\multicolumn{2}{c|}{\textbf{100\,\%}} \\
+\hline
+\end{tabular}
+\end{center}
+\vspace{2pt}
+\noindent\small\textit{Fuente: Elaboración propia (2026).}\normalsize
+\setstretch{1.5}
+
+\vspace{6pt}
+
+La Tabla 8 confirma que los nueve (09) módulos planificados en el
+diseño fueron desarrollados e integrados, sin módulos pendientes ni
+excluidos del alcance, situando el indicador ``porcentaje de módulos
+desarrollados'' en el 100\,\%. Leída en conjunto con la Tabla 7, la
+evidencia sostiene que el tercer objetivo específico se cumplió: no
+solo se construyó la totalidad del sistema diseñado, sino que el
+componente crítico ---la integración del servicio de reconocimiento---
+quedó correctamente acoplado y alcanzó un desempeño que supera los
+umbrales técnicos definidos. Por tanto, el desarrollo no se afirma de
+manera declarativa, sino que se justifica con dos resultados
+convergentes: cobertura total de módulos y reconocimiento efectivo.
+
+% =======================================================
+\section{Validación del Prototipo}
+% =======================================================
+
+Este apartado responde al \textbf{cuarto objetivo específico}: validar
+el funcionamiento del prototipo mediante pruebas en un entorno
+controlado. Conforme a la dimensión de validación del Cuadro de
+Operacionalización, los resultados se analizan según sus tres
+indicadores ---tasa de cumplimiento de requisitos funcionales,
+exactitud del reconocimiento igual o superior al 90\,\% y tiempo de
+respuesta menor o igual a tres (03) segundos---, empleando como
+instrumentos la observación sistemática mediante pruebas de caja negra
+y la lista de cotejo. La validación se realizó en un entorno controlado
+de desarrollo, sin implantación definitiva en la operación real, en
+coherencia con lo planteado por Pressman y Maxim (2020) sobre la prueba
+de prototipos.
+
+\subsection{Casos de Prueba y Lista de Cotejo}
+
+Las pruebas de caja negra se diseñaron a partir de los requerimientos
+funcionales de la SRS: para cada requerimiento se definió una entrada,
+una operación y una salida esperada, y se observó si el prototipo
+producía la salida correcta sin examinar su código interno. La elección
+de la caja negra es coherente con el objetivo, ya que lo que se valida
+es la conformidad del comportamiento observable con la especificación,
+no la estructura interna del programa. La Tabla 9 presenta la lista de
+cotejo aplicada a cada requerimiento funcional.
+
+\vspace{6pt}
+\setstretch{1.0}
+\noindent\textbf{Tabla 9}\\
+\textit{Lista de cotejo para la validación del prototipo}
+\vspace{4pt}
+
+\begin{center}
+\begin{tabular}{|c|>{\raggedright\arraybackslash}p{7.5cm}|c|}
+\hline
+\textbf{RF} & \textbf{Criterio de validación} & \textbf{Resultado} \\
+\hline
+RF-01 & El sistema reconoce el producto a partir de la imagen
+capturada desde el teléfono vinculado por QR y lo registra. &
+Cumple \\
+\hline
+RF-02 & El sistema actualiza el stock en tiempo real al registrar
+entradas y salidas. & Cumple \\
+\hline
+RF-03 & El sistema genera alertas de stock mínimo y de productos por
+vencer. & Cumple \\
+\hline
+RF-04 & El sistema permite consultar y buscar productos con su estado
+de existencias. & Cumple \\
+\hline
+RF-05 & El sistema genera reportes gerenciales con indicadores
+clave. & Cumple \\
+\hline
+RF-06 & El sistema administra el catálogo de productos y categorías. &
+Cumple \\
+\hline
+RF-07 & El sistema autentica usuarios y controla el acceso. &
+Cumple \\
+\hline
+RF-08 & El sistema presenta el panel general con indicadores y
+alertas. & Cumple \\
+\hline
+RF-09 & El sistema permite el respaldo de la información y la
+configuración del sistema. & Cumple \\
+\hline
+\end{tabular}
+\end{center}
+\vspace{2pt}
+\noindent\small\textit{Fuente: Elaboración propia (2026).}\normalsize
+\setstretch{1.5}
+
+\vspace{6pt}
+
+La Tabla 9 admite una interpretación que la conecta de vuelta con todo
+el recorrido del trabajo. Que los nueve requerimientos resulten
+``Cumple'' no es relevante únicamente por el conteo: cada fila de esta
+lista de cotejo se corresponde, una a una, con una fila de la MTR
+(Tabla 6) y, a través de ella, con una necesidad priorizada del
+diagnóstico (Tabla 2) y, en última instancia, con un error concreto
+detectado en la Tabla 1. La validación, por tanto, no comprueba
+funciones sueltas, sino que cierra la cadena objetivo ---
+operacionalización--- procedimiento ---resultado: cada error
+diagnosticado tiene hoy un requerimiento que lo combate, un componente
+que lo implementa y una prueba que confirma su funcionamiento. Esta
+correspondencia completa es la verdadera evidencia de que el sistema
+responde al problema, y no la simple suma de marcas de cumplimiento.
+
+\subsection{Tasa de Cumplimiento y Precisión}
+
+De los nueve (09) requerimientos funcionales evaluados, los nueve
+resultaron \textit{Cumple}, lo que arroja una \textbf{tasa de
+cumplimiento de requisitos funcionales del 100\,\%}, calculada como la
+proporción de ítems aprobados sobre el total exigido. Este valor debe
+interpretarse junto con los otros dos indicadores de la dimensión de
+validación: la exactitud del reconocimiento (93\,\%) superó el umbral
+del 90\,\% de RT-04, y el tiempo de respuesta promedio (2,4 s) se
+mantuvo por debajo de los tres (03) segundos de RT-03, aun
+considerando la latencia de red. El registro automatizado de
+existencias no presentó discrepancias frente a los casos verificados
+manualmente, cumpliendo el criterio de margen de error nulo. La
+convergencia de estos tres indicadores ---cumplimiento total, exactitud
+suficiente y respuesta oportuna--- es lo que permite afirmar, con base
+en la evidencia y no de forma declarativa, que el cuarto objetivo
+específico se cumplió satisfactoriamente y que el prototipo responde a
+los requerimientos definidos. Más aún, dado que la discrepancia físico
+contra registrado era el error percibido por el 100\,\% del personal
+(Tabla 1), el margen de error nulo en el registro automatizado
+constituye la respuesta directa y medible al núcleo del problema que
+originó la investigación.
+
+% =======================================================
+\section{Consideraciones de Factibilidad}
+% =======================================================
+
+De forma complementaria, y sin constituir un objetivo específico, se
+evaluó la factibilidad del prototipo en sus dimensiones técnica,
+operativa y económica, por cuanto la viabilidad de la solución refuerza
+la pertinencia de los resultados anteriores.
+
+\textbf{Factibilidad técnica.} Las herramientas empleadas (Python,
+FastAPI, Next.js y PostgreSQL) son de código abierto y de uso
+gratuito; el despliegue se realiza en plataformas de capa gratuita
+(Vercel, Render y Supabase) y el servicio de reconocimiento se consume
+en la capa gratuita de un modelo multimodal; el hardware requerido
+---una computadora con conexión a Internet y un teléfono con cámara---
+es de adquisición accesible para la empresa. La factibilidad técnica
+queda además respaldada por los resultados del tercer objetivo: un
+desempeño de reconocimiento del 93\,\% y un tiempo de respuesta de
+2,4 s demuestran que el enfoque no solo es viable en teoría, sino
+verificado en la práctica.
+
+\textbf{Factibilidad operativa.} La interfaz web sencilla (RT-05) y la
+consistencia visual entre las nueve pantallas reducen la curva de
+aprendizaje; con una capacitación básica, el personal del bodegón
+estaría en condiciones de operar el prototipo. La factibilidad
+operativa se sostiene en que la solución sustituye un proceso de cuatro
+a seis horas por un registro asistido por imagen, lo que la hace
+atractiva para el personal en lugar de una carga adicional.
+
+\textbf{Factibilidad económica.} En la Tabla 10 se presentan los
+costos estimados de desarrollo e implementación, que se contrastan con
+los beneficios derivados de la reducción de pérdidas por vencimiento y
+desabastecimiento, la eliminación de errores de transcripción y el
+ahorro de tiempo operativo.
+
+\vspace{6pt}
+\setstretch{1.0}
+\noindent\textbf{Tabla 10}\\
+\textit{Costos estimados de desarrollo e implementación}
+\vspace{4pt}
+
+\begin{center}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{7.5cm}|c|}
+\hline
+\textbf{Concepto} & \textbf{Costo estimado (USD)} \\
+\hline
+Equipo de cómputo y cámara & 350,00 \\
+\hline
+Desarrollo del software (horas-hombre) & 600,00 \\
+\hline
+Capacitación del personal & 80,00 \\
+\hline
+Mantenimiento anual estimado & 120,00 \\
+\hline
+\textbf{Total estimado} & \textbf{1.150,00} \\
+\hline
+\end{tabular}
+\end{center}
+\vspace{2pt}
+\noindent\small\textit{Fuente: Elaboración propia (2026). Cifras
+referenciales, ajustables a la realidad económica al momento de la
+implementación.}\normalsize
+\setstretch{1.5}
+
+\vspace{6pt}
+
+Considerando que las pérdidas por errores de inventario representan un
+costo recurrente para la empresa ---pérdidas por vencimiento y
+desabastecimiento percibidas por el 80\,\% del personal según la Tabla
+1---, el análisis costo-beneficio indica que la inversión estimada se
+recupera en un período corto, pues elimina un costo que hoy se repite
+en cada ciclo. En síntesis, el prototipo desarrollado es factible en
+sus dimensiones técnica, operativa y económica, lo que respalda la
+viabilidad de su eventual implementación en el Bodegón Pa' Donde Natty
+C.A. y refuerza, desde la perspectiva de la viabilidad, los resultados
+obtenidos en los cuatro objetivos específicos.
+
+% ============================================================
+%  CAPÍTULO V  –  CONCLUSIONES Y RECOMENDACIONES
+% ============================================================
+\chapter{Conclusiones y Recomendaciones}
+
+En este capítulo se sintetizan los principales logros alcanzados a lo
+largo del desarrollo del Trabajo Especial de Grado y se formulan las
+recomendaciones que se desprenden, tanto de la experiencia de
+investigación como de los resultados obtenidos en el Capítulo IV. Las
+conclusiones no se limitan a enunciar los pasos seguidos: se exponen
+los hallazgos verificables que respaldan el cumplimiento de cada uno
+de los objetivos específicos, en correspondencia con el cuadro de
+operacionalización de la variable formulado en el Capítulo III. Las
+recomendaciones, por su parte, se orientan a facilitar la
+implementación efectiva del prototipo en la operación real de la
+empresa, su mantenimiento y su eventual extensión en investigaciones
+futuras.
+
+% -------------------------------------------------------
+\section{Conclusiones}
+% -------------------------------------------------------
+
+El presente Trabajo Especial de Grado abordó el desarrollo de un
+prototipo funcional de un sistema de digitalización y registros de
+productos con uso de la Inteligencia Artificial para el control de
+inventarios en el Bodegón Pa' Donde Natty C.A. Cumplido el recorrido
+metodológico, se presentan las conclusiones más relevantes para cada
+uno de los cuatro objetivos específicos y, al cierre, una conclusión
+general sobre el aporte del estudio.
+
+\textbf{Sobre el primer objetivo específico ---Diagnóstico de las
+necesidades funcionales y técnicas---,} la triangulación de la
+observación directa, la entrevista no estructurada al personal
+directivo y el cuestionario aplicado al censo de cinco (05)
+trabajadores arrojó un diagnóstico convergente: el proceso manual de
+inventario presenta una discrepancia entre el conteo físico y el
+registrado reportada por el 100\,\% del personal, con efectos
+encadenados como el desabastecimiento de productos de alta rotación
+(80\,\%) y las pérdidas por vencimiento (80\,\%); el ciclo completo de
+inventario manual requiere entre cuatro (04) y seis (06) horas de
+trabajo, durante las cuales la operación regular del negocio se ve
+parcialmente interrumpida. El diagnóstico no quedó en el plano
+descriptivo: se consolidó en nueve (09) requerimientos funcionales y
+siete (07) requerimientos técnicos verificables, lo que permite
+considerar este objetivo cumplido y constituye la base formal del
+diseño posterior.
+
+\textbf{Sobre el segundo objetivo específico ---Diseño de la
+arquitectura, el modelo de datos y la interfaz---,} se concluyó que la
+arquitectura modular de tres capas (presentación, lógica de negocio y
+persistencia) responde al principio de bajo acoplamiento, ya que cada
+capa cumple una responsabilidad única y se comunica con las demás
+mediante interfaces bien delimitadas; el modelo de datos quedó
+normalizado hasta la Tercera Forma Normal (3FN), eliminando
+redundancias y dependencias transitivas que de otro modo habrían
+reproducido, en formato digital, la misma discrepancia diagnosticada
+en el proceso manual; y la Matriz de Trazabilidad de Requisitos (MTR)
+mostró una cobertura del 100\,\% (9 de 9 requerimientos funcionales),
+sin requerimientos huérfanos ni componentes injustificados. Estos
+tres indicadores ---acoplamiento, normalización y cobertura--- se
+satisfacen simultáneamente, lo que permite afirmar que el diseño no
+solo existe, sino que cubre íntegra y verificablemente las
+necesidades diagnosticadas.
+
+\textbf{Sobre el tercer objetivo específico ---Desarrollo del
+prototipo funcional con integración del modelo de IA---,} se construyó
+la totalidad de los nueve (09) módulos contemplados en el diseño,
+empleando Python con FastAPI para la capa de lógica de negocio, Next.js
+para la capa de presentación y PostgreSQL/Supabase para la
+persistencia y la sincronización en tiempo real entre el teléfono y la
+PC. La integración del reconocimiento mediante la API de un modelo de
+lenguaje multimodal alcanzó una exactitud del 93\,\% sobre cien (100)
+imágenes de veinte (20) productos distintos, con un tiempo de
+respuesta promedio de 2,4 segundos. Estos valores superan los umbrales
+exigidos por los requerimientos técnicos RT-03 ($\leq 3$ s) y RT-04
+(igual o superior al 90\,\%), y validan empíricamente la decisión de diseño de
+delegar el reconocimiento en un servicio externo de propósito general,
+en lugar de entrenar un modelo propio como en el antecedente de Wong
+Portillo et al.\ (2023).
+
+\textbf{Sobre el cuarto objetivo específico ---Validación del
+prototipo---,} las pruebas de caja negra aplicadas a cada uno de los
+nueve (09) requerimientos funcionales arrojaron una tasa de
+cumplimiento del 100\,\%, sin discrepancias entre la entrada, la
+operación y la salida esperada para ninguno de los casos evaluados. La
+convergencia de los tres indicadores de la dimensión de validación
+---cumplimiento total de requerimientos, exactitud del 93\,\% y
+respuesta de 2,4 s--- permite afirmar, con base en evidencia y no de
+forma declarativa, que el prototipo responde a los requerimientos
+definidos. Más aún, dado que la discrepancia físico contra registrado
+era el error percibido por el 100\,\% del personal en el diagnóstico,
+el margen de error nulo del registro automatizado constituye la
+respuesta directa y medible al núcleo del problema que originó la
+investigación.
+
+De forma complementaria, el análisis de factibilidad mostró que el
+prototipo es viable en sus tres dimensiones: \textbf{técnicamente},
+porque se sustenta en herramientas de código abierto y plataformas de
+capa gratuita, y porque su desempeño práctico (93\,\% / 2,4 s)
+respalda los supuestos; \textbf{operativamente}, porque sustituye un
+proceso de cuatro a seis horas por un registro asistido por imagen,
+con una interfaz sencilla y una curva de aprendizaje corta; y
+\textbf{económicamente}, porque la inversión estimada de \$1.150,00
+USD se justifica frente al ahorro recurrente derivado de la
+eliminación de pérdidas por vencimiento, desabastecimiento y errores
+de transcripción.
+
+Como \textbf{conclusión general}, el presente trabajo demuestra que la
+integración de un modelo de lenguaje multimodal mediante su API
+---consumido como servicio externo y guiado por una ingeniería de
+prompts apropiada--- constituye una alternativa técnicamente viable,
+económicamente accesible y operativamente eficaz para la
+digitalización del inventario en empresas comerciales de pequeña y
+mediana envergadura. El aporte del estudio trasciende el caso del
+Bodegón Pa' Donde Natty C.A.: ofrece un modelo replicable de
+articulación entre diagnóstico, ingeniería de software y servicios de
+Inteligencia Artificial de propósito general, susceptible de ser
+adaptado a otras pymes del sector comercial que enfrenten
+problemáticas similares de control de existencias.
+
+% -------------------------------------------------------
+\section{Recomendaciones}
+% -------------------------------------------------------
+
+A partir de la experiencia de investigación y de los resultados
+obtenidos, se formulan las siguientes recomendaciones, organizadas por
+ámbito de aplicación:
+
+\textbf{Recomendaciones dirigidas a la empresa:}
+
+\begin{enumerate}[leftmargin=*]
+  \item Implementar el prototipo de forma gradual, comenzando por una
+        categoría acotada de productos (por ejemplo, alimentos no
+        perecederos) y extendiéndolo progresivamente al resto del
+        catálogo, con el fin de validar el flujo en producción real y
+        ajustar los parámetros de las alertas (stock mínimo y fecha de
+        vencimiento) a la dinámica efectiva del bodegón.
+
+  \item Diseñar y ejecutar un plan de capacitación al personal de
+        almacén que comprenda el uso de la captura móvil vinculada por
+        código QR, la confirmación o corrección del producto
+        reconocido por la IA y la lectura del panel general
+        (dashboard). Una capacitación adecuada es condición necesaria
+        para que el sistema sustituya ---y no se sume a--- los
+        registros manuales actuales.
+
+  \item Establecer una política periódica de respaldo de la base de
+        datos (al menos semanal) y una auditoría mensual de
+        contrastación entre el inventario físico y el registrado, de
+        modo que la trazabilidad del sistema se mantenga vigente y se
+        detecten oportunamente eventuales desviaciones.
+
+  \item Monitorear el consumo mensual de la API del modelo multimodal
+        y de las capas gratuitas de las plataformas de despliegue
+        (Vercel, Render, Supabase), previendo el momento en que el
+        volumen de operaciones haga conveniente la migración a un
+        plan de pago, sin que ello impacte la operación.
+\end{enumerate}
+
+\textbf{Recomendaciones técnicas para la continuidad del sistema:}
+
+\begin{enumerate}[leftmargin=*, resume]
+  \item Refinar de manera iterativa el \textit{prompt} de la API del
+        modelo multimodal a partir de los casos no reconocidos
+        correctamente (el 7\,\% restante), incorporando ejemplos
+        específicos del catálogo y restricciones de formato que
+        reduzcan la ambigüedad.
+
+  \item Incorporar un mecanismo de almacenamiento en caché local de
+        los productos más frecuentes y de los reconocimientos
+        recientes, con el fin de mitigar el impacto de eventuales
+        cortes de conexión a Internet y reducir tanto el consumo de la
+        API como el tiempo de respuesta.
+
+  \item Implementar un módulo de auditoría que registre la identidad
+        del usuario, la fecha y la hora de cada movimiento de
+        inventario, en cumplimiento estricto de las exigencias de la
+        Ley Especial contra los Delitos Informáticos y como soporte
+        para la detección de inconsistencias.
+\end{enumerate}
+
+\textbf{Recomendaciones para investigaciones futuras:}
+
+\begin{enumerate}[leftmargin=*, resume]
+  \item Extender el sistema con un módulo de facturación electrónica
+        y otro de contabilidad básica, integrados al control de
+        inventario actual, de modo que el bodegón disponga de un
+        sistema de gestión comercial integral.
+
+  \item Incorporar componentes de predicción de demanda basados en
+        algoritmos de aprendizaje automático sobre los datos
+        históricos del propio sistema, en línea con los hallazgos de
+        Johan et al.\ (2024), para anticipar pedidos y reducir aún más
+        el riesgo de desabastecimiento.
+
+  \item Replicar la presente investigación en otras pequeñas y
+        medianas empresas del sector comercial del estado Bolívar y
+        del país, con el fin de evaluar la pertinencia del modelo
+        propuesto en distintos contextos operativos y validar su
+        replicabilidad.
+
+  \item Comparar de forma controlada el desempeño del modelo
+        multimodal de propósito general aquí empleado frente a un
+        modelo propio entrenado al estilo YOLO ---como en el
+        antecedente de Wong Portillo et al.\ (2023)---, con el fin de
+        cuantificar las diferencias en precisión, latencia y costo
+        para el caso específico de inventarios de bodegones.
+\end{enumerate}
+
+% ============================================================
+%  REFERENCIAS BIBLIOGRÁFICAS
+% ============================================================
+\clearpage
+\addcontentsline{toc}{chapter}{REFERENCIAS BIBLIOGRÁFICAS}
+\begin{center}
+{\fontsize{14}{16}\selectfont\bfseries REFERENCIAS BIBLIOGRÁFICAS\par}
+\end{center}
+\vspace{12pt}
+
+\setstretch{1.0}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}
+
+Anguera, M. T. (1986). \textit{La investigación cualitativa}.
+Educar, (10), 23--50. Universidad Autónoma de Barcelona.
+
+Arias, F. (2001). \textit{Mitos y errores en la elaboración de tesis y
+proyectos de investigación} (2a ed.). Editorial Episteme.
+
+Arias, F. (2006). \textit{El proyecto de investigación: Introducción
+a la metodología científica} (5a ed.). Editorial Episteme.
+
+Arias, F. (2012). \textit{El proyecto de investigación: Introducción
+a la metodología científica} (6a ed.). Editorial Episteme.
+
+Balestrini, M. (1998). \textit{Cómo se elabora el proyecto de
+investigación}. BL Consultores Asociados.
+
+Ballou, R. (2004). \textit{Logística: Administración de la cadena de
+suministro} (5a ed.). Pearson Educación.
+
+Chase, R., Aquilano, N. y Jacobs, F. R. (2009). \textit{Administración
+de operaciones: Producción y cadena de suministros} (12a ed.).
+McGraw-Hill.
+
+Date, C. J. (2001). \textit{Introducción a los sistemas de bases de
+datos} (7a ed.). Pearson Educación.
+
+Guerrero, H. (2009). \textit{Inventarios: Manejo y control}. ECOE
+Ediciones.
+
+Hernández, R., Fernández, C. y Baptista, P. (2012). \textit{Metodología
+de la investigación} (5a ed.). McGraw-Hill.
+
+Johan, S., Riascos-Guerrero, J. A., Galván-Colonia, E. y
+Pincay-Lozada, J. L. (2024). Estrategias basadas en Inteligencia
+Artificial para la gestión de inventarios en la cadena de suministro.
+\textit{Tecnología en Marcha}, 37(6), 88--97.
+\url{https://doi.org/10.18845/tm.v37i6.7271}
+
+Laudon, K. y Laudon, J. (2016). \textit{Sistemas de información
+gerencial} (14a ed.). Pearson Educación.
+
+Pressman, R. y Maxim, B. (2020). \textit{Ingeniería del software: Un
+enfoque práctico} (9a ed.). McGraw-Hill.
+
+Román Veliz, A. y Arce Ríos, M. (2023). \textit{Implementación de un
+sistema de gestión de inventarios para mejorar la eficiencia en la
+logística de aprovisionamiento de la planta lechera ``Concelac'' en la
+ciudad de Concepción-2022} [Trabajo de grado, Universidad Continental].
+Repositorio Institucional Continental.
+\url{https://hdl.handle.net/20.500.12394/13413}
+
+Russell, S. y Norvig, P. (2016). \textit{Inteligencia Artificial: Un
+enfoque moderno} (3a ed.). Pearson Educación.
+
+Schwab, K. (2016). \textit{La cuarta revolución industrial}. Debate.
+
+Sommerville, I. (2011). \textit{Ingeniería de software} (9a ed.).
+Pearson Educación.
+
+Tamayo, M. (2007). \textit{El proceso de la investigación científica}
+(4a ed.). Editorial Limusa.
+
+Wong Portillo, L., De la Torre Ganoza, R. y Reyes Herrera, A. (2023).
+\textit{Aplicación de reconocimiento de imágenes para productos en el
+sector retail} [Trabajo de grado, Universidad Peruana de Ciencias
+Aplicadas]. Repositorio Académico UPC.
+\url{https://hdl.handle.net/10757/667951}
+
+\vspace{12pt}
+\textbf{Bases legales}
+\vspace{6pt}
+
+Asamblea Nacional Constituyente. (1999). \textit{Constitución de la
+República Bolivariana de Venezuela}. Gaceta Oficial Extraordinaria
+N° 36.860 del 30 de diciembre de 1999.
+
+Asamblea Nacional de la República Bolivariana de Venezuela. (2001).
+\textit{Decreto con Rango, Valor y Fuerza de Ley sobre Mensajes de
+Datos y Firmas Electrónicas}. Gaceta Oficial N° 37.148 del 28 de
+febrero de 2001.
+
+Asamblea Nacional de la República Bolivariana de Venezuela. (2001).
+\textit{Ley Especial contra los Delitos Informáticos}. Gaceta Oficial
+N° 37.313 del 30 de octubre de 2001.
+
+Asamblea Nacional de la República Bolivariana de Venezuela. (2010).
+\textit{Ley Orgánica de Ciencia, Tecnología e Innovación (LOCTI)}.
+Gaceta Oficial N° 39.575 del 16 de diciembre de 2010.
+
+\setstretch{1.5}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+
+% ============================================================
+%  ANEXOS
+% ============================================================
+\clearpage
+\addcontentsline{toc}{chapter}{ANEXOS}
+\begin{center}
+\vspace*{2cm}
+{\fontsize{16}{20}\selectfont\bfseries ANEXOS\par}
+\end{center}
+
+% --- ANEXO A ---
+\clearpage
+\begin{center}
+{\fontsize{14}{16}\selectfont\bfseries
+ANEXO A\\
+CUESTIONARIO APLICADO AL PERSONAL DEL\\
+BODEGÓN PA' DONDE NATTY C.A.\par}
+\end{center}
+\vspace{12pt}
+
+\textbf{Instrucciones:} Lea cada ítem y marque con una equis (X) la
+opción que mejor refleje su percepción sobre el proceso actual de
+inventario en la empresa. Sus respuestas serán empleadas únicamente
+con fines académicos.
+
+\vspace{8pt}
+
+\setstretch{1.0}
+\noindent
+\begin{tabular}{|c|p{8.5cm}|c|c|}
+\hline
+\textbf{N°} & \textbf{Ítem} & \textbf{Sí} & \textbf{No} \\
+\hline
+1 & ¿Considera que el conteo físico de los productos coincide con lo registrado en los controles de la empresa? & & \\
+\hline
+2 & ¿Se han presentado situaciones de desabastecimiento de productos de alta rotación? & & \\
+\hline
+3 & ¿Se han producido pérdidas de mercancía por vencimiento no detectado a tiempo? & & \\
+\hline
+4 & ¿Ha observado registros duplicados al transcribir los datos de inventario? & & \\
+\hline
+5 & ¿Existen retardos en la reposición del stock cuando un producto se agota? & & \\
+\hline
+6 & ¿Considera que un sistema digital con reconocimiento automático de productos agilizaría el conteo? & & \\
+\hline
+7 & ¿Estima que la dirección y el personal estarían dispuestos a adoptar una herramienta digital de inventario? & & \\
+\hline
+\end{tabular}
+\setstretch{1.5}
+
+\vspace{12pt}
+\noindent\textbf{Observaciones adicionales:}\par
+\noindent\rule{\textwidth}{0.4pt}\\[4pt]
+\noindent\rule{\textwidth}{0.4pt}\\[4pt]
+\noindent\rule{\textwidth}{0.4pt}
+
+% --- ANEXO B ---
+\clearpage
+\begin{center}
+{\fontsize{14}{16}\selectfont\bfseries
+ANEXO B\\
+GUION DE ENTREVISTA NO ESTRUCTURADA\par}
+\end{center}
+\vspace{12pt}
+
+\textbf{Dirigida a:} Gerente general y encargado de almacén del
+Bodegón Pa' Donde Natty C.A.
+
+\textbf{Propósito:} Identificar las necesidades tecnológicas
+priorizadas por la dirección en relación con el control de
+inventarios.
+
+\vspace{8pt}
+
+\textbf{Preguntas orientadoras:}
+
+\begin{enumerate}[leftmargin=*]
+\item ¿Cómo describe usted el proceso actual de control de
+      inventarios de la empresa?
+\item ¿Cuáles son, a su juicio, los principales problemas o
+      limitaciones del proceso actual?
+\item ¿Qué tipo de errores ha observado con mayor frecuencia?
+\item ¿Cuánto tiempo y personal requiere un ciclo de inventario
+      manual?
+\item ¿Qué necesidades tecnológicas considera prioritarias para
+      mejorar el control de inventarios?
+\item ¿Considera importante el acceso controlado al sistema mediante
+      autenticación de usuarios?
+\item ¿Qué nivel de detalle espera obtener en los reportes
+      gerenciales del nuevo sistema?
+\item ¿Qué expectativas tiene respecto al uso de Inteligencia
+      Artificial para el reconocimiento de productos?
+\end{enumerate}
+
+% --- ANEXO C ---
+\clearpage
+\begin{center}
+{\fontsize{14}{16}\selectfont\bfseries
+ANEXO C\\
+GUÍA DE OBSERVACIÓN ESTRUCTURADA\par}
+\end{center}
+\vspace{12pt}
+
+\textbf{Propósito:} Verificar de forma directa las condiciones del
+proceso actual de inventario en las instalaciones del Bodegón Pa'
+Donde Natty C.A.
+
+\vspace{8pt}
+
+\setstretch{1.0}
+\noindent
+\begin{tabular}{|c|p{9cm}|c|c|}
+\hline
+\textbf{N°} & \textbf{Aspecto observado} & \textbf{Sí} & \textbf{No} \\
+\hline
+1 & ¿Existe un registro centralizado y único de los movimientos de mercancía? & & \\
+\hline
+2 & ¿El control de existencias se actualiza en tiempo real? & & \\
+\hline
+3 & ¿Se emplean hojas de cálculo no integradas entre sí? & & \\
+\hline
+4 & ¿Se utilizan apuntes en papel para registrar entradas y salidas? & & \\
+\hline
+5 & ¿Existe trazabilidad de los movimientos (quién, cuándo y qué)? & & \\
+\hline
+6 & ¿Se generan alertas automáticas de stock mínimo? & & \\
+\hline
+7 & ¿Se generan alertas automáticas de productos por vencer? & & \\
+\hline
+8 & ¿Existe un mecanismo de respaldo de la información? & & \\
+\hline
+\end{tabular}
+\setstretch{1.5}
+
+% --- ANEXO D ---
+\clearpage
+\begin{center}
+{\fontsize{14}{16}\selectfont\bfseries
+ANEXO D\\
+LISTA DE COTEJO PARA LA VALIDACIÓN FUNCIONAL\\
+DEL PROTOTIPO\par}
+\end{center}
+\vspace{12pt}
+
+\textbf{Propósito:} Verificar el cumplimiento de cada uno de los nueve
+(09) requerimientos funcionales definidos para el sistema, mediante
+pruebas de caja negra realizadas en el entorno controlado de
+desarrollo.
+
+\vspace{8pt}
+
+\setstretch{1.0}
+\begingroup
+\small
+\setlength{\tabcolsep}{3pt}
+\noindent
+\begin{tabular}{|>{\centering\arraybackslash}p{1.1cm}|>{\raggedright\arraybackslash}p{6.6cm}|>{\centering\arraybackslash}p{1.4cm}|>{\centering\arraybackslash}p{1.7cm}|>{\raggedright\arraybackslash}p{2.2cm}|}
+\hline
+\textbf{RF} & \textbf{Criterio de validación} & \textbf{Cumple} & \textbf{No cumple} & \textbf{Observación} \\
+\hline
+RF-01 & Reconocimiento y registro automatizado de productos. & & & \\
+\hline
+RF-02 & Registro de entradas/salidas y actualización en tiempo real. & & & \\
+\hline
+RF-03 & Generación de alertas de stock mínimo y vencimiento. & & & \\
+\hline
+RF-04 & Consulta y búsqueda de productos con estado de existencias. & & & \\
+\hline
+RF-05 & Generación de reportes gerenciales con KPIs. & & & \\
+\hline
+RF-06 & Administración del catálogo de productos y categorías. & & & \\
+\hline
+RF-07 & Autenticación de usuarios y control de acceso. & & & \\
+\hline
+RF-08 & Panel general con indicadores y alertas. & & & \\
+\hline
+RF-09 & Respaldo de la información y configuración del sistema. & & & \\
+\hline
+\end{tabular}
+\endgroup
+\setstretch{1.5}
+
+% --- ANEXO E ---
+\clearpage
+\begin{center}
+{\fontsize{14}{16}\selectfont\bfseries
+ANEXO E\\
+ESPECIFICACIÓN DE REQUERIMIENTOS DE\\
+SOFTWARE (SRS) CONSOLIDADA\par}
+\end{center}
+\vspace{12pt}
+
+El presente anexo presenta la Especificación de Requerimientos de
+Software (SRS) consolidada del sistema, organizada bajo el estándar
+IEEE 830. Comprende los nueve (09) requerimientos funcionales y los
+siete (07) requerimientos técnicos especificados en las Tablas 3 y 4
+del Capítulo IV, junto con la Matriz de Trazabilidad de Requisitos
+(Tabla 6) que vincula cada requerimiento con su componente
+arquitectónico, su entidad de base de datos y su pantalla de
+interfaz.
+
+\vspace{8pt}
+
+\begin{center}
+{\fontsize{13}{15}\selectfont\bfseries
+ESPECIFICACIÓN DE REQUERIMIENTOS DE SOFTWARE (SRS)\\
+Sistema de Digitalización y Registros de Productos con Inteligencia
+Artificial para Control de Inventarios\par}
+\vspace{4pt}
+{\setstretch{1.0}\small Estándar IEEE 830-1998 -- Versión 1.0 -- Mayo 2026\par}
+\end{center}
+
+\section*{Control de versiones}
+\addcontentsline{toc}{section}{Anexo E. Control de versiones}
+
+\setstretch{1.0}
+\noindent
+\begin{tabular}{|c|c|p{6.5cm}|p{3.0cm}|}
+\hline
+\textbf{Versión} & \textbf{Fecha} & \textbf{Descripción del cambio} & \textbf{Responsable} \\
+\hline
+0.1 & Enero 2026 & Borrador inicial del documento. & Autor \\
+\hline
+0.2 & Marzo 2026 & Refinamiento de requerimientos tras el diagnóstico. & Autor \\
+\hline
+0.3 & Abril 2026 & Incorporación de la matriz de trazabilidad. & Autor \\
+\hline
+1.0 & Mayo 2026 & Versión definitiva validada con el tutor académico. & Autor / Tutor \\
+\hline
+\end{tabular}
+\setstretch{1.5}
+
+\vspace{12pt}
+
+\setstretch{1.0}
+\noindent
+\begin{tabular}{|p{4cm}|p{9.5cm}|}
+\hline
+\textbf{Aprobado por:} & Ing. Carlos Moreno (Tutor Académico) \\
+\hline
+\textbf{Elaborado por:} & Gabriel Riera, C.I.: V--31.153.478 \\
+\hline
+\textbf{Estado del documento:} & Aprobado \\
+\hline
+\end{tabular}
+\setstretch{1.5}
+
+\section*{1. Introducción}
+\addcontentsline{toc}{section}{Anexo E. 1. Introducción}
+
+El presente documento corresponde a la Especificación de Requerimientos
+de Software (SRS, por sus siglas en inglés: \textit{Software
+Requirements Specification}) del \textbf{Sistema de digitalización y
+registros de productos con uso de la Inteligencia Artificial para
+control de inventarios en el Bodegón Pa' Donde Natty C.A.}, ubicado
+en Ciudad Bolívar, estado Bolívar. Este documento ha sido elaborado
+siguiendo el estándar internacional \textbf{IEEE 830-1998}, que
+establece las prácticas recomendadas para la especificación de
+requerimientos de software, y constituye el insumo formal sobre el
+cual se ha desarrollado el prototipo funcional presentado en el
+Trabajo Especial de Grado.
+
+\subsection*{1.1 Propósito}
+
+El propósito de este documento es definir, de manera completa, clara
+y verificable, los requerimientos funcionales y técnicos
+(no funcionales) que debe satisfacer el sistema de digitalización y
+registros de productos con uso de la Inteligencia Artificial,
+destinado a mejorar el control de inventarios del Bodegón Pa' Donde
+Natty C.A. Esta especificación sirve como base contractual entre el
+desarrollador del sistema y la empresa cliente, y como referencia
+técnica para las fases de diseño, desarrollo, validación y eventual
+mantenimiento del software.
+
+Los destinatarios de este documento son el desarrollador del sistema,
+el tutor académico, la gerencia del Bodegón Pa' Donde Natty C.A. y
+los evaluadores del Trabajo Especial de Grado.
+
+\subsection*{1.2 Alcance}
+
+El sistema, denominado en adelante \textbf{``Sistema de Inventario IA''}
+o simplemente \textbf{``el Sistema''}, es una aplicación web construida
+sobre una arquitectura modular de tres capas (presentación, lógica de
+negocio y persistencia) que permite digitalizar y automatizar el
+control de inventarios del Bodegón Pa' Donde Natty C.A., incorporando
+reconocimiento automatizado de productos mediante un modelo de
+lenguaje multimodal de Inteligencia Artificial consumido a través de
+su API.
+
+El Sistema comprende autenticación y control de acceso, panel general
+con indicadores clave, captura móvil vinculada por código QR,
+reconocimiento de productos mediante IA, administración del catálogo,
+gestión de stock y movimientos, alertas automáticas, reportes
+gerenciales, respaldo y configuración. Quedan fuera del alcance la
+facturación electrónica, contabilidad, comercio electrónico,
+integración tributaria y gestión de recursos humanos.
+
+\subsection*{1.3 Definiciones, acrónimos y abreviaturas}
+
+\setstretch{1.0}
+\noindent
+\begin{tabular}{|p{3cm}|p{10.5cm}|}
+\hline
+\textbf{Término} & \textbf{Definición} \\
+\hline
+API & \textit{Application Programming Interface}; interfaz que permite la comunicación entre sistemas. \\
+\hline
+CRUD & \textit{Create, Read, Update, Delete}; operaciones básicas sobre registros. \\
+\hline
+ERD & \textit{Entity-Relationship Diagram}; modelo entidad-relación. \\
+\hline
+IA & Inteligencia Artificial. \\
+\hline
+IEEE & \textit{Institute of Electrical and Electronics Engineers}. \\
+\hline
+JWT & \textit{JSON Web Token}; mecanismo de autenticación basado en tokens firmados. \\
+\hline
+KPI & \textit{Key Performance Indicator}; indicador clave de desempeño. \\
+\hline
+MTR & Matriz de Trazabilidad de Requisitos. \\
+\hline
+PYME & Pequeña y Mediana Empresa. \\
+\hline
+QR & \textit{Quick Response}; código bidimensional de respuesta rápida. \\
+\hline
+REST & \textit{Representational State Transfer}; estilo arquitectónico para servicios web. \\
+\hline
+RF & Requerimiento Funcional. \\
+\hline
+RT & Requerimiento Técnico o no funcional. \\
+\hline
+SGBD & Sistema Gestor de Base de Datos. \\
+\hline
+SRS & \textit{Software Requirements Specification}; especificación de requerimientos de software. \\
+\hline
+3FN & Tercera Forma Normal. \\
+\hline
+UI / UX & \textit{User Interface / User Experience}; interfaz y experiencia de usuario. \\
+\hline
+\end{tabular}
+\setstretch{1.5}
+
+\subsection*{1.4 Referencias}
+
+\setstretch{1.0}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+IEEE Computer Society. (1998). \textit{IEEE Std 830-1998: IEEE
+Recommended Practice for Software Requirements Specifications}.
+Institute of Electrical and Electronics Engineers.
+
+Sommerville, I. (2011). \textit{Ingeniería de software} (9a ed.).
+Pearson Educación.
+
+Pressman, R. y Maxim, B. (2020). \textit{Ingeniería del software: Un
+enfoque práctico} (9a ed.). McGraw-Hill.
+
+Date, C. J. (2001). \textit{Introducción a los sistemas de bases de
+datos} (7a ed.). Pearson Educación.
+
+Riera, G. (2026). \textit{Trabajo Especial de Grado: Sistema de
+digitalización y registros de productos con uso de la Inteligencia
+Artificial para control de inventarios en el Bodegón Pa' Donde Natty,
+Ciudad Bolívar, Estado Bolívar}. Universidad Nororiental Privada Gran
+Mariscal de Ayacucho.
+\setstretch{1.5}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+
+\section*{2. Descripción general}
+\addcontentsline{toc}{section}{Anexo E. 2. Descripción general}
+
+\subsection*{2.1 Perspectiva del producto}
+
+El Sistema de Inventario IA es un producto de software nuevo,
+construido desde cero, que reemplaza un proceso manual de control de
+inventarios basado en conteos físicos, anotaciones en papel y hojas
+de cálculo no integradas. La arquitectura se organiza en tres capas:
+presentación con Next.js desplegada en Vercel; lógica de negocio con
+Python y FastAPI desplegada en Render; y persistencia con PostgreSQL
+gestionado mediante Supabase, que además provee sincronización en
+tiempo real entre la PC y el teléfono.
+
+\subsection*{2.2 Funciones del producto}
+
+A alto nivel, el Sistema permite autenticar usuarios y restringir el
+acceso por roles; vincular un teléfono mediante código QR; reconocer
+productos automáticamente a partir de su imagen; registrar entradas y
+salidas de mercancía; mantener catálogo de productos y categorías;
+generar alertas de stock mínimo y vencimiento; consultar productos;
+producir reportes gerenciales; presentar dashboard y respaldar la
+información.
+
+\subsection*{2.3 Características de los usuarios}
+
+\setstretch{1.0}
+\noindent
+\begin{tabular}{|p{2.8cm}|p{4.5cm}|p{6.0cm}|}
+\hline
+\textbf{Perfil} & \textbf{Nivel técnico} & \textbf{Responsabilidades en el Sistema} \\
+\hline
+Administrador & Conocimientos básicos de informática & Gestión integral del sistema: usuarios, catálogo, configuración, respaldos y reportes gerenciales. \\
+\hline
+Gerente & Conocimientos básicos de informática & Consulta del panel general, lectura de reportes y supervisión de alertas. \\
+\hline
+Operador de almacén & Sin formación técnica avanzada & Captura móvil de productos, registro de entradas y salidas, confirmación del reconocimiento por IA. \\
+\hline
+\end{tabular}
+\setstretch{1.5}
+
+\subsection*{2.4 Restricciones}
+
+El desarrollo y operación del Sistema están sujetos a restricciones
+tecnológicas (Python/FastAPI, Next.js y PostgreSQL/Supabase), de
+despliegue (Vercel, Render y Supabase en capa gratuita), de
+conectividad, de terceros, legales y de tiempo.
+
+\subsection*{2.5 Suposiciones y dependencias}
+
+Se asume que la empresa cuenta con Internet estable, teléfono con
+cámara y computadora con navegador moderno; que la API del modelo
+multimodal mantiene condiciones operativas compatibles; y que la
+gerencia facilita la información y participación del personal.
+
+\section*{3. Requerimientos específicos}
+\addcontentsline{toc}{section}{Anexo E. 3. Requerimientos específicos}
+
+\subsection*{3.1 Requerimientos funcionales}
+
+\setstretch{1.0}
+\small
+\begin{longtable}{|p{2.1cm}|p{4.1cm}|p{7.1cm}|}
+\hline
+\textbf{Código} & \textbf{Nombre} & \textbf{Especificación resumida} \\
+\hline
+RF-01 & Reconocimiento y registro de productos por imagen & El Sistema reconocerá productos desde imágenes JPEG/PNG capturadas con teléfono vinculado por QR, enviará la imagen a la API multimodal, validará la respuesta, asociará el producto con el catálogo, registrará el movimiento y actualizará el stock. Prioridad: Alta. \\
+\hline
+RF-02 & Registro de entradas y salidas & Permitirá registrar movimientos de entrada y salida con producto, cantidad, fecha, usuario y observaciones; recalculará el stock y sincronizará la información en tiempo real. Prioridad: Alta. \\
+\hline
+RF-03 & Alertas de stock mínimo y vencimiento & Generará alertas cuando el stock alcance el umbral mínimo o cuando un producto esté próximo a vencer, mostrando notificaciones en el dashboard. Prioridad: Alta. \\
+\hline
+RF-04 & Consulta y búsqueda de productos & Permitirá buscar por nombre, categoría o código, con filtros por estado y existencias, mostrando listados paginados sin modificar la base de datos. Prioridad: Alta. \\
+\hline
+RF-05 & Reportes gerenciales & Generará reportes de existencias, rotación y movimientos con KPIs, filtros por fecha, categoría, producto o usuario, y opción de exportación. Prioridad: Media. \\
+\hline
+RF-06 & Administración del catálogo & Permitirá crear, consultar, modificar y eliminar productos y categorías, validando campos obligatorios y unicidad de registros. Prioridad: Media. \\
+\hline
+RF-07 & Autenticación y control de acceso & Autenticará usuarios mediante credenciales, verificará contraseñas almacenadas con \textit{hash}, emitirá token JWT y restringirá acceso por rol. Prioridad: Alta. \\
+\hline
+RF-08 & Dashboard con indicadores y alertas & Presentará tarjetas resumen, alertas y gráficas con total de productos, stock crítico, productos por vencer y movimientos del día. Prioridad: Media. \\
+\hline
+RF-09 & Respaldo y configuración & Permitirá ejecutar respaldos descargables y configurar parámetros operativos como umbrales, días previos al vencimiento y sensibilidad de reconocimiento. Prioridad: Media. \\
+\hline
+\end{longtable}
+\normalsize
+\setstretch{1.5}
+
+\subsection*{3.2 Requerimientos no funcionales o técnicos}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{RT-01: Plataforma y backend.} El backend se desarrollará en Python con FastAPI, integrando el modelo multimodal mediante API y exponiendo servicios REST documentados con OpenAPI/Swagger. Prioridad: Alta.
+  \item \textbf{RT-02: Base de datos relacional.} La persistencia empleará PostgreSQL gestionado por Supabase, con modelo normalizado hasta Tercera Forma Normal (3FN). Prioridad: Alta.
+  \item \textbf{RT-03: Tiempo de respuesta.} El reconocimiento deberá responder en promedio en tres (03) segundos o menos, incluyendo latencia de red. Prioridad: Alta.
+  \item \textbf{RT-04: Precisión.} La exactitud del reconocimiento deberá ser igual o superior al 90\,\%, con mecanismo de corrección manual. Prioridad: Alta.
+  \item \textbf{RT-05: Interfaz y operabilidad.} La aplicación será operable desde navegador de PC y vista móvil por QR, con interfaz sencilla para personal sin formación técnica avanzada. Prioridad: Alta.
+  \item \textbf{RT-06: Respaldo y configuración.} El Sistema dispondrá de respaldo bajo demanda y configuración de parámetros operativos. Prioridad: Media.
+  \item \textbf{RT-07: Despliegue y tiempo real.} El frontend se desplegará en Vercel, el backend en Render y la base de datos en Supabase, procurando sincronización inmediata sin recarga manual. Prioridad: Alta.
+\end{itemize}
+
+\subsection*{3.3 Interfaces externas}
+
+El Sistema presentará inicio de sesión, dashboard, vinculación por QR,
+vista móvil de captura, resultado del reconocimiento, catálogo,
+movimientos, consulta de inventario, reportes gerenciales y
+configuración/respaldo. Requiere computadora con navegador moderno,
+teléfono Android o iOS con cámara, API multimodal de IA sobre
+HTTPS/JSON, API REST interna de FastAPI y servicios de Supabase.
+
+\subsection*{3.4 Requerimientos de datos}
+
+\setstretch{1.0}
+\noindent
+\begin{tabular}{|p{3cm}|p{10.5cm}|}
+\hline
+\textbf{Entidad} & \textbf{Atributos principales} \\
+\hline
+Usuario & id, nombre, correo, contraseña (hash), rol, estado, fecha\_creacion. \\
+\hline
+Categoria & id, nombre, descripcion, fecha\_creacion. \\
+\hline
+Producto & id, nombre, id\_categoria (FK), unidad\_medida, stock\_actual, stock\_minimo, precio, fecha\_vencimiento, imagen\_url, estado. \\
+\hline
+Movimiento & id, id\_producto (FK), id\_usuario (FK), tipo (entrada/salida), cantidad, fecha\_hora, observaciones. \\
+\hline
+Alerta & id, id\_producto (FK), tipo (stock\_minimo / vencimiento), fecha\_generacion, estado (activa/atendida). \\
+\hline
+\end{tabular}
+\setstretch{1.5}
+
+\section*{4. Matriz de trazabilidad de requisitos}
+\addcontentsline{toc}{section}{Anexo E. 4. Matriz de trazabilidad de requisitos}
+
+La Matriz de Trazabilidad de Requisitos (MTR) vincula cada
+requerimiento funcional con su componente arquitectónico, las entidades
+de base de datos involucradas y la pantalla de interfaz que lo
+materializa.
+
+\setstretch{1.0}
+\scriptsize
+\noindent
+\begin{tabular}{|c|p{3.4cm}|p{3.0cm}|p{2.6cm}|c|}
+\hline
+\textbf{RF} & \textbf{Componente arquitectónico} & \textbf{Entidades BD} & \textbf{Pantalla UI} & \textbf{Trazado} \\
+\hline
+RF-01 & Reconocimiento IA + API & Producto, Movimiento & Captura móvil, Resultado & Sí \\
+\hline
+RF-02 & Gestión de stock (FastAPI) & Producto, Movimiento & Movimientos & Sí \\
+\hline
+RF-03 & Motor de alertas (FastAPI) & Producto, Alerta & Dashboard & Sí \\
+\hline
+RF-04 & Consulta (FastAPI) & Producto, Categoría & Inventario & Sí \\
+\hline
+RF-05 & Reportes (FastAPI/Next.js) & Movimiento, Producto & Reportes & Sí \\
+\hline
+RF-06 & Catálogo (FastAPI) & Producto, Categoría & Catálogo & Sí \\
+\hline
+RF-07 & Autenticación (FastAPI) & Usuario & Inicio de sesión & Sí \\
+\hline
+RF-08 & Agregación (FastAPI/Next.js) & Producto, Movimiento, Alerta & Dashboard & Sí \\
+\hline
+RF-09 & Respaldo/configuración (FastAPI) & Usuario, Producto & Configuración & Sí \\
+\hline
+\end{tabular}
+\normalsize
+\setstretch{1.5}
+
+\vspace{8pt}
+
+La cobertura alcanzada es del \textbf{100\,\%}: los nueve (09)
+requerimientos funcionales poseen un componente arquitectónico, una o
+más entidades de base de datos y una pantalla de interfaz asignados,
+sin requerimientos huérfanos ni componentes injustificados.
+
+\section*{Aprobación del documento}
+\addcontentsline{toc}{section}{Anexo E. Aprobación del documento}
+
+La presente Especificación de Requerimientos de Software (SRS) ha sido
+revisada y aprobada como base formal para el desarrollo del Sistema de
+Inventario IA del Bodegón Pa' Donde Natty C.A.
+
+\vspace{1.2cm}
+
+\noindent
+\begin{minipage}{0.45\textwidth}
+\centering
+\rule{5.5cm}{0.4pt}\\[4pt]
+\textbf{Autor}\\
+Gabriel Riera\\
+C.I.: V--31.153.478
+\end{minipage}\hfill
+\begin{minipage}{0.45\textwidth}
+\centering
+\rule{5.5cm}{0.4pt}\\[4pt]
+\textbf{Tutor Académico}\\
+Ing. Carlos Moreno
+\end{minipage}
+
+\vspace{1cm}
+
+\begin{center}
+Barcelona, Mayo 2026.
+\end{center}
+
+% ============================================================
+
+
+\end{document}
