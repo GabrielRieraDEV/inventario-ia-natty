@@ -32,8 +32,17 @@ def listar(_: CurrentUser = Depends(get_current_user)) -> list[dict]:
 @router.get("/inventario")
 def inventario(_: CurrentUser = Depends(get_current_user)) -> list[dict]:
     """Existencias actuales (stock derivado de los movimientos, RF-04)."""
-    res = get_client().table("vista_stock").select("*").order("nombre").execute()
-    return res.data or []
+    client = get_client()
+    filas = client.table("vista_stock").select("*").order("nombre").execute().data or []
+    # Enriquecer con el nombre de la categoría (robusto ante versiones de la vista).
+    cats = {
+        c["id"]: c["nombre"]
+        for c in client.table("categoria").select("id, nombre").execute().data or []
+    }
+    for f in filas:
+        if not f.get("categoria"):
+            f["categoria"] = cats.get(f.get("categoria_id"))
+    return filas
 
 
 @router.post("", response_model=Producto, status_code=201)
