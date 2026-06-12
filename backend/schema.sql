@@ -89,3 +89,28 @@ SELECT
 FROM producto p
 LEFT JOIN movimiento m ON m.producto_id = p.id
 GROUP BY p.id;
+
+-- ---------- Sesión de captura móvil (RF-01, flujo QR en tiempo real) ----------
+-- La PC crea una sesión y muestra su token en un QR; el teléfono la abre,
+-- captura la foto y el backend escribe aquí el resultado del reconocimiento.
+-- La PC se suscribe por Realtime a esta fila y refleja el resultado.
+CREATE TABLE IF NOT EXISTS sesion_captura (
+    token        UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+    estado       TEXT        NOT NULL DEFAULT 'pendiente'
+                             CHECK (estado IN ('pendiente', 'vinculada', 'reconocido', 'expirada')),
+    resultado    JSONB,
+    creado_en    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- ============================================================
+--  Datos semilla mínimos (categorías y un usuario administrador)
+--  La contraseña del admin se define al ejecutar el backend (seed).
+-- ============================================================
+INSERT INTO categoria (nombre) VALUES
+    ('Alimentos no perecederos'),
+    ('Bebidas'),
+    ('Higiene personal'),
+    ('Limpieza del hogar'),
+    ('Lácteos'),
+    ('Otros')
+ON CONFLICT (nombre) DO NOTHING;
