@@ -18,6 +18,7 @@ from app.routers import (
     productos,
     reportes,
     sesiones,
+    usuarios,
 )
 
 app = FastAPI(
@@ -42,6 +43,7 @@ app.include_router(movimientos.router)
 app.include_router(alertas.router)
 app.include_router(reportes.router)
 app.include_router(sesiones.router)
+app.include_router(usuarios.router)
 
 
 @app.get("/")

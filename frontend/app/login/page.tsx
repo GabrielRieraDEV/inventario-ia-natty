@@ -3,16 +3,26 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Icon } from "@/components/Icon";
+import { login } from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState("admin@padondenatty.com");
+  const [password, setPassword] = useState("");
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    // TODO: autenticar contra el backend (RF-07). Por ahora navega al panel.
-    router.push("/dashboard");
+    setError(null);
+    try {
+      await login(email, password);
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo iniciar sesión.");
+      setLoading(false);
+    }
   }
 
   return (
@@ -47,6 +57,8 @@ export default function LoginPage() {
                   name="email"
                   type="email"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@padondenatty.com"
                   className="block w-full pl-xl pr-sm py-sm font-body-md text-body-md bg-surface-container-lowest border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:border-primary transition-all placeholder:text-outline/50"
                 />
@@ -71,11 +83,20 @@ export default function LoginPage() {
                   name="password"
                   type="password"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className="block w-full pl-xl pr-sm py-sm font-body-md text-body-md bg-surface-container-lowest border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:border-primary transition-all placeholder:text-outline/50"
                 />
               </div>
             </div>
+
+            {error && (
+              <div className="flex items-center gap-sm bg-error-container text-on-error-container rounded-lg px-md py-sm font-body-sm text-body-sm">
+                <Icon name="error" className="text-[18px]" />
+                {error}
+              </div>
+            )}
 
             <button
               type="submit"

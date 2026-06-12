@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Icon } from "@/components/Icon";
 
 function Toggle({ defaultChecked = false }: { defaultChecked?: boolean }) {
@@ -81,9 +82,9 @@ export default function ConfiguracionPage() {
               <span className="font-data-mono font-medium text-secondary bg-secondary-fixed px-xs py-[2px] rounded">12</span>
             </li>
           </ul>
-          <button className="w-full bg-surface-container-lowest hover:bg-surface-container border border-primary text-primary font-label-md text-label-md py-sm px-md rounded-lg transition-colors flex justify-center items-center gap-sm mt-auto">
+          <Link href="/usuarios" className="w-full bg-surface-container-lowest hover:bg-surface-container border border-primary text-primary font-label-md text-label-md py-sm px-md rounded-lg transition-colors flex justify-center items-center gap-sm mt-auto">
             <Icon name="manage_accounts" className="text-[20px]" /> Gestionar roles y usuarios
-          </button>
+          </Link>
         </section>
 
         {/* Sensibilidad IA */}

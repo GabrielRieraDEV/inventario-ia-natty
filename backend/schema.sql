@@ -77,8 +77,11 @@ CREATE OR REPLACE VIEW vista_stock AS
 SELECT
     p.id,
     p.nombre,
+    p.codigo_barras,
     p.categoria_id,
+    c.nombre AS categoria,
     p.stock_minimo,
+    p.precio,
     COALESCE(SUM(
         CASE m.tipo
             WHEN 'entrada' THEN m.cantidad
@@ -87,8 +90,10 @@ SELECT
         END
     ), 0) AS stock_actual
 FROM producto p
+LEFT JOIN categoria c ON c.id = p.categoria_id
 LEFT JOIN movimiento m ON m.producto_id = p.id
-GROUP BY p.id;
+WHERE p.activo = TRUE
+GROUP BY p.id, c.nombre;
 
 -- ---------- Sesión de captura móvil (RF-01, flujo QR en tiempo real) ----------
 -- La PC crea una sesión y muestra su token en un QR; el teléfono la abre,

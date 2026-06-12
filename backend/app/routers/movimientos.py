@@ -38,14 +38,14 @@ def _evaluar_alerta_stock(producto_id: int) -> None:
             ).execute()
 
 
-@router.get("", response_model=list[Movimiento])
-def listar(_: CurrentUser = Depends(get_current_user)) -> list[dict]:
+@router.get("")
+def listar(limite: int = 100, _: CurrentUser = Depends(get_current_user)) -> list[dict]:
     res = (
         get_client()
         .table("movimiento")
-        .select("*")
+        .select("*, producto(nombre)")
         .order("creado_en", desc=True)
-        .limit(100)
+        .limit(limite)
         .execute()
     )
     return res.data or []
