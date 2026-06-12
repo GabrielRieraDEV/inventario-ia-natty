@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Recognition Result - Pa' Donde Natty</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Work+Sans:wght@600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#f9f9ff",
+                        "primary": "#03224d",
+                        "inverse-primary": "#afc6fb",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-background": "#111c2d",
+                        "surface-tint": "#475e8c",
+                        "surface-container-high": "#dee8ff",
+                        "surface-variant": "#d8e3fb",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#191c1e",
+                        "surface-dim": "#cfdaf2",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-fixed": "#e0e3e5",
+                        "secondary-container": "#d0e1fb",
+                        "on-primary-container": "#8ba2d5",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#2e4673",
+                        "surface": "#f9f9ff",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "tertiary": "#202425",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c4c6d0",
+                        "on-secondary-container": "#54647a",
+                        "tertiary-container": "#36393b",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#001a41",
+                        "secondary": "#505f76",
+                        "on-surface": "#111c2d",
+                        "outline": "#747780",
+                        "on-tertiary-container": "#a0a2a4",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container-highest": "#d8e3fb",
+                        "surface-container": "#e7eeff",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "on-surface-variant": "#44474f",
+                        "inverse-on-surface": "#ecf1ff",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#d3e4fe",
+                        "background": "#f9f9ff",
+                        "inverse-surface": "#263143",
+                        "primary-fixed-dim": "#afc6fb",
+                        "surface-container-low": "#f0f3ff",
+                        "primary-container": "#1f3864"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "md": "16px",
+                        "sidebar-width": "260px",
+                        "container-max": "1440px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "xxl": "48px",
+                        "base": "4px",
+                        "sm": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Work Sans"],
+                        "headline-lg": ["Work Sans"],
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Work Sans"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "display-lg": ["Work Sans"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "data-mono": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- SideNavBar (Shared Component) -->
+<nav class="fixed left-0 top-0 h-screen w-sidebar-width bg-primary border-r border-outline-variant flex flex-col py-xl px-md z-50">
+<div class="mb-xl px-md">
+<h1 class="font-headline-md text-headline-md font-bold text-surface-bright">Pa' Donde Natty</h1>
+<p class="font-body-sm text-body-sm text-primary-fixed opacity-80 mt-xs">Inventory System</p>
+</div>
+<ul class="flex flex-col gap-sm flex-1">
+<li>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary-container hover:text-surface-bright transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary-container hover:text-surface-bright transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-md text-label-md">Catalog</span>
+</a>
+</li>
+<!-- Active State: Inventory (Semantic Match for AI Recognition Result / Adding Stock) -->
+<li>
+<a class="text-surface-bright font-bold border-l-4 border-surface-container-high bg-primary-container flex items-center gap-md px-md py-sm rounded-r-lg active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+</li>
+<li>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary-container hover:text-surface-bright transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">swap_horiz</span>
+<span class="font-label-md text-label-md">Movements</span>
+</a>
+</li>
+<li>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary-container hover:text-surface-bright transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">notifications_active</span>
+<span class="font-label-md text-label-md">Alerts</span>
+</a>
+</li>
+<li>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary-container hover:text-surface-bright transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+</li>
+</ul>
+<div class="mt-auto">
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary-container hover:text-surface-bright transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area Wrapper -->
+<div class="flex-1 ml-[260px] flex flex-col min-h-screen">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-surface docked full-width top-0 sticky z-40 flex justify-between items-center w-full px-xl py-md border-b border-outline-variant">
+<div class="flex items-center gap-lg w-1/3">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-md py-sm pl-[36px] pr-md font-body-sm text-body-sm focus:ring-2 focus:ring-primary focus:ring-offset-2 outline-none transition-all" placeholder="Search inventory..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:bg-surface-container-high rounded-full p-sm transition-all focus:ring-2 focus:ring-primary focus:ring-offset-2">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high rounded-full p-sm transition-all focus:ring-2 focus:ring-primary focus:ring-offset-2">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high rounded-full p-sm transition-all focus:ring-2 focus:ring-primary focus:ring-offset-2">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Page Canvas -->
+<main class="flex-1 p-xl max-w-container-max mx-auto w-full">
+<div class="mb-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-background">AI Recognition Result</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Verify the identified product details before adding to inventory.</p>
+</div>
+<!-- Split View Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-xl items-start">
+<!-- Left Side: Captured Photo -->
+<div class="lg:col-span-5 relative group rounded-xl overflow-hidden border border-outline-variant bg-surface-container-lowest shadow-sm h-[600px]">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A close-up, brightly lit photograph of a standard 1-liter bottle of clear cooking oil resting on a clean, modern warehouse scanning table. The lighting is crisp and cool, simulating an industrial quality-control environment. A subtle, glowing blue digital bounding box graphic is superimposed on the bottle, indicating artificial intelligence image recognition in progress. The background is slightly blurred, focusing entirely on the product and the technological overlay. Corporate, high-tech logistics aesthetic with deep navy and clean white tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDl2FIW4UvV2mquTs66RJsjy1em1pqqw0B_wqIy4O02-03_9uSYR7Rq7KWwnkUzwagaTdo_Lmy20CgEDax9hNhGt35N_vRoD4djBE7hYuilveTO2Tpy_1uJ5oIgy-sGpUCsBm_ApBRli3saIWNrkq8otuShqDkNmdlt1gTXp3Fbc1D6fdZ7qN4v1LMy3kFevZsUAIAbMRK9diOYqsi4zGqZyc_R0u0O-0Au-a_dkgejAot4fRAcCXQfdPmQrsPeuKlYSTi1_VUpl3c');"></div>
+<!-- AI Scanning Overlay Effect -->
+<div class="absolute inset-0 border-2 border-primary border-dashed opacity-50 m-lg rounded-lg"></div>
+<div class="absolute top-md right-md bg-surface-container-lowest/90 backdrop-blur-sm px-md py-xs rounded-full border border-outline-variant flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">document_scanner</span>
+<span class="font-label-sm text-label-sm text-primary">Scan Complete</span>
+</div>
+</div>
+<!-- Right Side: AI Results & Form -->
+<div class="lg:col-span-7 flex flex-col gap-lg">
+<!-- Bento Grid for AI Insights -->
+<div class="grid grid-cols-2 gap-md">
+<!-- Identified Product Card -->
+<div class="col-span-2 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm">
+<div class="flex items-start gap-sm mb-sm">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Producto Identificado</p>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-background">Aceite de Girasol 1L</h3>
+</div>
+<!-- Category Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md shadow-sm">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-xs">Categoría</p>
+<p class="font-body-lg text-body-lg text-on-background font-medium">Abarrotes</p>
+</div>
+<!-- Confidence Card -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md shadow-sm flex flex-col justify-between">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-xs">Confianza AI</p>
+<div class="flex items-center gap-sm">
+<div class="w-full bg-outline-variant/30 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 98%"></div>
+</div>
+<span class="font-headline-sm text-headline-sm text-primary">98%</span>
+</div>
+</div>
+</div>
+<!-- Editable Form Fields Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm">
+<h4 class="font-headline-sm text-headline-sm text-on-background mb-md">Detalles de Ingreso</h4>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="flex flex-col gap-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="quantity">Quantity to Add</label>
+<input class="border border-outline-variant rounded-md px-md py-sm font-body-md text-on-background focus:ring-2 focus:ring-primary focus:ring-offset-2 outline-none transition-shadow w-full bg-surface-bright" id="quantity" min="1" type="number" value="24"/>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="expiry">Expiry Date</label>
+<input class="border border-outline-variant rounded-md px-md py-sm font-body-md text-on-background focus:ring-2 focus:ring-primary focus:ring-offset-2 outline-none transition-shadow w-full bg-surface-bright" id="expiry" type="date"/>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center justify-end gap-md mt-auto pt-lg">
+<button class="bg-surface-container-lowest border border-primary text-primary hover:bg-surface-container-high font-label-md text-label-md px-xl py-sm rounded-md transition-colors focus:ring-2 focus:ring-primary focus:ring-offset-2 outline-none shadow-sm">
+                            Corregir
+                        </button>
+<button class="bg-primary text-on-primary hover:bg-primary/90 font-label-md text-label-md px-xl py-sm rounded-md transition-all shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1)] hover:shadow-[0px_6px_8px_-1px_rgba(0,0,0,0.15)] focus:ring-2 focus:ring-primary focus:ring-offset-2 outline-none flex items-center gap-sm">
+<span class="material-symbols-outlined text-[18px]">check</span>
+                            Confirmar Registro
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

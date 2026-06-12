@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pa' Donde Natty - Vincular Cámara</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Work+Sans:wght@600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#f9f9ff",
+                      "primary": "#03224d",
+                      "inverse-primary": "#afc6fb",
+                      "tertiary-fixed-dim": "#c4c7c9",
+                      "on-background": "#111c2d",
+                      "surface-tint": "#475e8c",
+                      "surface-container-high": "#dee8ff",
+                      "surface-variant": "#d8e3fb",
+                      "surface-container-lowest": "#ffffff",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed": "#191c1e",
+                      "surface-dim": "#cfdaf2",
+                      "primary-fixed": "#d8e2ff",
+                      "tertiary-fixed": "#e0e3e5",
+                      "secondary-container": "#d0e1fb",
+                      "on-primary-container": "#8ba2d5",
+                      "error-container": "#ffdad6",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed-variant": "#2e4673",
+                      "surface": "#f9f9ff",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "tertiary": "#202425",
+                      "on-error-container": "#93000a",
+                      "outline-variant": "#c4c6d0",
+                      "on-secondary-container": "#54647a",
+                      "tertiary-container": "#36393b",
+                      "error": "#ba1a1a",
+                      "on-primary-fixed": "#001a41",
+                      "secondary": "#505f76",
+                      "on-surface": "#111c2d",
+                      "outline": "#747780",
+                      "on-tertiary-container": "#a0a2a4",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary-fixed": "#0b1c30",
+                      "surface-container-highest": "#d8e3fb",
+                      "surface-container": "#e7eeff",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "on-tertiary-fixed-variant": "#444749",
+                      "on-surface-variant": "#44474f",
+                      "inverse-on-surface": "#ecf1ff",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed": "#d3e4fe",
+                      "background": "#f9f9ff",
+                      "inverse-surface": "#263143",
+                      "primary-fixed-dim": "#afc6fb",
+                      "surface-container-low": "#f0f3ff",
+                      "primary-container": "#1f3864"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "lg": "24px",
+                      "md": "16px",
+                      "sidebar-width": "260px",
+                      "container-max": "1440px",
+                      "xs": "4px",
+                      "xl": "32px",
+                      "xxl": "48px",
+                      "base": "4px",
+                      "sm": "8px"
+              },
+              "fontFamily": {
+                      "headline-sm": [
+                              "Work Sans"
+                      ],
+                      "headline-lg": [
+                              "Work Sans"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Work Sans"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "data-mono": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Work Sans"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "data-mono": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen flex antialiased">
+<!-- SideNavBar (Shared Component) -->
+<aside class="bg-primary text-primary-fixed fixed left-0 top-0 h-screen w-sidebar-width border-r border-outline-variant flat no shadows flex flex-col h-full py-xl px-md z-50">
+<!-- Brand Area -->
+<div class="mb-xl px-md flex flex-col gap-xs">
+<h1 class="font-headline-md text-headline-md font-bold text-surface-bright">Pa' Donde Natty</h1>
+<span class="font-label-sm text-label-sm opacity-80">Inventory System</span>
+</div>
+<!-- Navigation Links -->
+<nav class="flex flex-col gap-xs flex-1">
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm hover:bg-primary-container hover:text-surface-bright transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm hover:bg-primary-container hover:text-surface-bright transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-md text-label-md">Catalog</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm hover:bg-primary-container hover:text-surface-bright transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm hover:bg-primary-container hover:text-surface-bright transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+<span class="font-label-md text-label-md">Movements</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm hover:bg-primary-container hover:text-surface-bright transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+<span class="font-label-md text-label-md">Alerts</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm hover:bg-primary-container hover:text-surface-bright transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<!-- Active State Navigation -->
+<a class="text-surface-bright font-bold border-l-4 border-surface-container-high bg-primary-container flex items-center gap-md px-md py-sm rounded-r-lg transition-colors scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="settings" data-weight="fill" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="flex-1 ml-sidebar-width flex flex-col min-h-screen relative w-full">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-surface text-primary docked full-width top-0 sticky z-40 border-b border-outline-variant flat no shadows flex justify-between items-center w-full px-xl py-md">
+<!-- Search Bar Area (Left as per JSON) -->
+<div class="flex-1 max-w-md flex items-center">
+<div class="relative w-full group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+</div>
+<input class="w-full bg-[#F1F5F9] border-none rounded-full py-sm pl-[44px] pr-md font-body-sm text-body-sm text-on-surface focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all outline-none" placeholder="Search..." type="text"/>
+<div class="absolute inset-y-0 right-0 pr-md flex items-center pointer-events-none">
+<span class="font-label-sm text-label-sm text-outline border border-outline-variant rounded px-1">⌘K</span>
+</div>
+</div>
+</div>
+<!-- Trailing Icons -->
+<div class="flex items-center gap-sm">
+<button class="text-on-surface-variant hover:bg-surface-container-high rounded-full p-sm transition-all flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<!-- Active action indicating the current page purpose -->
+<button class="text-primary font-bold hover:bg-surface-container-high rounded-full p-sm transition-all flex items-center justify-center ring-2 ring-primary ring-offset-2 bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="qr_code_scanner" data-weight="fill" style="font-variation-settings: 'FILL' 1;">qr_code_scanner</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high rounded-full p-sm transition-all flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Page Canvas: QR Code Linking Screen -->
+<main class="flex-1 bg-surface-container-low flex items-center justify-center p-xl">
+<!-- High-end Glassmorphic/Minimalist Card Container -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1)] p-xxl max-w-[540px] w-full flex flex-col items-center text-center relative overflow-hidden">
+<!-- Decorative background blob for modern feel -->
+<div class="absolute top-0 right-0 -mt-16 -mr-16 w-48 h-48 bg-primary-fixed opacity-30 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Header Icon -->
+<div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mb-lg border border-surface-variant">
+<span class="material-symbols-outlined text-primary" data-icon="devices" style="font-size: 32px;">devices</span>
+</div>
+<!-- Title & Instructions -->
+<h2 class="font-headline-md text-headline-md text-on-background font-semibold mb-sm">Device Pairing</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-xl max-w-sm">
+                    Escanea este código con la App de Pa' Donde Natty en tu teléfono para vincular la cámara
+                </p>
+<!-- QR Code Display Area -->
+<div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm mb-xl flex items-center justify-center w-64 h-64 mx-auto relative group cursor-pointer transition-transform hover:scale-[1.02]">
+<!-- Scanner scanning line effect (CSS only) -->
+<div class="absolute top-0 left-0 w-full h-[2px] bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" style="animation: scan 2s linear infinite;"></div>
+<img alt="QR Code" class="w-full h-full object-cover rounded-md" data-alt="A highly detailed, perfectly square, crisp black and white modern QR code element designed for a professional logistics software interface. The QR code is isolated on a pure white background with sharp, geometric pixel blocks conveying high-tech digital connectivity. The lighting is bright and even, fitting a pristine corporate UI environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFgvZ7NNpYNnIs1-phUHAU8VGlR29K3zq0ZvrJ-cWyaHTpHtnR0Q7YLe6r46wAd6QJmF4i89iuhnJu2WcUvOQ_1GzzIXEE12K9MRzWQ6jttXaHbUWI9ziGcRvnMHMRjVlrk2Nw0GmIKn_JzCIjJAoQR4zef6yhN1hHRaqXBY8VIBbHM1Kl-ULh6hWJ5HcfH5y2_hIYOz4rJ6V2nqTLdYCTHX2d99r0O-ly5Y_SZULu0eOqNySphpUxqOVKPDPIibtNmUw5xR_A2-I"/>
+</div>
+<!-- Actions -->
+<div class="flex justify-center w-full mt-sm">
+<button class="bg-surface-container-lowest border border-primary text-primary hover:bg-surface-container-low font-label-md text-label-md rounded-full px-xl py-sm transition-colors focus:ring-2 focus:ring-primary focus:ring-offset-2 w-full sm:w-auto min-w-[140px]">
+                        Cancel
+                    </button>
+</div>
+</section>
+</main>
+</div>
+<style>
+        @keyframes scan {
+            0% { top: 0; }
+            50% { top: 100%; }
+            100% { top: 0; }
+        }
+    </style>
+</body></html>

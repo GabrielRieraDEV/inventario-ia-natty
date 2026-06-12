@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings - Pa' Donde Natty</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Work+Sans:wght@600;700;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#f9f9ff",
+                    "primary": "#03224d",
+                    "inverse-primary": "#afc6fb",
+                    "tertiary-fixed-dim": "#c4c7c9",
+                    "on-background": "#111c2d",
+                    "surface-tint": "#475e8c",
+                    "surface-container-high": "#dee8ff",
+                    "surface-variant": "#d8e3fb",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#191c1e",
+                    "surface-dim": "#cfdaf2",
+                    "primary-fixed": "#d8e2ff",
+                    "tertiary-fixed": "#e0e3e5",
+                    "secondary-container": "#d0e1fb",
+                    "on-primary-container": "#8ba2d5",
+                    "error-container": "#ffdad6",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#2e4673",
+                    "surface": "#f9f9ff",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "tertiary": "#202425",
+                    "on-error-container": "#93000a",
+                    "outline-variant": "#c4c6d0",
+                    "on-secondary-container": "#54647a",
+                    "tertiary-container": "#36393b",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed": "#001a41",
+                    "secondary": "#505f76",
+                    "on-surface": "#111c2d",
+                    "outline": "#747780",
+                    "on-tertiary-container": "#a0a2a4",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed": "#0b1c30",
+                    "surface-container-highest": "#d8e3fb",
+                    "surface-container": "#e7eeff",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "on-tertiary-fixed-variant": "#444749",
+                    "on-surface-variant": "#44474f",
+                    "inverse-on-surface": "#ecf1ff",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed": "#d3e4fe",
+                    "background": "#f9f9ff",
+                    "inverse-surface": "#263143",
+                    "primary-fixed-dim": "#afc6fb",
+                    "surface-container-low": "#f0f3ff",
+                    "primary-container": "#1f3864"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "md": "16px",
+                    "sidebar-width": "260px",
+                    "container-max": "1440px",
+                    "xs": "4px",
+                    "xl": "32px",
+                    "xxl": "48px",
+                    "base": "4px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "headline-sm": ["Work Sans"],
+                    "headline-lg": ["Work Sans"],
+                    "body-sm": ["Inter"],
+                    "headline-md": ["Work Sans"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "data-mono": ["Inter"],
+                    "display-lg": ["Work Sans"],
+                    "label-md": ["Inter"],
+                    "label-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                    "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                    "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                    "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                    "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                    "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                    "data-mono": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                    "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                    "label-md": ["14px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                    "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Custom toggle switch styling to avoid external image dependencies and keep it inline CSS */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #03224d; /* primary */
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #03224d; /* primary */
+        }
+        .toggle-checkbox {
+            right: 4px;
+            z-index: 1;
+            border-color: #e0e3e5;
+            transition: all 0.3s;
+        }
+        .toggle-label {
+            background-color: #c4c6d0; /* outline-variant */
+            transition: all 0.3s;
+        }
+        
+        /* Range slider styling */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #03224d; /* primary */
+            cursor: pointer;
+            margin-top: -8px; 
+            box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #d8e3fb; /* surface-variant */
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased flex">
+<!-- SideNavBar (Shared Component) -->
+<nav class="hidden md:flex fixed left-0 top-0 h-screen w-sidebar-width bg-primary border-r border-outline-variant flex-col py-xl px-md z-50">
+<!-- Brand Header -->
+<div class="mb-xxl px-sm flex flex-col gap-xs">
+<h1 class="font-headline-md text-headline-md font-bold text-surface-bright">Pa' Donde Natty</h1>
+<p class="font-label-sm text-label-sm text-on-primary-container opacity-80 uppercase tracking-widest">Inventory System</p>
+</div>
+<!-- Navigation Links -->
+<div class="flex flex-col gap-sm">
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-DEFAULT hover:bg-primary-container hover:text-surface-bright transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-DEFAULT hover:bg-primary-container hover:text-surface-bright transition-colors" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-md text-label-md">Catalog</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-DEFAULT hover:bg-primary-container hover:text-surface-bright transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-DEFAULT hover:bg-primary-container hover:text-surface-bright transition-colors" href="#">
+<span class="material-symbols-outlined">swap_horiz</span>
+<span class="font-label-md text-label-md">Movements</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-DEFAULT hover:bg-primary-container hover:text-surface-bright transition-colors" href="#">
+<span class="material-symbols-outlined">notifications_active</span>
+<span class="font-label-md text-label-md">Alerts</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-DEFAULT hover:bg-primary-container hover:text-surface-bright transition-colors" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<!-- Active State: Settings -->
+<a class="text-surface-bright font-bold border-l-4 border-surface-container-high bg-primary-container flex items-center gap-md px-md py-sm rounded-r-DEFAULT transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 ml-0 md:ml-sidebar-width min-h-screen flex flex-col">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-surface sticky top-0 z-40 border-b border-outline-variant flex justify-between items-center w-full px-xl py-md h-20">
+<!-- Search Bar (on_left) -->
+<div class="flex-1 max-w-lg relative flex items-center group">
+<span class="material-symbols-outlined absolute left-md text-on-surface-variant group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full py-sm pl-xxl pr-md font-body-sm text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:border-primary transition-all" placeholder="Search settings, users, or backups..." type="text"/>
+<div class="absolute right-md px-sm py-xs bg-surface-container border border-outline-variant rounded text-xs text-on-surface-variant font-data-mono hidden lg:block">⌘K</div>
+</div>
+<!-- Mobile Brand Logo (Visible only on mobile) -->
+<div class="md:hidden font-headline-sm text-headline-sm font-black text-primary">
+                Pa' Donde Natty
+            </div>
+<!-- Trailing Icons -->
+<div class="flex items-center gap-md ml-xl">
+<button class="text-on-surface-variant hover:bg-surface-container-high rounded-full p-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high rounded-full p-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high rounded-full p-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Canvas Area -->
+<main class="flex-1 p-md md:p-xl w-full max-w-container-max mx-auto">
+<!-- Page Header -->
+<div class="mb-xl">
+<h2 class="font-headline-lg text-headline-lg text-on-background">System Settings</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Manage system configurations, backups, and artificial intelligence parameters.</p>
+</div>
+<!-- Bento Grid Layout for Settings -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- Database Backup Card (Spans wide) -->
+<section class="lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-sm mb-md">
+<div class="p-sm bg-secondary-container text-on-secondary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">database</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Database Backup &amp; Export</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-xl">
+                            Securely export your inventory logs, transaction history, and user data. Regular backups ensure business continuity in case of system anomalies.
+                        </p>
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-md mb-xl flex items-center justify-between">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wide">Last Automated Backup</p>
+<p class="font-body-md text-body-md font-medium text-on-surface mt-xs flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px] text-primary">check_circle</span>
+                                    Today, 03:00 AM UTC
+                                </p>
+</div>
+<button class="bg-primary hover:bg-primary-container text-on-primary hover:text-surface-bright font-label-md text-label-md py-sm px-md rounded-lg transition-colors shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1)] focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                                Run Manual Backup
+                            </button>
+</div>
+</div>
+<div class="border-t border-outline-variant pt-md flex gap-md">
+<button class="flex-1 bg-surface-container-lowest hover:bg-surface-container border border-outline text-primary font-label-md text-label-md py-sm px-md rounded-lg transition-colors flex justify-center items-center gap-sm">
+<span class="material-symbols-outlined text-[20px]">csv</span>
+                            Export to CSV
+                        </button>
+<button class="flex-1 bg-surface-container-lowest hover:bg-surface-container border border-outline text-primary font-label-md text-label-md py-sm px-md rounded-lg transition-colors flex justify-center items-center gap-sm">
+<span class="material-symbols-outlined text-[20px]">table_view</span>
+                            Export to Excel
+                        </button>
+</div>
+</section>
+<!-- User Management Card -->
+<section class="lg:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col">
+<div class="flex items-center gap-sm mb-md">
+<div class="p-sm bg-secondary-container text-on-secondary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">group</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">User Management</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-xl flex-1">
+                        Control access levels for warehouse staff, store managers, and administrative personnel.
+                    </p>
+<ul class="space-y-sm mb-xl">
+<li class="flex justify-between items-center text-body-sm">
+<span class="text-on-surface">Active Admins</span>
+<span class="font-data-mono font-medium text-primary bg-primary-fixed px-xs py-[2px] rounded">3</span>
+</li>
+<li class="flex justify-between items-center text-body-sm">
+<span class="text-on-surface">Staff Members</span>
+<span class="font-data-mono font-medium text-secondary bg-secondary-fixed px-xs py-[2px] rounded">12</span>
+</li>
+</ul>
+<button class="w-full bg-surface-container-lowest hover:bg-surface-container border border-primary text-primary font-label-md text-label-md py-sm px-md rounded-lg transition-colors flex justify-center items-center gap-sm mt-auto">
+<span class="material-symbols-outlined text-[20px]">manage_accounts</span>
+                        Manage Roles &amp; Users
+                    </button>
+</section>
+<!-- IA Sensitivity Adjustment -->
+<section class="lg:col-span-6 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg">
+<div class="flex items-center gap-sm mb-md">
+<div class="p-sm bg-surface-tint text-surface-bright rounded-lg flex items-center justify-center shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-xs">
+                                IA Sensitivity
+                                <span class="bg-surface-variant text-primary text-[10px] uppercase font-bold px-xs py-[2px] rounded-sm tracking-wider">Beta</span>
+</h3>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg">
+                        Adjust the tolerance threshold for the predictive AI anomaly detector. Higher sensitivity will flag minor discrepancies in stock movement patterns.
+                    </p>
+<div class="mt-xl">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant mb-sm">
+<span>Permissive (Fewer Alerts)</span>
+<span class="font-data-mono text-primary font-bold" id="ia-value-display">Strict</span>
+<span>Strict (More Alerts)</span>
+</div>
+<input class="w-full appearance-none bg-transparent focus:outline-none" id="ia-slider" max="100" min="1" type="range" value="75"/>
+<div class="mt-lg p-md bg-inverse-on-surface border border-outline-variant border-dashed rounded-lg flex items-start gap-md">
+<span class="material-symbols-outlined text-surface-tint mt-xs">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-sm">
+                                Current Setting: <strong class="text-on-surface">Level 75</strong>. The system will alert you if expected depletion rates deviate by more than 5% compared to historical data.
+                            </p>
+</div>
+</div>
+</section>
+<!-- System Notifications Card -->
+<section class="lg:col-span-6 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg">
+<div class="flex items-center gap-sm mb-md">
+<div class="p-sm bg-secondary-container text-on-secondary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">System Notifications</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-xl">
+                        Configure how and when the system alerts you regarding inventory and security events.
+                    </p>
+<div class="flex flex-col gap-md">
+<!-- Toggle Item 1 -->
+<div class="flex items-center justify-between py-sm border-b border-outline-variant/50 pb-md">
+<div>
+<p class="font-label-md text-label-md text-on-surface">Critical Stock Depletion</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Send immediate alert when fast-moving items drop below 10%.</p>
+</div>
+<!-- Toggle Component -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer focus:ring-2 focus:ring-primary focus:ring-offset-2" id="toggle1" name="toggle1" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle1"></label>
+</div>
+</div>
+<!-- Toggle Item 2 -->
+<div class="flex items-center justify-between py-sm border-b border-outline-variant/50 pb-md">
+<div>
+<p class="font-label-md text-label-md text-on-surface">Daily Summary Report</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Receive a consolidated end-of-day email detailing all movements.</p>
+</div>
+<!-- Toggle Component -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer focus:ring-2 focus:ring-primary focus:ring-offset-2" id="toggle2" name="toggle2" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle2"></label>
+</div>
+</div>
+<!-- Toggle Item 3 -->
+<div class="flex items-center justify-between py-sm">
+<div>
+<p class="font-label-md text-label-md text-on-surface flex items-center gap-xs">
+                                    Unusual Access Times
+                                    <span class="material-symbols-outlined text-[16px] text-error">warning</span>
+</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Trigger SMS alert if system is accessed outside business hours.</p>
+</div>
+<!-- Toggle Component -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer focus:ring-2 focus:ring-primary focus:ring-offset-2" id="toggle3" name="toggle3" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle3"></label>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Bottom Save Actions -->
+<div class="mt-xl pt-lg border-t border-outline-variant flex justify-end gap-md">
+<button class="bg-transparent hover:bg-surface-container text-on-surface font-label-md text-label-md py-md px-lg rounded-lg transition-colors focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                    Discard Changes
+                </button>
+<button class="bg-primary hover:bg-primary-container text-on-primary hover:text-surface-bright font-label-md text-label-md py-md px-lg rounded-lg transition-colors shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1)] focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center gap-sm">
+<span class="material-symbols-outlined text-[20px]">save</span>
+                    Save Configurations
+                </button>
+</div>
+</main>
+</div>
+<!-- Minimal JS for UI interaction -->
+<script>
+        // Update slider value visual
+        const slider = document.getElementById('ia-slider');
+        const display = document.getElementById('ia-value-display');
+        
+        slider.addEventListener('input', function() {
+            let val = parseInt(this.value);
+            let text = "Balanced";
+            if(val > 80) text = "Strict";
+            else if(val < 30) text = "Permissive";
+            
+            display.textContent = text;
+        });
+    </script>
+</body></html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Catalog - Pa' Donde Natty</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@600;700;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#f9f9ff",
+                        "primary": "#03224d",
+                        "inverse-primary": "#afc6fb",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-background": "#111c2d",
+                        "surface-tint": "#475e8c",
+                        "surface-container-high": "#dee8ff",
+                        "surface-variant": "#d8e3fb",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#191c1e",
+                        "surface-dim": "#cfdaf2",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-fixed": "#e0e3e5",
+                        "secondary-container": "#d0e1fb",
+                        "on-primary-container": "#8ba2d5",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#2e4673",
+                        "surface": "#f9f9ff",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "tertiary": "#202425",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c4c6d0",
+                        "on-secondary-container": "#54647a",
+                        "tertiary-container": "#36393b",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#001a41",
+                        "secondary": "#505f76",
+                        "on-surface": "#111c2d",
+                        "outline": "#747780",
+                        "on-tertiary-container": "#a0a2a4",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container-highest": "#d8e3fb",
+                        "surface-container": "#e7eeff",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "on-surface-variant": "#44474f",
+                        "inverse-on-surface": "#ecf1ff",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#d3e4fe",
+                        "background": "#f9f9ff",
+                        "inverse-surface": "#263143",
+                        "primary-fixed-dim": "#afc6fb",
+                        "surface-container-low": "#f0f3ff",
+                        "primary-container": "#1f3864"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "md": "16px",
+                        "sidebar-width": "260px",
+                        "container-max": "1440px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "xxl": "48px",
+                        "base": "4px",
+                        "sm": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Work Sans"],
+                        "headline-lg": ["Work Sans"],
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Work Sans"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "data-mono": ["Inter"],
+                        "display-lg": ["Work Sans"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "data-mono": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #F9FAFB; } /* Fallback background, overridden by tailwind */
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-full py-xl px-md bg-primary dark:bg-primary fixed left-0 top-0 h-screen w-sidebar-width border-r border-outline-variant dark:border-outline z-50">
+<div class="mb-xl px-md">
+<h1 class="font-headline-md text-headline-md font-bold text-surface-bright">Pa' Donde Natty</h1>
+<p class="font-body-sm text-body-sm text-on-primary-container opacity-80 mt-xs">Inventory System</p>
+</div>
+<nav class="flex-1 flex flex-col gap-sm">
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm hover:bg-primary-container hover:text-surface-bright transition-colors rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-surface-bright font-bold border-l-4 border-surface-container-high bg-primary-container flex items-center gap-md px-md py-sm rounded-r-DEFAULT scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-md text-label-md">Catalog</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm hover:bg-primary-container hover:text-surface-bright transition-colors rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm hover:bg-primary-container hover:text-surface-bright transition-colors rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+<span class="font-label-md text-label-md">Movements</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm hover:bg-primary-container hover:text-surface-bright transition-colors rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+<span class="font-label-md text-label-md">Alerts</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm hover:bg-primary-container hover:text-surface-bright transition-colors rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm hover:bg-primary-container hover:text-surface-bright transition-colors rounded-DEFAULT mt-auto" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col md:ml-sidebar-width min-w-0">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-xl py-md bg-surface dark:bg-surface-dim docked full-width top-0 sticky z-40 border-b border-outline-variant dark:border-outline">
+<div class="flex items-center gap-md flex-1 md:hidden">
+<h1 class="font-headline-sm text-headline-sm font-black text-primary dark:text-primary-fixed">Pa' Donde Natty</h1>
+</div>
+<!-- Search Bar -->
+<div class="hidden md:flex flex-1 max-w-md relative group">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full bg-[#F1F5F9] border-none rounded-lg pl-xl pr-md py-sm text-body-sm focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all" placeholder="Search catalog..." type="text"/>
+<span class="absolute right-md top-1/2 -translate-y-1/2 text-outline font-label-sm text-label-sm border border-outline-variant rounded px-xs bg-surface-container-lowest">⌘K</span>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-sm ml-auto">
+<button class="text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest rounded-full p-sm transition-all focus:ring-2 focus:ring-primary focus:ring-offset-2">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest rounded-full p-sm transition-all focus:ring-2 focus:ring-primary focus:ring-offset-2">
+<span class="material-symbols-outlined" data-icon="qr_code_scanner">qr_code_scanner</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest rounded-full p-sm transition-all focus:ring-2 focus:ring-primary focus:ring-offset-2">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 p-md md:p-xl overflow-y-auto">
+<!-- Header & Actions -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md mb-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Product Catalog</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Manage your inventory items, pricing, and stock levels.</p>
+</div>
+<div class="flex items-center gap-md w-full md:w-auto">
+<button class="flex-1 md:flex-none flex items-center justify-center gap-xs px-md py-sm bg-primary text-on-primary rounded-DEFAULT font-label-md text-label-md hover:bg-primary-container transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                        New Product
+                    </button>
+</div>
+</div>
+<!-- Filters -->
+<div class="bg-surface-container-lowest border border-[#E2E8F0] rounded-lg p-md mb-lg flex flex-wrap gap-md items-center">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Categories:</span>
+<button class="px-md py-xs bg-surface-container-high text-primary rounded-full font-label-md text-label-md border border-primary-fixed hover:bg-primary hover:text-on-primary transition-colors">All</button>
+<button class="px-md py-xs bg-surface text-on-surface-variant rounded-full font-label-md text-label-md border border-outline-variant hover:bg-surface-container transition-colors">Beverages</button>
+<button class="px-md py-xs bg-surface text-on-surface-variant rounded-full font-label-md text-label-md border border-outline-variant hover:bg-surface-container transition-colors">Food</button>
+<button class="px-md py-xs bg-surface text-on-surface-variant rounded-full font-label-md text-label-md border border-outline-variant hover:bg-surface-container transition-colors">Cleaning</button>
+<button class="px-md py-xs bg-surface text-on-surface-variant rounded-full font-label-md text-label-md border border-outline-variant hover:bg-surface-container transition-colors">Personal Care</button>
+<div class="ml-auto flex items-center gap-sm">
+<button class="p-xs text-primary bg-surface-container rounded hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="view_list">view_list</span>
+</button>
+<button class="p-xs text-outline hover:bg-surface-container transition-colors rounded">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+</button>
+</div>
+</div>
+<!-- Data Table -->
+<div class="bg-surface-container-lowest border border-[#E2E8F0] rounded-lg overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-[#F8FAF9] border-b border-[#E2E8F0]">
+<th class="py-sm px-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Product Name</th>
+<th class="py-sm px-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">SKU</th>
+<th class="py-sm px-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Category</th>
+<th class="py-sm px-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Price</th>
+<th class="py-sm px-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Stock</th>
+<th class="py-sm px-md font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#E2E8F0]">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-md px-md">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-surface-variant rounded flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="bakery_dining">bakery_dining</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Harina PAN</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">1kg Pre-cooked Corn Meal</p>
+</div>
+</div>
+</td>
+<td class="py-md px-md font-data-mono text-data-mono text-on-surface-variant">HPAN-001</td>
+<td class="py-md px-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-container text-primary-fixed-variant">Food</span>
+</td>
+<td class="py-md px-md font-label-md text-label-md text-on-surface">$1.50</td>
+<td class="py-md px-md">
+<div class="flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
+<span class="font-body-sm text-body-sm text-on-surface">150 units</span>
+</div>
+</td>
+<td class="py-md px-md text-right">
+<div class="flex items-center justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors" title="View Stock">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-error transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-md px-md">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-surface-variant rounded flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="rice_bowl">rice_bowl</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Arroz Mary</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">1kg White Rice</p>
+</div>
+</div>
+</td>
+<td class="py-md px-md font-data-mono text-data-mono text-on-surface-variant">AMAR-001</td>
+<td class="py-md px-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-container text-primary-fixed-variant">Food</span>
+</td>
+<td class="py-md px-md font-label-md text-label-md text-on-surface">$1.20</td>
+<td class="py-md px-md">
+<div class="flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-[#F59E0B]"></span>
+<span class="font-body-sm text-body-sm text-on-surface">24 units</span>
+</div>
+</td>
+<td class="py-md px-md text-right">
+<div class="flex items-center justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors" title="View Stock">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-error transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-md px-md">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-surface-variant rounded flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="local_drink">local_drink</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Coca-Cola 2L</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Original Taste</p>
+</div>
+</div>
+</td>
+<td class="py-md px-md font-data-mono text-data-mono text-on-surface-variant">COKE-2L</td>
+<td class="py-md px-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-container text-primary-fixed-variant">Beverages</span>
+</td>
+<td class="py-md px-md font-label-md text-label-md text-on-surface">$2.50</td>
+<td class="py-md px-md">
+<div class="flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
+<span class="font-body-sm text-body-sm text-on-surface">80 units</span>
+</div>
+</td>
+<td class="py-md px-md text-right">
+<div class="flex items-center justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors" title="View Stock">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-error transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-md px-md">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 bg-surface-variant rounded flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="cleaning_services">cleaning_services</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Detergente Ariel</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Powder 900g</p>
+</div>
+</div>
+</td>
+<td class="py-md px-md font-data-mono text-data-mono text-on-surface-variant">ARIEL-900</td>
+<td class="py-md px-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-container text-primary-fixed-variant">Cleaning</span>
+</td>
+<td class="py-md px-md font-label-md text-label-md text-on-surface">$4.00</td>
+<td class="py-md px-md">
+<div class="flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-[#EF4444]"></span>
+<span class="font-body-sm text-body-sm text-error">3 units</span>
+</div>
+</td>
+<td class="py-md px-md text-right">
+<div class="flex items-center justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors" title="View Stock">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-error transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="bg-surface-container-lowest border-t border-[#E2E8F0] px-md py-sm flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Showing 1 to 4 of 42 entries</span>
+<div class="flex items-center gap-xs">
+<button class="px-sm py-xs border border-outline-variant rounded bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-50" disabled="">Previous</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-label-sm text-label-sm">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container font-label-sm text-label-sm transition-colors">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container font-label-sm text-label-sm transition-colors">3</button>
+<button class="px-sm py-xs border border-outline-variant rounded bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container transition-colors">Next</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

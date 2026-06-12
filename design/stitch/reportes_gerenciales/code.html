@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Management Reports - Pa' Donde Natty</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Work+Sans:wght@600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#f9f9ff",
+                      "primary": "#03224d",
+                      "inverse-primary": "#afc6fb",
+                      "tertiary-fixed-dim": "#c4c7c9",
+                      "on-background": "#111c2d",
+                      "surface-tint": "#475e8c",
+                      "surface-container-high": "#dee8ff",
+                      "surface-variant": "#d8e3fb",
+                      "surface-container-lowest": "#ffffff",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed": "#191c1e",
+                      "surface-dim": "#cfdaf2",
+                      "primary-fixed": "#d8e2ff",
+                      "tertiary-fixed": "#e0e3e5",
+                      "secondary-container": "#d0e1fb",
+                      "on-primary-container": "#8ba2d5",
+                      "error-container": "#ffdad6",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed-variant": "#2e4673",
+                      "surface": "#f9f9ff",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "tertiary": "#202425",
+                      "on-error-container": "#93000a",
+                      "outline-variant": "#c4c6d0",
+                      "on-secondary-container": "#54647a",
+                      "tertiary-container": "#36393b",
+                      "error": "#ba1a1a",
+                      "on-primary-fixed": "#001a41",
+                      "secondary": "#505f76",
+                      "on-surface": "#111c2d",
+                      "outline": "#747780",
+                      "on-tertiary-container": "#a0a2a4",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary-fixed": "#0b1c30",
+                      "surface-container-highest": "#d8e3fb",
+                      "surface-container": "#e7eeff",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "on-tertiary-fixed-variant": "#444749",
+                      "on-surface-variant": "#44474f",
+                      "inverse-on-surface": "#ecf1ff",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed": "#d3e4fe",
+                      "background": "#f9f9ff",
+                      "inverse-surface": "#263143",
+                      "primary-fixed-dim": "#afc6fb",
+                      "surface-container-low": "#f0f3ff",
+                      "primary-container": "#1f3864"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "lg": "24px",
+                      "md": "16px",
+                      "sidebar-width": "260px",
+                      "container-max": "1440px",
+                      "xs": "4px",
+                      "xl": "32px",
+                      "xxl": "48px",
+                      "base": "4px",
+                      "sm": "8px"
+              },
+              "fontFamily": {
+                      "headline-sm": ["Work Sans"],
+                      "headline-lg": ["Work Sans"],
+                      "body-sm": ["Inter"],
+                      "headline-md": ["Work Sans"],
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "data-mono": ["Inter"],
+                      "display-lg": ["Work Sans"],
+                      "label-md": ["Inter"],
+                      "label-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                      "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                      "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                      "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                      "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                      "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                      "data-mono": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                      "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                      "label-md": ["14px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                      "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex font-body-md text-body-md antialiased selection:bg-surface-variant selection:text-primary">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-primary text-primary-fixed border-r border-outline-variant flex flex-col py-xl px-md z-50">
+<div class="mb-xl px-md">
+<h1 class="font-headline-md text-headline-md font-bold text-surface-bright">Pa' Donde Natty</h1>
+<p class="font-label-sm text-label-sm text-on-primary-container opacity-80 mt-xs">Inventory System</p>
+</div>
+<nav class="flex-1 flex flex-col gap-sm">
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary-container hover:text-surface-bright transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary-container hover:text-surface-bright transition-colors" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-md text-label-md">Catalog</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary-container hover:text-surface-bright transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary-container hover:text-surface-bright transition-colors" href="#">
+<span class="material-symbols-outlined">swap_horiz</span>
+<span class="font-label-md text-label-md">Movements</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary-container hover:text-surface-bright transition-colors" href="#">
+<span class="material-symbols-outlined">notifications_active</span>
+<span class="font-label-md text-label-md">Alerts</span>
+</a>
+<!-- Active Navigation Item -->
+<a class="text-surface-bright font-bold border-l-4 border-surface-container-high bg-primary-container flex items-center gap-md px-md py-sm rounded-r-lg scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="text-on-primary-container opacity-80 flex items-center gap-md px-md py-sm rounded-lg hover:bg-primary-container hover:text-surface-bright transition-colors mt-auto" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="flex-1 ml-sidebar-width flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="docked full-width top-0 sticky z-40 bg-surface border-b border-outline-variant flex justify-between items-center px-xl py-md shadow-sm">
+<!-- Search Bar (on_left) -->
+<div class="flex-1 max-w-md relative group">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant text-on-surface font-body-sm text-body-sm rounded-lg pl-xl pr-md py-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all placeholder:text-on-surface-variant" placeholder="Search inventory, categories..." type="text"/>
+<div class="absolute right-sm top-1/2 -translate-y-1/2 flex items-center gap-xs">
+<span class="bg-surface-container border border-outline-variant rounded px-xs py-xs font-data-mono text-data-mono text-on-surface-variant text-[10px]">⌘</span>
+<span class="bg-surface-container border border-outline-variant rounded px-xs py-xs font-data-mono text-data-mono text-on-surface-variant text-[10px]">K</span>
+</div>
+</div>
+<!-- Trailing Icons -->
+<div class="flex items-center gap-md ml-xl">
+<button class="text-on-surface-variant hover:bg-surface-container-highest rounded-full p-sm transition-all focus:ring-2 focus:ring-primary focus:ring-offset-2 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-sm right-sm w-xs h-xs bg-error rounded-full border border-surface"></span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-highest rounded-full p-sm transition-all focus:ring-2 focus:ring-primary focus:ring-offset-2">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+</button>
+<div class="h-xl w-[1px] bg-outline-variant mx-xs"></div>
+<button class="text-on-surface-variant hover:bg-surface-container-highest rounded-full p-sm transition-all focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center gap-sm">
+<span class="material-symbols-outlined text-[28px]">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="p-xl flex-1 max-w-container-max mx-auto w-full flex flex-col gap-xl">
+<!-- Page Header -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-xs">Management Reports</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Overview of inventory health and movement for current period.</p>
+</div>
+<div class="flex gap-md">
+<button class="px-md py-sm bg-surface-container-lowest border border-outline-variant text-primary font-label-md text-label-md rounded-lg flex items-center gap-sm hover:bg-surface-container transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                        Last 30 Days
+                        <span class="material-symbols-outlined text-[18px]">keyboard_arrow_down</span>
+</button>
+<button class="px-md py-sm bg-primary text-on-primary font-label-md text-label-md rounded-lg flex items-center gap-sm shadow-md hover:shadow-lg hover:-translate-y-[1px] transition-all">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Export PDF
+                    </button>
+</div>
+</div>
+<!-- KPI Cards (Bento Grid Top Row) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm flex flex-col justify-between">
+<div class="flex justify-between items-start mb-md">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Total Value</p>
+<span class="material-symbols-outlined text-primary-container bg-surface-container rounded-lg p-sm">payments</span>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-xs">$124,500</h3>
+<p class="font-body-sm text-body-sm text-on-secondary-container flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-[#059669]">trending_up</span>
+<span class="text-[#059669] font-medium">+4.2%</span> vs last month
+                        </p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm flex flex-col justify-between">
+<div class="flex justify-between items-start mb-md">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Low Stock</p>
+<span class="material-symbols-outlined text-error bg-error-container rounded-lg p-sm">warning</span>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-xs">24 <span class="font-headline-sm text-headline-sm text-on-surface-variant">Items</span></h3>
+<p class="font-body-sm text-body-sm text-error flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+                            Requires immediate action
+                        </p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm flex flex-col justify-between">
+<div class="flex justify-between items-start mb-md">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Movements</p>
+<span class="material-symbols-outlined text-surface-tint bg-surface-variant rounded-lg p-sm">sync_alt</span>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-xs">1,842</h3>
+<p class="font-body-sm text-body-sm text-on-secondary-container flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-outline">trending_flat</span>
+<span class="font-medium">Stable</span> volume
+                        </p>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm flex flex-col justify-between">
+<div class="flex justify-between items-start mb-md">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Turnover Rate</p>
+<span class="material-symbols-outlined text-secondary bg-secondary-container rounded-lg p-sm">rotate_right</span>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-xs">4.8<span class="font-headline-sm text-headline-sm text-on-surface-variant">x</span></h3>
+<p class="font-body-sm text-body-sm text-on-secondary-container flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-[#059669]">trending_up</span>
+<span class="text-[#059669] font-medium">+0.5</span> improvement
+                        </p>
+</div>
+</div>
+</div>
+<!-- Charts Area (Bento Grid Bottom) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg flex-1">
+<!-- Chart 1: Stock Levels (Bar Chart) -->
+<div class="lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm flex flex-col p-lg">
+<div class="flex justify-between items-center mb-xl">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Stock Levels per Category</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Current volume in main warehouse</p>
+</div>
+<button class="text-primary font-label-sm text-label-sm hover:underline">View Details</button>
+</div>
+<!-- CSS Bar Chart Mockup -->
+<div class="flex-1 flex items-end gap-md pt-lg relative">
+<!-- Y-Axis Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pb-[30px] z-0 pointer-events-none">
+<div class="border-t border-outline-variant opacity-30 w-full"></div>
+<div class="border-t border-outline-variant opacity-30 w-full"></div>
+<div class="border-t border-outline-variant opacity-30 w-full"></div>
+<div class="border-t border-outline-variant opacity-30 w-full"></div>
+<div class="border-t border-outline-variant opacity-50 w-full"></div>
+</div>
+<!-- Bars -->
+<div class="flex-1 flex flex-col items-center gap-sm z-10 group cursor-pointer">
+<div class="w-full bg-primary-container rounded-t-sm h-[80%] transition-colors group-hover:bg-primary relative">
+<div class="absolute -top-xl left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm px-sm py-xs rounded opacity-0 group-hover:opacity-100 transition-opacity">8,400</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate w-full text-center">Beverages</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-sm z-10 group cursor-pointer">
+<div class="w-full bg-primary-container rounded-t-sm h-[65%] transition-colors group-hover:bg-primary relative">
+<div class="absolute -top-xl left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm px-sm py-xs rounded opacity-0 group-hover:opacity-100 transition-opacity">6,200</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate w-full text-center">Snacks</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-sm z-10 group cursor-pointer">
+<div class="w-full bg-primary-container rounded-t-sm h-[40%] transition-colors group-hover:bg-primary relative">
+<div class="absolute -top-xl left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm px-sm py-xs rounded opacity-0 group-hover:opacity-100 transition-opacity">3,800</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate w-full text-center">Dairy</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-sm z-10 group cursor-pointer">
+<div class="w-full bg-error-container border border-error rounded-t-sm h-[15%] transition-all hover:bg-error hover:text-on-error relative">
+<div class="absolute -top-xl left-1/2 -translate-x-1/2 bg-error text-on-error font-label-sm text-label-sm px-sm py-xs rounded opacity-0 group-hover:opacity-100 transition-opacity">1,100</div>
+</div>
+<span class="font-label-sm text-label-sm text-error truncate w-full text-center font-medium">Produce</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-sm z-10 group cursor-pointer">
+<div class="w-full bg-primary-container rounded-t-sm h-[55%] transition-colors group-hover:bg-primary relative">
+<div class="absolute -top-xl left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm px-sm py-xs rounded opacity-0 group-hover:opacity-100 transition-opacity">5,100</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate w-full text-center">Canned</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-sm z-10 group cursor-pointer">
+<div class="w-full bg-primary-container rounded-t-sm h-[90%] transition-colors group-hover:bg-primary relative">
+<div class="absolute -top-xl left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm px-sm py-xs rounded opacity-0 group-hover:opacity-100 transition-opacity">9,200</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate w-full text-center">Dry Goods</span>
+</div>
+</div>
+</div>
+<!-- Chart 3: Product Rotation (Pie Chart) -->
+<div class="lg:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm flex flex-col p-lg">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-xs">Rotation Speed</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-xl">Inventory aging analysis</p>
+<div class="flex-1 flex flex-col items-center justify-center relative">
+<!-- CSS Pie Chart using conic-gradient -->
+<div class="w-48 h-48 rounded-full shadow-inner border border-outline-variant/20 relative flex items-center justify-center" style="background: conic-gradient(var(--tw-colors-primary) 0% 60%, var(--tw-colors-secondary) 60% 85%, var(--tw-colors-tertiary-fixed-dim) 85% 100%);">
+<!-- Donut Hole -->
+<div class="w-32 h-32 bg-surface-container-lowest rounded-full flex items-center justify-center shadow-sm">
+<div class="text-center">
+<span class="block font-headline-md text-headline-md text-on-surface">60%</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Fast Mover</span>
+</div>
+</div>
+</div>
+<!-- Legend -->
+<div class="w-full mt-xl flex flex-col gap-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<div class="w-sm h-sm rounded-full bg-primary"></div>
+<span class="font-body-sm text-body-sm text-on-surface">Fast Movers (&lt; 30 days)</span>
+</div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">60%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<div class="w-sm h-sm rounded-full bg-secondary"></div>
+<span class="font-body-sm text-body-sm text-on-surface">Steady (30-90 days)</span>
+</div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">25%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<div class="w-sm h-sm rounded-full bg-tertiary-fixed-dim"></div>
+<span class="font-body-sm text-body-sm text-on-surface">Slow Movers (&gt; 90 days)</span>
+</div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">15%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Chart 2: Movement History (Line Chart / Area) -->
+<div class="lg:col-span-12 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm flex flex-col p-lg min-h-[300px]">
+<div class="flex justify-between items-center mb-xl">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Movement History</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Inbound vs Outbound volume over 6 months</p>
+</div>
+<div class="flex gap-md items-center">
+<div class="flex items-center gap-xs">
+<div class="w-md h-[2px] bg-primary"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Outbound</span>
+</div>
+<div class="flex items-center gap-xs">
+<div class="w-md h-[2px] bg-secondary-container border border-secondary border-dashed"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Inbound</span>
+</div>
+</div>
+</div>
+<div class="flex-1 w-full relative">
+<!-- Simulated Line Chart with SVG -->
+<svg class="w-full h-full preserve-aspect-ratio-none overflow-visible" viewbox="0 0 1000 200">
+<!-- Grid lines -->
+<line stroke="var(--tw-colors-outline-variant)" stroke-opacity="0.3" stroke-width="1" x1="0" x2="1000" y1="50" y2="50"></line>
+<line stroke="var(--tw-colors-outline-variant)" stroke-opacity="0.3" stroke-width="1" x1="0" x2="1000" y1="100" y2="100"></line>
+<line stroke="var(--tw-colors-outline-variant)" stroke-opacity="0.3" stroke-width="1" x1="0" x2="1000" y1="150" y2="150"></line>
+<line stroke="var(--tw-colors-outline-variant)" stroke-opacity="0.8" stroke-width="1" x1="0" x2="1000" y1="200" y2="200"></line>
+<!-- Inbound Line (Dashed, softer) -->
+<path d="M0,180 C100,160 200,190 300,140 C400,90 500,150 600,120 C700,90 800,130 900,100 L1000,110" fill="none" opacity="0.6" stroke="var(--tw-colors-secondary)" stroke-dasharray="6,4" stroke-width="2"></path>
+<!-- Outbound Area and Line -->
+<path d="M0,150 C150,120 250,80 400,100 C550,120 650,40 800,60 C900,70 950,30 1000,20 L1000,200 L0,200 Z" fill="var(--tw-colors-surface-container)" opacity="0.5"></path>
+<path d="M0,150 C150,120 250,80 400,100 C550,120 650,40 800,60 C900,70 950,30 1000,20" fill="none" stroke="var(--tw-colors-primary)" stroke-width="3"></path>
+<!-- Data Points (Interactive Hover Targets) -->
+<circle class="hover:r-6 cursor-pointer transition-all" cx="400" cy="100" fill="var(--tw-colors-surface-container-lowest)" r="4" stroke="var(--tw-colors-primary)" stroke-width="2"></circle>
+<circle class="hover:r-6 cursor-pointer transition-all" cx="800" cy="60" fill="var(--tw-colors-surface-container-lowest)" r="4" stroke="var(--tw-colors-primary)" stroke-width="2"></circle>
+<!-- X Axis Labels -->
+<text fill="var(--tw-colors-on-surface-variant)" font-family="Inter" font-size="12" font-weight="600" x="0" y="220">Jan</text>
+<text fill="var(--tw-colors-on-surface-variant)" font-family="Inter" font-size="12" font-weight="600" x="200" y="220">Feb</text>
+<text fill="var(--tw-colors-on-surface-variant)" font-family="Inter" font-size="12" font-weight="600" x="400" y="220">Mar</text>
+<text fill="var(--tw-colors-on-surface-variant)" font-family="Inter" font-size="12" font-weight="600" x="600" y="220">Apr</text>
+<text fill="var(--tw-colors-on-surface-variant)" font-family="Inter" font-size="12" font-weight="600" x="800" y="220">May</text>
+<text fill="var(--tw-colors-on-surface-variant)" font-family="Inter" font-size="12" font-weight="600" x="980" y="220">Jun</text>
+</svg>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
