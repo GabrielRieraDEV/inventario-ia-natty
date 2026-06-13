@@ -40,3 +40,22 @@ def resumen(_: CurrentUser = Depends(get_current_user)) -> dict:
         "entradas_hoy": entradas,
         "salidas_hoy": salidas,
     }
+
+
+@router.get("/stock-por-categoria")
+def stock_por_categoria(_: CurrentUser = Depends(get_current_user)) -> list[dict]:
+    """Existencias totales agrupadas por categoría (gráfico de reportes)."""
+    client = get_client()
+    filas = client.table("vista_stock").select("categoria_id, stock_actual").execute().data or []
+    cats = {
+        c["id"]: c["nombre"]
+        for c in client.table("categoria").select("id, nombre").execute().data or []
+    }
+    agg: dict[str, int] = {}
+    for f in filas:
+        nombre = cats.get(f.get("categoria_id"), "Sin categoría")
+        agg[nombre] = agg.get(nombre, 0) + (f.get("stock_actual") or 0)
+    return [
+        {"categoria": k, "stock": v}
+        for k, v in sorted(agg.items(), key=lambda x: -x[1])
+    ]

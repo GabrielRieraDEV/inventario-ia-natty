@@ -1,15 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useParams } from "next/navigation";
 import { Icon } from "@/components/Icon";
+import { api } from "@/lib/api";
 
-type Estado = "iniciando" | "listo" | "capturando" | "error";
+type Estado = "iniciando" | "listo" | "enviando" | "enviado" | "error";
 
 export default function CapturaMovilPage() {
+  const params = useParams<{ token: string }>();
+  const token = params?.token as string;
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [estado, setEstado] = useState<Estado>("iniciando");
   const [foto, setFoto] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let activo = true;
@@ -50,9 +55,31 @@ export default function CapturaMovilPage() {
     if (!ctx) return;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     setFoto(canvas.toDataURL("image/jpeg", 0.9));
-    setEstado("capturando");
-    // TODO: enviar la imagen al backend (POST /api/recognize) y reflejar en la PC (RF-01).
-  }, [estado]);
+    setEstado("enviando");
+    setError(null);
+
+    // Enviar la imagen al backend, que la reconoce con la IA y la refleja en la PC (RF-01).
+    canvas.toBlob(
+      async (blob) => {
+        if (!blob) {
+          setEstado("error");
+          setError("No se pudo capturar la imagen.");
+          return;
+        }
+        try {
+          const form = new FormData();
+          form.append("file", blob, "captura.jpg");
+          await api.postForm(`/api/sesiones/${token}/capturar`, form);
+          setEstado("enviado");
+        } catch (e) {
+          setEstado("error");
+          setError(e instanceof Error ? e.message : "No se pudo enviar la foto.");
+        }
+      },
+      "image/jpeg",
+      0.9,
+    );
+  }, [estado, token]);
 
   return (
     <div className="fixed inset-0 bg-black text-surface-bright overflow-hidden select-none">
@@ -81,16 +108,16 @@ export default function CapturaMovilPage() {
           <Icon name="close" />
         </button>
         <div className="flex items-center gap-sm bg-inverse-surface/70 backdrop-blur-md px-md py-sm rounded-full border border-surface-bright/10 mt-xs">
-          {estado === "listo" || estado === "capturando" ? (
+          {estado === "iniciando" ? (
             <>
-              <span className="w-2 h-2 rounded-full bg-[#10B981]" />
-              <span className="font-label-md text-label-md tracking-wide">Vinculado</span>
+              <Icon name="progress_activity" className="animate-spin text-[18px] text-primary-fixed" />
+              <span className="font-label-md text-label-md tracking-wide">Conectando…</span>
             </>
           ) : (
             <>
-              <Icon name="progress_activity" className="animate-spin text-[18px] text-primary-fixed" />
+              <span className={`w-2 h-2 rounded-full ${estado === "error" ? "bg-error" : "bg-[#10B981]"}`} />
               <span className="font-label-md text-label-md tracking-wide">
-                {estado === "error" ? "Sin cámara" : "Conectando…"}
+                {estado === "error" ? "Sin cámara" : "Vinculado"}
               </span>
             </>
           )}
@@ -117,9 +144,21 @@ export default function CapturaMovilPage() {
         )}
         {foto && (
           <div className="bg-black/60 backdrop-blur-md px-lg py-sm rounded-full border border-surface-bright/10 text-center pointer-events-auto">
-            <p className="font-body-md text-body-md flex items-center gap-sm">
-              <Icon name="check_circle" fill className="text-[#10B981]" /> Foto enviada al sistema
-            </p>
+            {estado === "enviando" && (
+              <p className="font-body-md text-body-md flex items-center gap-sm">
+                <Icon name="progress_activity" className="animate-spin" /> Enviando y reconociendo…
+              </p>
+            )}
+            {estado === "enviado" && (
+              <p className="font-body-md text-body-md flex items-center gap-sm">
+                <Icon name="check_circle" fill className="text-[#10B981]" /> ¡Listo! Revisa la pantalla de la PC
+              </p>
+            )}
+            {estado === "error" && (
+              <p className="font-body-md text-body-md flex items-center gap-sm text-error-container">
+                <Icon name="error" /> {error ?? "Error al enviar"}
+              </p>
+            )}
           </div>
         )}
       </div>

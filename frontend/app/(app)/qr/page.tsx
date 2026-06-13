@@ -1,20 +1,51 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { Icon } from "@/components/Icon";
+import { api } from "@/lib/api";
+
+type Sesion = { token: string; estado: string; resultado: unknown };
 
 export default function QrPage() {
+  const router = useRouter();
+  const [token, setToken] = useState<string>("");
   const [url, setUrl] = useState<string>("");
+  const [estado, setEstado] = useState<string>("pendiente");
+  const [error, setError] = useState<string | null>(null);
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // Crear la sesión en el backend.
   useEffect(() => {
-    // Token de sesión para vincular el teléfono a esta sesión de la PC.
-    const token =
-      typeof crypto !== "undefined" && crypto.randomUUID
-        ? crypto.randomUUID()
-        : Math.random().toString(36).slice(2);
-    setUrl(`${window.location.origin}/m/${token}`);
+    api
+      .post<{ token: string }>("/api/sesiones")
+      .then((s) => {
+        setToken(s.token);
+        setUrl(`${window.location.origin}/m/${s.token}`);
+      })
+      .catch((e) => setError(e instanceof Error ? e.message : "No se pudo crear la sesión."));
   }, []);
+
+  // Poll hasta que el teléfono envíe la captura y la IA reconozca el producto.
+  useEffect(() => {
+    if (!token) return;
+    timer.current = setInterval(async () => {
+      try {
+        const s = await api.get<Sesion>(`/api/sesiones/${token}`);
+        setEstado(s.estado);
+        if (s.estado === "reconocido") {
+          if (timer.current) clearInterval(timer.current);
+          router.push(`/reconocimiento?token=${token}`);
+        }
+      } catch {
+        /* reintenta en el próximo tick */
+      }
+    }, 2000);
+    return () => {
+      if (timer.current) clearInterval(timer.current);
+    };
+  }, [token, router]);
 
   return (
     <div className="flex-1 flex items-center justify-center p-md md:p-xl">
@@ -25,30 +56,31 @@ export default function QrPage() {
           <Icon name="devices" className="text-primary text-[32px]" />
         </div>
 
-        <h2 className="font-headline-md text-headline-md text-on-background font-semibold mb-sm">
-          Vincular teléfono
-        </h2>
+        <h2 className="font-headline-md text-headline-md text-on-background font-semibold mb-sm">Vincular teléfono</h2>
         <p className="font-body-lg text-body-lg text-on-surface-variant mb-xl max-w-sm">
-          Escanea este código con la cámara de tu teléfono para vincularlo y capturar productos.
+          Escanea este código con la cámara de tu teléfono para capturar un producto.
         </p>
 
-        <div className="bg-white p-lg rounded-xl border border-outline-variant shadow-sm mb-xl flex items-center justify-center w-64 h-64 mx-auto">
+        <div className="bg-white p-lg rounded-xl border border-outline-variant shadow-sm mb-lg flex items-center justify-center w-64 h-64 mx-auto">
           {url ? (
             <QRCodeSVG value={url} size={208} fgColor="#03224d" bgColor="#ffffff" level="M" />
           ) : (
-            <Icon name="qr_code_2" className="text-outline text-[120px]" />
+            <Icon name="qr_code_2" className="text-outline text-[120px] animate-pulse" />
           )}
         </div>
 
-        {url && (
-          <p className="font-data-mono text-data-mono text-on-surface-variant break-all mb-lg max-w-sm">
-            {url}
-          </p>
+        {error ? (
+          <p className="font-body-sm text-body-sm text-error mb-md">{error}</p>
+        ) : (
+          <div className="flex items-center gap-sm bg-surface-container-low rounded-full px-md py-sm mb-md">
+            <Icon name="progress_activity" className="animate-spin text-primary text-[18px]" />
+            <span className="font-label-md text-label-md text-on-surface-variant">
+              {estado === "reconocido" ? "¡Producto reconocido!" : "Esperando captura del teléfono…"}
+            </span>
+          </div>
         )}
 
-        <button className="bg-surface-container-lowest border border-primary text-primary hover:bg-surface-container-low font-label-md text-label-md rounded-full px-xl py-sm transition-colors min-w-[140px]">
-          Cancelar
-        </button>
+        {url && <p className="font-data-mono text-data-mono text-on-surface-variant break-all max-w-sm">{url}</p>}
       </section>
     </div>
   );

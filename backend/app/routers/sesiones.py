@@ -11,6 +11,7 @@ Flujo:
 import time
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from pydantic import BaseModel
 
 from app.config import Settings, get_settings
 from app.db import get_client
@@ -75,3 +76,64 @@ async def capturar(
         {"estado": "reconocido", "resultado": resultado}
     ).eq("token", token).execute()
     return resultado
+
+
+class ConfirmarIn(BaseModel):
+    cantidad: int = 1
+    nombre: str | None = None  # permite corregir el nombre reconocido
+
+
+@router.post("/{token}/confirmar")
+def confirmar(
+    token: str, body: ConfirmarIn, user: CurrentUser = Depends(get_current_user)
+) -> dict:
+    """Confirma el reconocimiento: busca/crea el producto y registra la entrada (RF-01/02)."""
+    client = get_client()
+    ses = (
+        client.table("sesion_captura").select("resultado").eq("token", token).execute()
+    )
+    if not ses.data or not ses.data[0].get("resultado"):
+        raise HTTPException(404, "La sesión no tiene un reconocimiento.")
+
+    prod = ses.data[0]["resultado"].get("producto", {})
+    nombre = body.nombre or prod.get("nombre") or "Desconocido"
+
+    # Buscar el producto por nombre; si no existe, crearlo.
+    existente = (
+        client.table("producto").select("id").eq("nombre", nombre).eq("activo", True).execute()
+    )
+    if existente.data:
+        producto_id = existente.data[0]["id"]
+    else:
+        categoria_id = None
+        if prod.get("categoria"):
+            c = client.table("categoria").select("id").eq("nombre", prod["categoria"]).execute()
+            categoria_id = c.data[0]["id"] if c.data else None
+        nuevo = (
+            client.table("producto")
+            .insert(
+                {
+                    "nombre": nombre,
+                    "categoria_id": categoria_id,
+                    "marca": prod.get("marca"),
+                    "presentacion": prod.get("presentacion"),
+                }
+            )
+            .execute()
+        )
+        producto_id = nuevo.data[0]["id"]
+
+    mov = (
+        client.table("movimiento")
+        .insert(
+            {
+                "producto_id": producto_id,
+                "tipo": "entrada",
+                "cantidad": max(1, body.cantidad),
+                "usuario_id": int(user.user_id),
+                "origen": "reconocimiento_ia",
+            }
+        )
+        .execute()
+    )
+    return {"producto_id": producto_id, "nombre": nombre, "movimiento": mov.data[0]}

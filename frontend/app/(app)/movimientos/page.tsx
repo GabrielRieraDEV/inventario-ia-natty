@@ -1,85 +1,117 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
 import { Icon } from "@/components/Icon";
+import { api } from "@/lib/api";
+
+type Producto = { id: number; nombre: string; presentacion: string | null };
+type Stock = { id: number; stock_actual: number; stock_minimo: number };
 
 export default function MovimientosPage() {
+  const [productos, setProductos] = useState<Producto[]>([]);
+  const [stock, setStock] = useState<Record<number, Stock>>({});
+  const [productoId, setProductoId] = useState<number | "">("");
+  const [tipo, setTipo] = useState<"entrada" | "salida">("entrada");
+  const [cantidad, setCantidad] = useState(1);
+  const [nota, setNota] = useState("");
+  const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null);
+  const [guardando, setGuardando] = useState(false);
+
+  async function cargar() {
+    const [p, inv] = await Promise.all([
+      api.get<Producto[]>("/api/productos"),
+      api.get<Stock[]>("/api/productos/inventario"),
+    ]);
+    setProductos(p);
+    setStock(Object.fromEntries(inv.map((s) => [s.id, s])));
+    if (p.length && productoId === "") setProductoId(p[0].id);
+  }
+  useEffect(() => { cargar(); /* eslint-disable-next-line */ }, []);
+
+  const actual = productoId !== "" ? stock[productoId]?.stock_actual ?? 0 : 0;
+  const nuevo = useMemo(() => (tipo === "entrada" ? actual + cantidad : actual - cantidad), [tipo, actual, cantidad]);
+  const seleccionado = productos.find((p) => p.id === productoId);
+
+  async function registrar(e: React.FormEvent) {
+    e.preventDefault();
+    if (productoId === "") return;
+    setGuardando(true);
+    setMsg(null);
+    try {
+      await api.post("/api/movimientos", { producto_id: productoId, tipo, cantidad, nota: nota || null });
+      setMsg({ ok: true, texto: "Movimiento registrado y stock actualizado." });
+      setCantidad(1);
+      setNota("");
+      await cargar();
+    } catch (e) {
+      setMsg({ ok: false, texto: e instanceof Error ? e.message : "No se pudo registrar." });
+    } finally {
+      setGuardando(false);
+    }
+  }
+
   return (
     <div className="w-full max-w-container-max mx-auto">
       <div className="mb-lg">
         <h2 className="font-headline-lg text-headline-lg text-on-background">Registrar movimiento</h2>
-        <p className="font-body-md text-body-md text-on-surface-variant mt-xs">
-          Registra entradas de mercancía o salidas de despacho.
-        </p>
+        <p className="font-body-md text-body-md text-on-surface-variant mt-xs">Registra entradas de mercancía o salidas de despacho.</p>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-lg items-start">
-        {/* Formulario */}
         <div className="xl:col-span-8 space-y-lg">
           <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg">
-            <form className="space-y-lg">
-              {/* Producto */}
+            <form className="space-y-lg" onSubmit={registrar}>
               <div>
                 <label className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-sm block">Producto</label>
-                <div className="relative">
-                  <Icon name="search" className="absolute left-md top-1/2 -translate-y-1/2 text-outline" />
-                  <input
-                    type="text"
-                    defaultValue="Cerveza Polar Pilsen 355ml (Caja x24)"
-                    placeholder="Selecciona o escanea un producto…"
-                    className="w-full pl-[40px] pr-md py-md bg-surface-bright border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-shadow"
-                  />
-                </div>
+                <select value={productoId} onChange={(e) => setProductoId(e.target.value ? Number(e.target.value) : "")} required
+                  className="w-full px-md py-md bg-surface-bright border border-outline-variant rounded-lg font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                  {productos.length === 0 && <option value="">No hay productos</option>}
+                  {productos.map((p) => <option key={p.id} value={p.id}>{p.nombre}{p.presentacion ? ` (${p.presentacion})` : ""}</option>)}
+                </select>
               </div>
 
               <hr className="border-outline-variant opacity-50" />
 
-              {/* Tipo y cantidad */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
                 <div>
                   <label className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-sm block">Tipo de movimiento</label>
                   <div className="flex rounded-lg border border-outline-variant p-xs bg-surface-bright">
-                    <label className="flex-1 cursor-pointer">
-                      <input defaultChecked className="peer sr-only" name="tipo" type="radio" value="entrada" />
-                      <div className="text-center py-sm rounded-md font-label-md text-label-md peer-checked:bg-primary-container peer-checked:text-on-primary-container text-on-surface-variant hover:bg-surface-container transition-colors flex items-center justify-center gap-xs">
-                        <Icon name="arrow_downward" fill className="text-[18px]" /> Entrada
-                      </div>
-                    </label>
-                    <label className="flex-1 cursor-pointer">
-                      <input className="peer sr-only" name="tipo" type="radio" value="salida" />
-                      <div className="text-center py-sm rounded-md font-label-md text-label-md peer-checked:bg-error-container peer-checked:text-on-error-container text-on-surface-variant hover:bg-surface-container transition-colors flex items-center justify-center gap-xs">
-                        <Icon name="arrow_upward" fill className="text-[18px]" /> Salida
-                      </div>
-                    </label>
+                    {(["entrada", "salida"] as const).map((t) => (
+                      <button key={t} type="button" onClick={() => setTipo(t)}
+                        className={`flex-1 text-center py-sm rounded-md font-label-md text-label-md flex items-center justify-center gap-xs transition-colors ${
+                          tipo === t
+                            ? t === "entrada" ? "bg-primary-container text-on-primary-container" : "bg-error-container text-on-error-container"
+                            : "text-on-surface-variant hover:bg-surface-container"
+                        }`}>
+                        <Icon name={t === "entrada" ? "arrow_downward" : "arrow_upward"} fill className="text-[18px]" />
+                        {t === "entrada" ? "Entrada" : "Salida"}
+                      </button>
+                    ))}
                   </div>
                 </div>
                 <div>
                   <label className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-sm block">Cantidad</label>
-                  <div className="relative">
-                    <input type="number" min={1} defaultValue={5} className="w-full px-md py-md bg-surface-bright border border-outline-variant rounded-lg font-data-mono text-body-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-shadow text-right pr-[60px]" />
-                    <div className="absolute right-md top-1/2 -translate-y-1/2 font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-sm py-xs rounded border border-outline-variant">Cajas</div>
-                  </div>
+                  <input type="number" min={1} value={cantidad} onChange={(e) => setCantidad(Math.max(1, Number(e.target.value)))}
+                    className="w-full px-md py-md bg-surface-bright border border-outline-variant rounded-lg font-data-mono text-body-lg text-right outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" />
                 </div>
               </div>
 
-              {/* Responsable */}
               <div>
-                <label className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-sm block">Responsable</label>
-                <select className="w-full px-md py-md bg-surface-bright border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-shadow appearance-none">
-                  <option>Carlos Mendoza (Encargado de almacén)</option>
-                  <option>Ana Silva (Logística)</option>
-                  <option>Proveedor externo</option>
-                </select>
+                <label className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-sm block">Nota (opcional)</label>
+                <textarea rows={2} value={nota} onChange={(e) => setNota(e.target.value)} placeholder="Detalles del movimiento…"
+                  className="w-full px-md py-sm bg-surface-bright border border-outline-variant rounded-lg font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 resize-none" />
               </div>
 
-              {/* Notas */}
-              <div>
-                <label className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-sm block">Notas (opcional)</label>
-                <textarea rows={3} placeholder="Agrega detalles relevantes sobre este movimiento…" className="w-full px-md py-sm bg-surface-bright border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-shadow resize-none" />
-              </div>
+              {msg && (
+                <div className={`flex items-center gap-sm rounded-lg px-md py-sm font-body-sm text-body-sm ${msg.ok ? "bg-[#dcfce7] text-[#166534]" : "bg-error-container text-on-error-container"}`}>
+                  <Icon name={msg.ok ? "check_circle" : "error"} className="text-[18px]" /> {msg.texto}
+                </div>
+              )}
 
-              {/* Acciones */}
-              <div className="pt-md flex items-center justify-end gap-md border-t border-outline-variant mt-lg">
-                <button type="button" className="font-label-md text-label-md text-on-surface-variant px-xl py-[10px] rounded-lg hover:bg-surface-container transition-colors">Cancelar</button>
-                <button type="button" className="font-label-md text-label-md bg-primary text-on-primary px-xl py-[10px] rounded-lg hover:shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1)] transition-all flex items-center gap-sm">
-                  <Icon name="check_circle" fill className="text-[18px]" /> Confirmar movimiento
+              <div className="pt-md flex items-center justify-end gap-md border-t border-outline-variant">
+                <button type="submit" disabled={guardando || productoId === ""}
+                  className="font-label-md text-label-md bg-primary text-on-primary px-xl py-[10px] rounded-lg hover:bg-primary-container transition-all flex items-center gap-sm disabled:opacity-70">
+                  <Icon name="check_circle" fill className="text-[18px]" /> {guardando ? "Registrando…" : "Confirmar movimiento"}
                 </button>
               </div>
             </form>
@@ -88,40 +120,36 @@ export default function MovimientosPage() {
 
         {/* Impacto */}
         <div className="xl:col-span-4">
-          <div className="sticky top-[100px]">
-            <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col">
-              <h3 className="font-headline-sm text-headline-sm text-on-surface mb-md flex items-center gap-sm border-b border-outline-variant pb-md">
-                <Icon name="analytics" className="text-surface-tint" /> Impacto del movimiento
-              </h3>
-              <div className="space-y-lg py-md">
-                <div>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-xs">Producto seleccionado</p>
-                  <p className="font-body-md text-body-md font-medium text-on-surface">Cerveza Polar Pilsen 355ml (Caja x24)</p>
-                  <p className="font-data-mono text-data-mono text-on-surface-variant mt-xs">SKU: POL-PIL-355-24</p>
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg">
+            <h3 className="font-headline-sm text-headline-sm text-on-surface mb-md flex items-center gap-sm border-b border-outline-variant pb-md">
+              <Icon name="analytics" className="text-surface-tint" /> Impacto del movimiento
+            </h3>
+            <div className="space-y-lg py-md">
+              <div>
+                <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-xs">Producto seleccionado</p>
+                <p className="font-body-md text-body-md font-medium text-on-surface">{seleccionado?.nombre ?? "—"}</p>
+              </div>
+              <div className="bg-surface-container rounded-lg p-md border border-outline-variant space-y-sm">
+                <div className="flex justify-between items-center">
+                  <span className="font-body-md text-body-md text-on-surface-variant">Stock actual</span>
+                  <span className="font-data-mono text-body-lg text-on-surface">{actual}</span>
                 </div>
-                <div className="bg-surface-container rounded-lg p-md border border-outline-variant space-y-sm">
-                  <div className="flex justify-between items-center">
-                    <span className="font-body-md text-body-md text-on-surface-variant">Stock actual</span>
-                    <span className="font-data-mono text-body-lg text-on-surface">142</span>
-                  </div>
-                  <div className="flex justify-between items-center text-primary">
-                    <span className="font-body-md text-body-md">Entrada</span>
-                    <span className="font-data-mono text-body-lg font-bold flex items-center gap-xs"><Icon name="add" className="text-[16px]" /> 5</span>
-                  </div>
-                  <hr className="border-outline-variant my-sm" />
-                  <div className="flex justify-between items-center">
-                    <span className="font-label-md text-label-md text-on-surface uppercase tracking-wider">Nuevo stock</span>
-                    <span className="font-data-mono text-headline-md font-bold text-on-background">147</span>
-                  </div>
+                <div className={`flex justify-between items-center ${tipo === "entrada" ? "text-primary" : "text-error"}`}>
+                  <span className="font-body-md text-body-md">{tipo === "entrada" ? "Entrada" : "Salida"}</span>
+                  <span className="font-data-mono text-body-lg font-bold">{tipo === "entrada" ? "+" : "−"}{cantidad}</span>
                 </div>
-                <div className="flex items-start gap-sm bg-surface-bright border border-outline-variant rounded-lg p-md">
-                  <Icon name="info" fill className="text-primary mt-[2px]" />
-                  <div>
-                    <p className="font-label-md text-label-md text-on-surface">Nivel de stock óptimo</p>
-                    <p className="font-body-sm text-body-sm text-on-surface-variant mt-xs">El nuevo nivel supera el umbral mínimo de 50 unidades.</p>
-                  </div>
+                <hr className="border-outline-variant my-sm" />
+                <div className="flex justify-between items-center">
+                  <span className="font-label-md text-label-md text-on-surface uppercase tracking-wider">Nuevo stock</span>
+                  <span className={`font-data-mono text-headline-md font-bold ${nuevo < 0 ? "text-error" : "text-on-background"}`}>{nuevo}</span>
                 </div>
               </div>
+              {nuevo < 0 && (
+                <div className="flex items-start gap-sm bg-error-container/40 border border-error rounded-lg p-md">
+                  <Icon name="warning" className="text-error mt-[2px]" />
+                  <p className="font-body-sm text-body-sm text-on-surface">La salida supera el stock disponible.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
