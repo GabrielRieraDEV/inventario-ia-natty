@@ -1,0 +1,36 @@
+# Despliegue del backend (FastAPI) en Render — https://render.com
+# Render lee este archivo como "Blueprint". Conecta el repo y crea el servicio.
+# Las claves marcadas con sync:false se cargan a mano en el panel (nunca en git).
+services:
+  - type: web
+    name: inventario-ia-natty-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      # Persistencia (Supabase) — usar la clave SECRET / service_role en el backend.
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      # Reconocimiento (Google Gemini).
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      # Seguridad: Render genera un secreto largo y aleatorio en el primer deploy.
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE_MINUTES
+        value: "480"
+      # CORS: dominio(s) del frontend en Vercel, separados por coma.
+      # Ej.: https://inventario-ia-natty.vercel.app
+      - key: CORS_ORIGINS
+        sync: false

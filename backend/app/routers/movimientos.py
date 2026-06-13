@@ -1,6 +1,6 @@
 """Gestión de stock y movimientos (RF-02). Evalúa alertas tras cada registro."""
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.db import get_client
 from app.deps import CurrentUser, get_current_user
@@ -53,8 +53,24 @@ def listar(limite: int = 100, _: CurrentUser = Depends(get_current_user)) -> lis
 
 @router.post("", response_model=Movimiento, status_code=201)
 def crear(body: MovimientoIn, user: CurrentUser = Depends(get_current_user)) -> dict:
+    client = get_client()
+    # Una salida nunca debe dejar el stock en negativo (el stock es derivado).
+    if body.tipo == "salida":
+        fila = (
+            client.table("vista_stock")
+            .select("stock_actual")
+            .eq("id", body.producto_id)
+            .limit(1)
+            .execute()
+        )
+        disponible = fila.data[0]["stock_actual"] if fila.data else 0
+        if body.cantidad > disponible:
+            raise HTTPException(
+                400, f"Stock insuficiente: hay {disponible} unidades disponibles."
+            )
+
     data = body.model_dump()
     data["usuario_id"] = int(user.user_id)
-    res = get_client().table("movimiento").insert(data).execute()
+    res = client.table("movimiento").insert(data).execute()
     _evaluar_alerta_stock(body.producto_id)
     return res.data[0]

@@ -38,6 +38,8 @@ Primera vez: ejecutar `backend/schema.sql` en el SQL Editor de Supabase, luego `
 - **Supabase usa el formato de claves NUEVO** (`sb_secret_…` / `sb_publishable_…`). Requiere `supabase>=2.31` (la 2.11 da "Invalid API key").
 - **Hash de contraseñas con `bcrypt` directo**, NO passlib (passlib 1.7.4 + bcrypt 4.x crashea).
 - **Reconocimiento del teléfono real**: `getUserMedia` y `localhost` no son accesibles desde un teléfono externo; para probar con teléfono hay que desplegar (Vercel/Render) o usar la IP LAN. En la misma PC, la webcam sirve abriendo la URL del QR en otra pestaña.
+- **No hay Realtime**: la PC **sondea** la sesión (`setInterval` en `qr/page.tsx`), no usa Supabase Realtime. La dependencia `@supabase/supabase-js` está instalada pero hoy sin uso. No afirmar "tiempo real" en la doc.
+- **`zoneinfo` en Windows** necesita el paquete `tzdata` (ya en `requirements.txt`); sin él, `ZoneInfo("America/Caracas")` falla en local.
 - Avisos inofensivos: warning de pydantic `<built-in function any>` (viene de postgrest), y `LF will be replaced by CRLF` de git en Windows.
 
 ## Backend — mapa
@@ -49,18 +51,19 @@ Primera vez: ejecutar `backend/schema.sql` en el SQL Editor de Supabase, luego `
 - `app/models.py` — esquemas pydantic.
 - `app/recognition/` — `base.py` (interfaz `ProductRecognizer` + `RecognitionResult`), `gemini.py` (implementación). Desacoplado: el proveedor se puede cambiar sin tocar el resto.
 - `app/routers/` — `auth`, `usuarios`, `categorias`, `productos`, `movimientos`, `alertas`, `reportes`, `sesiones`.
-- `schema.sql` — esquema 3FN + `vista_stock` (stock derivado) + `sesion_captura` + categorías semilla.
+- `schema.sql` — esquema completo (3FN): tablas con `producto.foto_url` + `vista_stock` (stock derivado, incluye `foto_url`) + `sesion_captura` + categorías semilla + bucket público `productos` (fotos). Para recrear: borrar la BD y correrlo de nuevo.
 - `seed.py` — usuario admin + productos de ejemplo.
 
-Rutas clave: `POST /api/auth/login`, `GET /api/productos/inventario`, `POST /api/movimientos` (evalúa alertas), `GET /api/reportes/resumen`, `GET /api/reportes/stock-por-categoria`, y el flujo QR: `POST /api/sesiones` → `POST /api/sesiones/{token}/capturar` (sin auth, reconoce con IA) → `POST /api/sesiones/{token}/confirmar` (crea/asocia producto + entrada).
+Rutas clave: `POST /api/auth/login`, `GET /api/productos/inventario`, `POST /api/movimientos` (evalúa alertas; una **salida** se rechaza si excede el stock), `GET /api/reportes/resumen` (día en zona `America/Caracas`), `GET /api/reportes/stock-por-categoria`, `GET /api/reportes/export/inventario` y `/export/movimientos` (CSV, RF-09), `GET /api/alertas` (al listar las no resueltas genera alertas `por_vencer`), y el flujo QR: `POST /api/sesiones` → `POST /api/sesiones/{token}/capturar` (sin auth, reconoce con IA; el token caduca a los `SESION_TTL_MINUTOS`; guarda la foto como data URL en `resultado.imagen`) → `POST /api/sesiones/{token}/confirmar` (crea/asocia producto + entrada; sube la foto al bucket `productos` y la guarda en `producto.foto_url` si el producto aún no tiene una). El body acepta `tipo` (`entrada`|`salida`, el flujo QR pasa `?tipo=`) y `foto` (data URL): la PC quita el fondo con `@imgly/background-removal` y envía un **PNG sin fondo**; si falta o falla, se usa la foto original de la sesión. En `salida` el producto debe existir y se valida el stock.
 
 ## Frontend — mapa
 - `app/login/` — login (RF-07). `app/page.tsx` redirige a `/login`.
-- `app/(app)/` — rutas protegidas (sidebar + topbar) tras `AuthGuard`: `dashboard` (RF-08), `catalogo` (RF-06), `inventario` (RF-04), `movimientos` (RF-02), `alertas` (RF-03), `reportes` (RF-05), `configuracion` (RF-09), `usuarios`, `qr`, `reconocimiento`.
-- `app/m/[token]/` — captura móvil a pantalla completa (sin shell), con cámara real.
-- `components/` — `Sidebar`, `Topbar`, `Icon` (Material Symbols), `AuthGuard`, `AlertsContext` (estado compartido de alertas para el badge del sidebar y la campana).
-- `lib/api.ts` — cliente HTTP con JWT en `localStorage` (`getToken`/`setSesion`/`cerrarSesion`); `api.get/post/put/del/postForm`.
-- `lib/nav.ts` — items del sidebar.
+- `app/(app)/` — rutas protegidas (sidebar + topbar) tras `AuthGuard`: `dashboard` (RF-08), `catalogo` (RF-06, alta/edición con modal — incluye `fecha_vencimiento` — y baja lógica + botón "Escanear con cámara"), `inventario` (RF-04, filtra por `?q=`), `movimientos` (RF-02; selector de producto con **buscador/autocompletado** —no `<select>`, escala a miles—; botón de cámara dinámico que abre `/qr?tipo=entrada|salida`), `alertas` (RF-03), `reportes` (RF-05), `configuracion` (RF-09), `usuarios`, `qr`, `reconocimiento` (muestra `resultado.imagen`).
+- `app/m/[token]/` — captura móvil a pantalla completa (sin shell), con cámara real; reduce la foto a ≤1280 px antes de enviarla.
+- `@imgly/background-removal` (en `reconocimiento`): quita el fondo en el navegador al confirmar. Import **dinámico** (fuera del bundle inicial); descarga su modelo/WASM de un CDN la primera vez (requiere internet) y lo cachea. Las miniaturas usan `object-contain` + fondo claro para lucir el recorte transparente.
+- `components/` — `Sidebar` (el flujo QR es un item de nav, "Captura IA"), `Topbar` (el buscador navega a `/inventario?q=`), `Icon` (Material Symbols), `AuthGuard`, `AlertsContext` (estado compartido de alertas para el badge del sidebar y la campana).
+- `lib/api.ts` — cliente HTTP con JWT en `localStorage` (`getToken`/`setSesion`/`cerrarSesion`); `api.get/post/put/del/postForm` y `descargar` (blob autenticado para los CSV).
+- `lib/nav.ts` — items del sidebar (incluye `/qr` "Captura IA", RF-01).
 - `tailwind.config.ts` — tokens del sistema de diseño de **Google Stitch** (navy `#03224d`, Work Sans + Inter). Los mockups originales están en `design/stitch/` (11 pantallas).
 
 ## Convenciones
@@ -73,6 +76,13 @@ El TEG ya está completo en texto. Falta, y depende del sistema:
 - Las **11 capturas** del Cap. IV (Fig. 4a–4k) → tomar del sistema corriendo, guardar en `docs/uploads/`.
 - Métricas reales de la **Tabla 7** (reconocimiento): probado ~95% de exactitud y ~2 s (cumple RT-04 ≥90% y RT-03 ≤3s).
 - El logo `docs/uploads/logo_ugma.png` lo aporta el usuario.
+
+## Despliegue
+Capa gratuita: Supabase (BD) + Render (backend) + Vercel (frontend). Guía paso a paso en `docs/DEPLOY.md`.
+- `render.yaml` (raíz) es el Blueprint del backend: `rootDir: backend`, arranque `uvicorn app.main:app --host 0.0.0.0 --port $PORT`, healthcheck `/health`, `JWT_SECRET` autogenerado. Las claves (`SUPABASE_*`, `GEMINI_API_KEY`, `CORS_ORIGINS`) van como secretos en el panel.
+- `backend/.python-version` fija Python 3.12.7.
+- Frontend en Vercel con **Root Directory = `frontend`**. Tras desplegarlo, agregar su dominio a `CORS_ORIGINS` del backend.
+- `CORS_ORIGINS` (backend) y `NEXT_PUBLIC_API_URL` (frontend) deben apuntarse mutuamente; en prod ya no valen los `localhost`.
 
 ## Repo
 Privado: `github.com/GabrielRieraDEV/inventario-ia-natty`. Rama `main`. Publicado vía GitHub Desktop; el usuario sincroniza/hace push (los commits de Claude se firman con Co-Authored-By).

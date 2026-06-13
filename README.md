@@ -35,7 +35,7 @@ Arquitectura modular de **tres capas** con frontend y backend desacoplados:
 │  Presentación (Next.js)  │      │  Captura móvil (Next.js) │
 │  PC — gestión completa   │◄──QR─┤  Teléfono — solo cámara  │
 └───────────┬─────────────┘      └────────────┬────────────┘
-            │  REST / tiempo real              │
+            │  REST (la PC sondea la sesión)   │
             ▼                                  ▼
         ┌───────────────────────────────────────────┐
         │     Lógica de negocio (Python / FastAPI)   │
@@ -46,7 +46,7 @@ Arquitectura modular de **tres capas** con frontend y backend desacoplados:
                             ▼
                 ┌───────────────────────────┐
                 │ Persistencia (PostgreSQL)  │
-                │ Supabase + tiempo real     │
+                │ Supabase                   │
                 └───────────────────────────┘
 ```
 
@@ -54,7 +54,7 @@ Arquitectura modular de **tres capas** con frontend y backend desacoplados:
 
 - **Backend:** Python · [FastAPI](https://fastapi.tiangolo.com/) (API REST) — desplegado en Render
 - **Frontend:** [Next.js](https://nextjs.org/) — desplegado en Vercel
-- **Base de datos:** PostgreSQL gestionado por [Supabase](https://supabase.com/) (con sincronización en tiempo real)
+- **Base de datos:** PostgreSQL gestionado por [Supabase](https://supabase.com/)
 - **Reconocimiento IA:** modelo de lenguaje multimodal **Google Gemini** consumido vía API (capa gratuita)
 - **Despliegue:** capa gratuita (Vercel + Render + Supabase)
 
@@ -70,7 +70,9 @@ inventario-ia-natty/
 ├── frontend/         # Aplicación Next.js (PC + vista móvil de captura)
 ├── docs/
 │   ├── TEG.tex       # Trabajo Especial de Grado (fuente LaTeX)
+│   ├── DEPLOY.md     # Guía de despliegue (Supabase + Render + Vercel)
 │   └── uploads/      # Figuras del TEG (capturas del sistema, diagramas)
+├── render.yaml       # Blueprint de despliegue del backend en Render
 └── README.md
 ```
 
@@ -78,7 +80,7 @@ inventario-ia-natty/
 
 ## Puesta en marcha (desarrollo local)
 
-> Estado: **scaffold inicial**. La implementación de los módulos se desarrolla de forma incremental (metodología Kanban, según el TEG).
+> Estado: **prototipo funcional completo** — los 9 módulos (RF-01…RF-09) están implementados y probados end-to-end. Para publicarlo, ver [`docs/DEPLOY.md`](docs/DEPLOY.md).
 
 ### Requisitos
 - Python 3.12+
@@ -93,8 +95,10 @@ python -m venv .venv
 # Windows: .venv\Scripts\activate   |   Linux/Mac: source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env      # completar credenciales
-uvicorn app.main:app --reload
+uvicorn app.main:app --port 8003   # ver gotcha de puertos en CLAUDE.md
 ```
+
+> Primera vez: ejecuta `backend/schema.sql` en el SQL Editor de Supabase y luego `python seed.py` (crea el admin y datos de ejemplo).
 
 ### Frontend
 ```bash
@@ -110,9 +114,9 @@ npm run dev
 
 | Requisito | Umbral | Estado |
 |-----------|--------|--------|
-| RT-03 — Tiempo de respuesta del reconocimiento | ≤ 3 s | Por validar |
-| RT-04 — Exactitud del reconocimiento | ≥ 90 % | Por validar |
-| Cumplimiento de requerimientos funcionales | 100 % | Por validar |
+| RT-03 — Tiempo de respuesta del reconocimiento | ≤ 3 s | ✔ ~2 s (medido) |
+| RT-04 — Exactitud del reconocimiento | ≥ 90 % | ✔ ~95 % (medido) |
+| Cumplimiento de requerimientos funcionales | 100 % | ✔ RF-01…RF-09 |
 
 ---
 

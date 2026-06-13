@@ -8,6 +8,7 @@ export type NavItem = {
 
 export const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Panel general", icon: "dashboard", rf: "RF-08" },
+  { href: "/qr", label: "Captura IA", icon: "qr_code_scanner", rf: "RF-01" },
   { href: "/catalogo", label: "Catálogo", icon: "menu_book", rf: "RF-06" },
   { href: "/inventario", label: "Inventario", icon: "inventory_2", rf: "RF-04" },
   { href: "/movimientos", label: "Movimientos", icon: "swap_horiz", rf: "RF-02" },

@@ -12,9 +12,16 @@ export function Topbar() {
   const { alertas } = useAlerts();
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [menu, setMenu] = useState<"none" | "cuenta" | "notif">("none");
+  const [busqueda, setBusqueda] = useState("");
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => setUsuario(getUsuario()), []);
+
+  function buscar(e: React.FormEvent) {
+    e.preventDefault();
+    const q = busqueda.trim();
+    router.push(q ? `/inventario?q=${encodeURIComponent(q)}` : "/inventario");
+  }
 
   useEffect(() => {
     function onClick(e: MouseEvent) {
@@ -36,14 +43,16 @@ export function Topbar() {
   return (
     <header className="bg-surface sticky top-0 z-40 border-b border-outline-variant flex justify-between items-center w-full px-xl py-md">
       {/* Buscador */}
-      <div className="flex-1 max-w-md hidden md:flex relative items-center">
+      <form onSubmit={buscar} className="flex-1 max-w-md hidden md:flex relative items-center">
         <Icon name="search" className="absolute left-sm text-on-surface-variant z-10 pointer-events-none" />
         <input
-          type="text"
+          type="search"
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
           placeholder="Buscar en el inventario..."
           className="w-full bg-[#F1F5F9] border-none rounded-lg pl-xl pr-sm py-[8px] font-body-sm text-on-surface focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all outline-none"
         />
-      </div>
+      </form>
 
       <h1 className="md:hidden font-headline-sm text-headline-sm font-black text-primary">
         Pa&apos; Donde Natty

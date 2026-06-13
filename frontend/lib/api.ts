@@ -3,7 +3,7 @@
 // Cliente HTTP del frontend hacia la API FastAPI. Adjunta el token JWT
 // guardado tras el login y centraliza el manejo de errores.
 
-const BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8003";
 
 const TOKEN_KEY = "natty_token";
 const USER_KEY = "natty_user";
@@ -78,6 +78,29 @@ export const api = {
   postForm: <T>(path: string, form: FormData) =>
     request<T>(path, { method: "POST", body: form }),
 };
+
+/** Descarga un archivo protegido (adjunta el JWT) y dispara el "Guardar como" del navegador. */
+export async function descargar(path: string, filename: string): Promise<void> {
+  const token = getToken();
+  const headers = new Headers();
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  const res = await fetch(`${BASE}${path}`, { headers });
+  if (res.status === 401) {
+    cerrarSesion();
+    if (typeof window !== "undefined") window.location.href = "/login";
+    throw new ApiError(401, "Sesión expirada.");
+  }
+  if (!res.ok) throw new ApiError(res.status, "No se pudo generar el archivo.");
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
 
 // --- Endpoints de autenticación (RF-07) ---
 export async function login(email: string, password: string): Promise<Usuario> {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { api } from "@/lib/api";
 
@@ -14,9 +15,20 @@ type Producto = {
   presentacion: string | null;
   precio: number;
   stock_minimo: number;
+  fecha_vencimiento: string | null;
+  foto_url: string | null;
 };
 
-const vacio = { nombre: "", codigo_barras: "", categoria_id: "", marca: "", presentacion: "", precio: "0", stock_minimo: "0" };
+const vacio = {
+  nombre: "",
+  codigo_barras: "",
+  categoria_id: "",
+  marca: "",
+  presentacion: "",
+  precio: "0",
+  stock_minimo: "0",
+  fecha_vencimiento: "",
+};
 
 export default function CatalogoPage() {
   const [productos, setProductos] = useState<Producto[]>([]);
@@ -24,6 +36,7 @@ export default function CatalogoPage() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modal, setModal] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
   const [form, setForm] = useState({ ...vacio });
   const [guardando, setGuardando] = useState(false);
 
@@ -46,25 +59,52 @@ export default function CatalogoPage() {
   }
   useEffect(() => { cargar(); }, []);
 
-  async function crear(e: React.FormEvent) {
+  function abrirNuevo() {
+    setEditId(null);
+    setForm({ ...vacio });
+    setError(null);
+    setModal(true);
+  }
+
+  function abrirEditar(p: Producto) {
+    setEditId(p.id);
+    setForm({
+      nombre: p.nombre,
+      codigo_barras: p.codigo_barras ?? "",
+      categoria_id: p.categoria_id ? String(p.categoria_id) : "",
+      marca: p.marca ?? "",
+      presentacion: p.presentacion ?? "",
+      precio: String(p.precio),
+      stock_minimo: String(p.stock_minimo),
+      fecha_vencimiento: p.fecha_vencimiento ?? "",
+    });
+    setError(null);
+    setModal(true);
+  }
+
+  async function guardar(e: React.FormEvent) {
     e.preventDefault();
     setGuardando(true);
     setError(null);
+    const cuerpo = {
+      nombre: form.nombre,
+      codigo_barras: form.codigo_barras || null,
+      categoria_id: form.categoria_id ? Number(form.categoria_id) : null,
+      marca: form.marca || null,
+      presentacion: form.presentacion || null,
+      precio: Number(form.precio) || 0,
+      stock_minimo: Number(form.stock_minimo) || 0,
+      fecha_vencimiento: form.fecha_vencimiento || null,
+    };
     try {
-      await api.post("/api/productos", {
-        nombre: form.nombre,
-        codigo_barras: form.codigo_barras || null,
-        categoria_id: form.categoria_id ? Number(form.categoria_id) : null,
-        marca: form.marca || null,
-        presentacion: form.presentacion || null,
-        precio: Number(form.precio) || 0,
-        stock_minimo: Number(form.stock_minimo) || 0,
-      });
+      if (editId === null) await api.post("/api/productos", cuerpo);
+      else await api.put(`/api/productos/${editId}`, cuerpo);
       setModal(false);
       setForm({ ...vacio });
+      setEditId(null);
       await cargar();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "No se pudo crear el producto.");
+      setError(e instanceof Error ? e.message : "No se pudo guardar el producto.");
     } finally {
       setGuardando(false);
     }
@@ -72,8 +112,12 @@ export default function CatalogoPage() {
 
   async function eliminar(id: number) {
     if (!confirm("¿Dar de baja este producto?")) return;
-    await api.del(`/api/productos/${id}`);
-    await cargar();
+    try {
+      await api.del(`/api/productos/${id}`);
+      await cargar();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "No se pudo dar de baja.");
+    }
   }
 
   return (
@@ -83,9 +127,14 @@ export default function CatalogoPage() {
           <h2 className="font-headline-lg text-headline-lg text-primary">Catálogo de productos</h2>
           <p className="font-body-sm text-body-sm text-on-surface-variant mt-xs">Administra los artículos, precios y niveles de existencias.</p>
         </div>
-        <button onClick={() => setModal(true)} className="flex items-center justify-center gap-xs px-md py-sm bg-primary text-on-primary rounded font-label-md text-label-md hover:bg-primary-container transition-colors shadow-sm">
-          <Icon name="add" className="text-[18px]" /> Nuevo producto
-        </button>
+        <div className="flex items-center gap-sm">
+          <Link href="/qr" className="flex items-center justify-center gap-xs px-md py-sm bg-surface-container-lowest border border-primary text-primary rounded font-label-md text-label-md hover:bg-surface-container transition-colors">
+            <Icon name="qr_code_scanner" className="text-[18px]" /> Escanear con cámara
+          </Link>
+          <button onClick={abrirNuevo} className="flex items-center justify-center gap-xs px-md py-sm bg-primary text-on-primary rounded font-label-md text-label-md hover:bg-primary-container transition-colors shadow-sm">
+            <Icon name="add" className="text-[18px]" /> Nuevo producto
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -115,7 +164,12 @@ export default function CatalogoPage() {
                   <tr key={p.id} className="hover:bg-surface-container-low transition-colors group">
                     <td className="py-md px-md">
                       <div className="flex items-center gap-md">
-                        <div className="w-10 h-10 bg-surface-variant rounded flex items-center justify-center text-primary"><Icon name="inventory_2" /></div>
+                        {p.foto_url ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={p.foto_url} alt={p.nombre} className="w-10 h-10 rounded object-contain bg-surface-bright border border-outline-variant p-0.5" />
+                        ) : (
+                          <div className="w-10 h-10 bg-surface-variant rounded flex items-center justify-center text-primary"><Icon name="inventory_2" /></div>
+                        )}
                         <div>
                           <p className="font-label-md text-label-md text-on-surface">{p.nombre}</p>
                           <p className="font-body-sm text-body-sm text-on-surface-variant">{[p.marca, p.presentacion].filter(Boolean).join(" · ") || "—"}</p>
@@ -126,8 +180,11 @@ export default function CatalogoPage() {
                     <td className="py-md px-md"><span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-container text-on-primary-fixed-variant">{catName(p.categoria_id)}</span></td>
                     <td className="py-md px-md font-label-md text-label-md text-on-surface">${p.precio.toFixed(2)}</td>
                     <td className="py-md px-md font-data-mono text-data-mono text-on-surface-variant">{p.stock_minimo}</td>
-                    <td className="py-md px-md text-right">
-                      <button onClick={() => eliminar(p.id)} className="p-xs text-on-surface-variant hover:text-error transition-colors opacity-0 group-hover:opacity-100" title="Dar de baja">
+                    <td className="py-md px-md text-right whitespace-nowrap">
+                      <button onClick={() => abrirEditar(p)} className="p-xs text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100" title="Editar">
+                        <Icon name="edit" className="text-[20px]" />
+                      </button>
+                      <button onClick={() => eliminar(p.id)} className="p-xs text-on-surface-variant hover:text-error transition-colors opacity-0 group-hover:opacity-100 ml-xs" title="Dar de baja">
                         <Icon name="delete" className="text-[20px]" />
                       </button>
                     </td>
@@ -139,15 +196,15 @@ export default function CatalogoPage() {
         </div>
       </div>
 
-      {/* Modal nuevo producto */}
+      {/* Modal nuevo / editar producto */}
       {modal && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-md" onClick={() => setModal(false)}>
           <div className="bg-surface-container-lowest rounded-xl border border-outline-variant w-full max-w-lg p-lg" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-md">
-              <h3 className="font-headline-sm text-headline-sm text-on-surface">Nuevo producto</h3>
+              <h3 className="font-headline-sm text-headline-sm text-on-surface">{editId === null ? "Nuevo producto" : "Editar producto"}</h3>
               <button onClick={() => setModal(false)} className="text-on-surface-variant hover:bg-surface-container rounded-full p-xs"><Icon name="close" /></button>
             </div>
-            <form className="grid grid-cols-1 sm:grid-cols-2 gap-md" onSubmit={crear}>
+            <form className="grid grid-cols-1 sm:grid-cols-2 gap-md" onSubmit={guardar}>
               <input required placeholder="Nombre" value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} className="sm:col-span-2 px-md py-sm bg-surface-bright border border-outline-variant rounded-lg outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" />
               <input placeholder="Código de barras" value={form.codigo_barras} onChange={(e) => setForm({ ...form, codigo_barras: e.target.value })} className="px-md py-sm bg-surface-bright border border-outline-variant rounded-lg outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" />
               <select value={form.categoria_id} onChange={(e) => setForm({ ...form, categoria_id: e.target.value })} className="px-md py-sm bg-surface-bright border border-outline-variant rounded-lg outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
@@ -158,6 +215,10 @@ export default function CatalogoPage() {
               <input placeholder="Presentación (1 kg, 500 ml…)" value={form.presentacion} onChange={(e) => setForm({ ...form, presentacion: e.target.value })} className="px-md py-sm bg-surface-bright border border-outline-variant rounded-lg outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" />
               <input type="number" step="0.01" min="0" placeholder="Precio" value={form.precio} onChange={(e) => setForm({ ...form, precio: e.target.value })} className="px-md py-sm bg-surface-bright border border-outline-variant rounded-lg outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" />
               <input type="number" min="0" placeholder="Stock mínimo" value={form.stock_minimo} onChange={(e) => setForm({ ...form, stock_minimo: e.target.value })} className="px-md py-sm bg-surface-bright border border-outline-variant rounded-lg outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" />
+              <label className="sm:col-span-2 flex flex-col gap-xs font-label-sm text-label-sm text-on-surface-variant">
+                Fecha de vencimiento (opcional)
+                <input type="date" value={form.fecha_vencimiento} onChange={(e) => setForm({ ...form, fecha_vencimiento: e.target.value })} className="px-md py-sm bg-surface-bright border border-outline-variant rounded-lg outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 text-on-surface" />
+              </label>
               <div className="sm:col-span-2 flex justify-end gap-md pt-sm">
                 <button type="button" onClick={() => setModal(false)} className="px-lg py-sm font-label-md text-label-md text-on-surface-variant hover:bg-surface-container rounded-lg">Cancelar</button>
                 <button type="submit" disabled={guardando} className="px-lg py-sm bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:bg-primary-container transition-colors flex items-center gap-sm disabled:opacity-70">

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Icon } from "@/components/Icon";
 import { api } from "@/lib/api";
 
@@ -10,6 +11,7 @@ type Fila = {
   categoria: string | null;
   stock_actual: number;
   stock_minimo: number;
+  foto_url: string | null;
 };
 
 function estadoDe(f: Fila): "critico" | "bajo" | "normal" {
@@ -24,10 +26,15 @@ const badge = {
   normal: { cls: "bg-primary-fixed text-on-primary-fixed", label: "Normal" },
 } as const;
 
-export default function InventarioPage() {
+function Contenido() {
+  const params = useSearchParams();
   const [items, setItems] = useState<Fila[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [q, setQ] = useState("");
+
+  // Sincroniza la caja con el término que llega del buscador de la barra superior.
+  useEffect(() => setQ(params.get("q") ?? ""), [params]);
 
   useEffect(() => {
     api
@@ -37,6 +44,16 @@ export default function InventarioPage() {
       .finally(() => setCargando(false));
   }, []);
 
+  const filtrados = useMemo(() => {
+    const t = q.trim().toLowerCase();
+    if (!t) return items;
+    return items.filter(
+      (f) =>
+        f.nombre.toLowerCase().includes(t) ||
+        (f.categoria ?? "").toLowerCase().includes(t),
+    );
+  }, [items, q]);
+
   return (
     <div className="max-w-container-max mx-auto flex flex-col gap-lg w-full">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-md">
@@ -45,6 +62,16 @@ export default function InventarioPage() {
           <p className="font-body-md text-body-md text-on-surface-variant mt-xs">
             Existencias en tiempo real (derivadas de los movimientos).
           </p>
+        </div>
+        <div className="relative w-full sm:w-72">
+          <Icon name="search" className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" />
+          <input
+            type="search"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Buscar por nombre o categoría…"
+            className="w-full bg-surface-bright border border-outline-variant rounded-lg pl-xl pr-sm py-sm font-body-sm text-on-surface outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          />
         </div>
       </div>
 
@@ -57,7 +84,11 @@ export default function InventarioPage() {
       <div className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col shadow-sm">
         <div className="px-md py-sm border-b border-outline-variant flex items-center justify-between">
           <span className="font-label-sm text-label-sm text-on-surface-variant">
-            {cargando ? "Cargando…" : `Mostrando ${items.length} artículos`}
+            {cargando
+              ? "Cargando…"
+              : q.trim()
+                ? `${filtrados.length} de ${items.length} artículos`
+                : `Mostrando ${items.length} artículos`}
           </span>
         </div>
         <div className="overflow-x-auto">
@@ -76,12 +107,24 @@ export default function InventarioPage() {
                 <tr><td colSpan={5} className="py-xl text-center text-on-surface-variant"><Icon name="progress_activity" className="animate-spin" /></td></tr>
               ) : items.length === 0 ? (
                 <tr><td colSpan={5} className="py-xl text-center font-body-sm text-on-surface-variant">Aún no hay productos. Agrégalos desde el catálogo.</td></tr>
+              ) : filtrados.length === 0 ? (
+                <tr><td colSpan={5} className="py-xl text-center font-body-sm text-on-surface-variant">Sin resultados para «{q.trim()}».</td></tr>
               ) : (
-                items.map((f) => {
+                filtrados.map((f) => {
                   const e = estadoDe(f);
                   return (
                     <tr key={f.id} className="hover:bg-surface-container-low transition-colors">
-                      <td className="px-md py-md font-label-md text-label-md text-on-surface">{f.nombre}</td>
+                      <td className="px-md py-md font-label-md text-label-md text-on-surface">
+                        <div className="flex items-center gap-sm">
+                          {f.foto_url ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={f.foto_url} alt={f.nombre} className="w-8 h-8 rounded object-contain bg-surface-bright border border-outline-variant shrink-0 p-0.5" />
+                          ) : (
+                            <div className="w-8 h-8 rounded bg-surface-variant flex items-center justify-center text-primary shrink-0"><Icon name="inventory_2" className="text-[18px]" /></div>
+                          )}
+                          {f.nombre}
+                        </div>
+                      </td>
                       <td className="px-md py-md font-body-sm text-body-sm text-on-surface-variant">{f.categoria ?? "—"}</td>
                       <td className={`px-md py-md text-right font-data-mono text-data-mono text-on-surface ${e === "critico" ? "font-bold" : ""}`}>{f.stock_actual}</td>
                       <td className="px-md py-md text-right font-data-mono text-data-mono text-on-surface-variant">{f.stock_minimo}</td>
@@ -97,5 +140,13 @@ export default function InventarioPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function InventarioPage() {
+  return (
+    <Suspense fallback={<div className="py-xl text-center text-on-surface-variant"><Icon name="progress_activity" className="animate-spin" /></div>}>
+      <Contenido />
+    </Suspense>
   );
 }

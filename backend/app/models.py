@@ -42,6 +42,7 @@ class ProductoIn(BaseModel):
 
 class Producto(ProductoIn):
     id: int
+    foto_url: str | None = None
     activo: bool = True
 
 

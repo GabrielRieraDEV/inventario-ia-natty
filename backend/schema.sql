@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS producto (
     precio        NUMERIC(12, 2) NOT NULL DEFAULT 0 CHECK (precio >= 0),
     stock_minimo  INTEGER     NOT NULL DEFAULT 0 CHECK (stock_minimo >= 0),
     fecha_vencimiento DATE,
+    foto_url      TEXT,
     activo        BOOLEAN     NOT NULL DEFAULT TRUE,
     creado_en     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -82,6 +83,7 @@ SELECT
     c.nombre AS categoria,
     p.stock_minimo,
     p.precio,
+    p.foto_url,
     COALESCE(SUM(
         CASE m.tipo
             WHEN 'entrada' THEN m.cantidad
@@ -95,10 +97,11 @@ LEFT JOIN movimiento m ON m.producto_id = p.id
 WHERE p.activo = TRUE
 GROUP BY p.id, c.nombre;
 
--- ---------- Sesión de captura móvil (RF-01, flujo QR en tiempo real) ----------
+-- ---------- Sesión de captura móvil (RF-01, flujo QR) ----------
 -- La PC crea una sesión y muestra su token en un QR; el teléfono la abre,
 -- captura la foto y el backend escribe aquí el resultado del reconocimiento.
--- La PC se suscribe por Realtime a esta fila y refleja el resultado.
+-- La PC sondea esta fila (GET /api/sesiones/{token}) hasta verla 'reconocido'.
+-- El token caduca a los SESION_TTL_MINUTOS (estado 'expirada').
 CREATE TABLE IF NOT EXISTS sesion_captura (
     token        UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
     estado       TEXT        NOT NULL DEFAULT 'pendiente'
@@ -106,6 +109,13 @@ CREATE TABLE IF NOT EXISTS sesion_captura (
     resultado    JSONB,
     creado_en    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- ---------- Almacenamiento de fotos de productos ----------
+-- Bucket público (lectura por URL). El backend sube con la clave service_role
+-- (omite RLS); la lectura pública permite mostrar las miniaturas en la UI.
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('productos', 'productos', TRUE)
+ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================
 --  Datos semilla mínimos (categorías y un usuario administrador)

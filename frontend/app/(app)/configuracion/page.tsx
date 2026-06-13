@@ -1,29 +1,119 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
+import { api, descargar, ApiError } from "@/lib/api";
 
-function Toggle({ defaultChecked = false }: { defaultChecked?: boolean }) {
+type Usuario = { rol: string; activo: boolean };
+
+// Preferencias guardadas localmente (RF-09). El detector de anomalías y las
+// notificaciones por correo son trabajo futuro; aquí se persiste la preferencia.
+type Config = {
+  sensibilidad: number;
+  notifs: Record<string, boolean>;
+};
+
+const NOTIFS = [
+  { k: "stock", t: "Agotamiento crítico de stock", d: "Alerta inmediata cuando un producto cae por debajo del stock mínimo.", warn: false },
+  { k: "reporte", t: "Reporte diario consolidado", d: "Resumen de fin de día con el detalle de todos los movimientos.", warn: false },
+  { k: "acceso", t: "Accesos en horarios inusuales", d: "Aviso si se accede al sistema fuera del horario laboral.", warn: true },
+];
+
+const CONFIG_KEY = "natty_config";
+const DEFAULT_CONFIG: Config = {
+  sensibilidad: 75,
+  notifs: { stock: true, reporte: false, acceso: true },
+};
+
+function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
     <label className="relative inline-flex items-center cursor-pointer shrink-0">
-      <input type="checkbox" defaultChecked={defaultChecked} className="sr-only peer" />
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="sr-only peer" />
       <div className="w-12 h-6 bg-outline-variant rounded-full peer-checked:bg-primary transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:shadow after:transition-all peer-checked:after:translate-x-6" />
     </label>
   );
 }
 
-const NOTIFS = [
-  { t: "Agotamiento crítico de stock", d: "Alerta inmediata cuando un producto de alta rotación cae por debajo del 10%.", on: true },
-  { t: "Reporte diario consolidado", d: "Correo de fin de día con el detalle de todos los movimientos.", on: false },
-  { t: "Accesos en horarios inusuales", d: "Alerta si se accede al sistema fuera del horario laboral.", on: true, warn: true },
-];
+function leerConfig(): Config {
+  if (typeof window === "undefined") return DEFAULT_CONFIG;
+  try {
+    const raw = localStorage.getItem(CONFIG_KEY);
+    return raw ? { ...DEFAULT_CONFIG, ...(JSON.parse(raw) as Config) } : DEFAULT_CONFIG;
+  } catch {
+    return DEFAULT_CONFIG;
+  }
+}
 
 export default function ConfiguracionPage() {
+  const [admins, setAdmins] = useState<number | null>(null);
+  const [personal, setPersonal] = useState<number | null>(null);
+  const [productos, setProductos] = useState<number | null>(null);
+  const [config, setConfig] = useState<Config>(DEFAULT_CONFIG);
+  const [exportando, setExportando] = useState<string | null>(null);
+  const [aviso, setAviso] = useState<string | null>(null);
+
+  useEffect(() => {
+    setConfig(leerConfig());
+    // Conteos reales (la lista de usuarios solo está disponible para administradores).
+    api
+      .get<Usuario[]>("/api/usuarios")
+      .then((us) => {
+        setAdmins(us.filter((u) => u.activo && u.rol === "admin").length);
+        setPersonal(us.filter((u) => u.activo && u.rol !== "admin").length);
+      })
+      .catch((e) => {
+        if (e instanceof ApiError && e.status === 403) {
+          setAdmins(-1); // sin permiso para ver el detalle
+          setPersonal(-1);
+        }
+      });
+    api
+      .get<{ id: number }[]>("/api/productos")
+      .then((p) => setProductos(p.length))
+      .catch(() => setProductos(null));
+  }, []);
+
+  async function exportar(tipo: "inventario" | "movimientos") {
+    setExportando(tipo);
+    setAviso(null);
+    try {
+      await descargar(`/api/reportes/export/${tipo}`, `${tipo}.csv`);
+      setAviso(`Exportación de ${tipo} generada.`);
+    } catch {
+      setAviso("No se pudo generar el archivo. Inténtalo de nuevo.");
+    } finally {
+      setExportando(null);
+    }
+  }
+
+  function guardar() {
+    localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+    setAviso("Configuración guardada.");
+  }
+
+  function descartar() {
+    setConfig(leerConfig());
+    setAviso("Cambios descartados.");
+  }
+
+  const conteo = (n: number | null) =>
+    n === null ? "—" : n === -1 ? "•••" : String(n);
+
   return (
     <div className="w-full max-w-container-max mx-auto">
-      <div className="mb-xl">
-        <h2 className="font-headline-lg text-headline-lg text-on-background">Configuración del sistema</h2>
-        <p className="font-body-md text-body-md text-on-surface-variant mt-xs">
-          Administra respaldos, usuarios y parámetros de la Inteligencia Artificial.
-        </p>
+      <div className="mb-xl flex items-start justify-between gap-md flex-wrap">
+        <div>
+          <h2 className="font-headline-lg text-headline-lg text-on-background">Configuración del sistema</h2>
+          <p className="font-body-md text-body-md text-on-surface-variant mt-xs">
+            Administra respaldos, usuarios y parámetros de la Inteligencia Artificial.
+          </p>
+        </div>
+        {aviso && (
+          <span className="font-label-md text-label-md text-primary bg-primary-fixed px-md py-sm rounded-full flex items-center gap-xs">
+            <Icon name="info" className="text-[18px]" /> {aviso}
+          </span>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-lg">
@@ -37,26 +127,23 @@ export default function ConfiguracionPage() {
               <h3 className="font-headline-sm text-headline-sm text-on-surface">Respaldo y exportación</h3>
             </div>
             <p className="font-body-sm text-body-sm text-on-surface-variant mb-xl">
-              Exporta de forma segura los registros de inventario, el historial de transacciones y los datos de usuarios. Los respaldos periódicos garantizan la continuidad del negocio.
+              Exporta los registros de inventario y el historial de movimientos en formato CSV (compatible con Excel). Guarda estos archivos periódicamente como respaldo del negocio.
             </p>
-            <div className="bg-surface-container-low border border-outline-variant rounded-lg p-md mb-xl flex items-center justify-between">
-              <div>
-                <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wide">Último respaldo automático</p>
-                <p className="font-body-md text-body-md font-medium text-on-surface mt-xs flex items-center gap-xs">
-                  <Icon name="check_circle" className="text-[18px] text-primary" /> Hoy, 03:00 a. m.
-                </p>
-              </div>
-              <button className="bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md py-sm px-md rounded-lg transition-colors">
-                Respaldo manual
-              </button>
-            </div>
           </div>
-          <div className="border-t border-outline-variant pt-md flex gap-md">
-            <button className="flex-1 bg-surface-container-lowest hover:bg-surface-container border border-outline text-primary font-label-md text-label-md py-sm px-md rounded-lg transition-colors flex justify-center items-center gap-sm">
-              <Icon name="csv" className="text-[20px]" /> Exportar a CSV
+          <div className="border-t border-outline-variant pt-md flex gap-md flex-wrap">
+            <button
+              onClick={() => exportar("inventario")}
+              disabled={exportando !== null}
+              className="flex-1 min-w-[200px] bg-surface-container-lowest hover:bg-surface-container border border-outline text-primary font-label-md text-label-md py-sm px-md rounded-lg transition-colors flex justify-center items-center gap-sm disabled:opacity-50"
+            >
+              <Icon name={exportando === "inventario" ? "progress_activity" : "inventory_2"} className={`text-[20px] ${exportando === "inventario" ? "animate-spin" : ""}`} /> Exportar inventario
             </button>
-            <button className="flex-1 bg-surface-container-lowest hover:bg-surface-container border border-outline text-primary font-label-md text-label-md py-sm px-md rounded-lg transition-colors flex justify-center items-center gap-sm">
-              <Icon name="table_view" className="text-[20px]" /> Exportar a Excel
+            <button
+              onClick={() => exportar("movimientos")}
+              disabled={exportando !== null}
+              className="flex-1 min-w-[200px] bg-surface-container-lowest hover:bg-surface-container border border-outline text-primary font-label-md text-label-md py-sm px-md rounded-lg transition-colors flex justify-center items-center gap-sm disabled:opacity-50"
+            >
+              <Icon name={exportando === "movimientos" ? "progress_activity" : "swap_vert"} className={`text-[20px] ${exportando === "movimientos" ? "animate-spin" : ""}`} /> Exportar movimientos
             </button>
           </div>
         </section>
@@ -75,11 +162,15 @@ export default function ConfiguracionPage() {
           <ul className="space-y-sm mb-xl">
             <li className="flex justify-between items-center text-body-sm">
               <span className="text-on-surface">Administradores activos</span>
-              <span className="font-data-mono font-medium text-primary bg-primary-fixed px-xs py-[2px] rounded">3</span>
+              <span className="font-data-mono font-medium text-primary bg-primary-fixed px-xs py-[2px] rounded">{conteo(admins)}</span>
             </li>
             <li className="flex justify-between items-center text-body-sm">
               <span className="text-on-surface">Personal</span>
-              <span className="font-data-mono font-medium text-secondary bg-secondary-fixed px-xs py-[2px] rounded">12</span>
+              <span className="font-data-mono font-medium text-secondary bg-secondary-fixed px-xs py-[2px] rounded">{conteo(personal)}</span>
+            </li>
+            <li className="flex justify-between items-center text-body-sm">
+              <span className="text-on-surface">Productos en catálogo</span>
+              <span className="font-data-mono font-medium text-on-surface bg-surface-container px-xs py-[2px] rounded">{conteo(productos)}</span>
             </li>
           </ul>
           <Link href="/usuarios" className="w-full bg-surface-container-lowest hover:bg-surface-container border border-primary text-primary font-label-md text-label-md py-sm px-md rounded-lg transition-colors flex justify-center items-center gap-sm mt-auto">
@@ -99,19 +190,26 @@ export default function ConfiguracionPage() {
             </h3>
           </div>
           <p className="font-body-sm text-body-sm text-on-surface-variant mb-lg">
-            Ajusta el umbral de tolerancia del detector de anomalías. Una mayor sensibilidad marcará discrepancias menores en los patrones de movimiento.
+            Ajusta el umbral de confianza con el que el reconocimiento marca un producto como dudoso para revisión manual.
           </p>
           <div className="mt-xl">
             <div className="flex justify-between font-label-sm text-label-sm text-on-surface-variant mb-sm">
               <span>Permisiva</span>
-              <span className="font-data-mono text-primary font-bold">Estricta</span>
+              <span className="font-data-mono text-primary font-bold">{config.sensibilidad}</span>
               <span>Estricta</span>
             </div>
-            <input type="range" min={1} max={100} defaultValue={75} className="w-full accent-primary" />
+            <input
+              type="range"
+              min={1}
+              max={100}
+              value={config.sensibilidad}
+              onChange={(e) => setConfig((c) => ({ ...c, sensibilidad: Number(e.target.value) }))}
+              className="w-full accent-primary"
+            />
             <div className="mt-lg p-md bg-inverse-on-surface border border-outline-variant border-dashed rounded-lg flex items-start gap-md">
               <Icon name="info" className="text-surface-tint mt-xs" />
               <p className="font-body-sm text-body-sm text-on-surface-variant">
-                Nivel actual: <strong className="text-on-surface">75</strong>. El sistema alertará si las tasas de consumo se desvían más del 5% respecto al histórico.
+                Nivel actual: <strong className="text-on-surface">{config.sensibilidad}</strong>. Cuanto más estricta, más capturas se enviarán a revisión manual antes de registrarse.
               </p>
             </div>
           </div>
@@ -126,11 +224,11 @@ export default function ConfiguracionPage() {
             <h3 className="font-headline-sm text-headline-sm text-on-surface">Notificaciones del sistema</h3>
           </div>
           <p className="font-body-sm text-body-sm text-on-surface-variant mb-xl">
-            Configura cómo y cuándo el sistema te avisa sobre eventos de inventario y seguridad.
+            Configura qué eventos de inventario y seguridad quieres que el sistema resalte.
           </p>
           <div className="flex flex-col gap-md">
             {NOTIFS.map((n, i) => (
-              <div key={n.t} className={`flex items-center justify-between gap-md py-sm ${i < NOTIFS.length - 1 ? "border-b border-outline-variant/50 pb-md" : ""}`}>
+              <div key={n.k} className={`flex items-center justify-between gap-md py-sm ${i < NOTIFS.length - 1 ? "border-b border-outline-variant/50 pb-md" : ""}`}>
                 <div>
                   <p className="font-label-md text-label-md text-on-surface flex items-center gap-xs">
                     {n.t}
@@ -138,7 +236,10 @@ export default function ConfiguracionPage() {
                   </p>
                   <p className="font-body-sm text-body-sm text-on-surface-variant mt-xs">{n.d}</p>
                 </div>
-                <Toggle defaultChecked={n.on} />
+                <Toggle
+                  checked={config.notifs[n.k] ?? false}
+                  onChange={(v) => setConfig((c) => ({ ...c, notifs: { ...c.notifs, [n.k]: v } }))}
+                />
               </div>
             ))}
           </div>
@@ -147,10 +248,10 @@ export default function ConfiguracionPage() {
 
       {/* Guardar */}
       <div className="mt-xl pt-lg border-t border-outline-variant flex justify-end gap-md">
-        <button className="bg-transparent hover:bg-surface-container text-on-surface font-label-md text-label-md py-md px-lg rounded-lg transition-colors">
+        <button onClick={descartar} className="bg-transparent hover:bg-surface-container text-on-surface font-label-md text-label-md py-md px-lg rounded-lg transition-colors">
           Descartar cambios
         </button>
-        <button className="bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md py-md px-lg rounded-lg transition-colors flex items-center gap-sm">
+        <button onClick={guardar} className="bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md py-md px-lg rounded-lg transition-colors flex items-center gap-sm">
           <Icon name="save" className="text-[20px]" /> Guardar configuración
         </button>
       </div>

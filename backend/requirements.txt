@@ -9,3 +9,4 @@ google-genai==2.8.0
 python-jose[cryptography]==3.3.0
 bcrypt==4.2.1
 qrcode[pil]==8.0
+tzdata==2025.1

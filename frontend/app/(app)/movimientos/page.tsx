@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { api } from "@/lib/api";
 
@@ -11,11 +12,14 @@ export default function MovimientosPage() {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [stock, setStock] = useState<Record<number, Stock>>({});
   const [productoId, setProductoId] = useState<number | "">("");
+  const [query, setQuery] = useState("");
+  const [abierto, setAbierto] = useState(false);
   const [tipo, setTipo] = useState<"entrada" | "salida">("entrada");
   const [cantidad, setCantidad] = useState(1);
   const [nota, setNota] = useState("");
   const [msg, setMsg] = useState<{ ok: boolean; texto: string } | null>(null);
   const [guardando, setGuardando] = useState(false);
+  const combo = useRef<HTMLDivElement>(null);
 
   async function cargar() {
     const [p, inv] = await Promise.all([
@@ -24,9 +28,30 @@ export default function MovimientosPage() {
     ]);
     setProductos(p);
     setStock(Object.fromEntries(inv.map((s) => [s.id, s])));
-    if (p.length && productoId === "") setProductoId(p[0].id);
   }
-  useEffect(() => { cargar(); /* eslint-disable-next-line */ }, []);
+  useEffect(() => { cargar(); }, []);
+
+  // Cerrar el desplegable al hacer clic fuera.
+  useEffect(() => {
+    function onClick(e: MouseEvent) {
+      if (combo.current && !combo.current.contains(e.target as Node)) setAbierto(false);
+    }
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, []);
+
+  // Solo se renderizan las primeras 50 coincidencias: rápido aunque haya miles.
+  const filtrados = useMemo(() => {
+    const t = query.trim().toLowerCase();
+    const base = t ? productos.filter((p) => p.nombre.toLowerCase().includes(t)) : productos;
+    return base.slice(0, 50);
+  }, [productos, query]);
+
+  function elegir(p: Producto) {
+    setProductoId(p.id);
+    setQuery(p.nombre);
+    setAbierto(false);
+  }
 
   const actual = productoId !== "" ? stock[productoId]?.stock_actual ?? 0 : 0;
   const nuevo = useMemo(() => (tipo === "entrada" ? actual + cantidad : actual - cantidad), [tipo, actual, cantidad]);
@@ -52,22 +77,56 @@ export default function MovimientosPage() {
 
   return (
     <div className="w-full max-w-container-max mx-auto">
-      <div className="mb-lg">
-        <h2 className="font-headline-lg text-headline-lg text-on-background">Registrar movimiento</h2>
-        <p className="font-body-md text-body-md text-on-surface-variant mt-xs">Registra entradas de mercancía o salidas de despacho.</p>
+      <div className="mb-lg flex flex-col sm:flex-row sm:items-center justify-between gap-md">
+        <div>
+          <h2 className="font-headline-lg text-headline-lg text-on-background">Registrar movimiento</h2>
+          <p className="font-body-md text-body-md text-on-surface-variant mt-xs">Registra entradas de mercancía o salidas de despacho.</p>
+        </div>
+        <Link
+          href={`/qr?tipo=${tipo}`}
+          className={`flex items-center justify-center gap-xs px-md py-sm rounded-lg font-label-md text-label-md transition-colors shrink-0 border ${
+            tipo === "salida"
+              ? "border-error text-error hover:bg-error-container/40"
+              : "border-primary text-primary hover:bg-surface-container"
+          } bg-surface-container-lowest`}
+        >
+          <Icon name="qr_code_scanner" className="text-[18px]" /> {tipo === "salida" ? "Salida con cámara (IA)" : "Entrada con cámara (IA)"}
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-lg items-start">
         <div className="xl:col-span-8 space-y-lg">
           <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg">
             <form className="space-y-lg" onSubmit={registrar}>
-              <div>
+              <div ref={combo}>
                 <label className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-sm block">Producto</label>
-                <select value={productoId} onChange={(e) => setProductoId(e.target.value ? Number(e.target.value) : "")} required
-                  className="w-full px-md py-md bg-surface-bright border border-outline-variant rounded-lg font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
-                  {productos.length === 0 && <option value="">No hay productos</option>}
-                  {productos.map((p) => <option key={p.id} value={p.id}>{p.nombre}{p.presentacion ? ` (${p.presentacion})` : ""}</option>)}
-                </select>
+                <div className="relative">
+                  <Icon name="search" className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" />
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => { setQuery(e.target.value); setProductoId(""); setAbierto(true); }}
+                    onFocus={() => setAbierto(true)}
+                    placeholder={productos.length ? "Busca un producto por nombre…" : "No hay productos"}
+                    className="w-full pl-xl pr-sm py-md bg-surface-bright border border-outline-variant rounded-lg font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  />
+                  {abierto && productos.length > 0 && (
+                    <ul className="absolute z-20 mt-xs w-full max-h-72 overflow-y-auto bg-surface-container-lowest border border-outline-variant rounded-lg shadow-lg divide-y divide-outline-variant">
+                      {filtrados.length === 0 ? (
+                        <li className="px-md py-sm font-body-sm text-on-surface-variant">Sin coincidencias.</li>
+                      ) : (
+                        filtrados.map((p) => (
+                          <li key={p.id}>
+                            <button type="button" onClick={() => elegir(p)} className="w-full text-left px-md py-sm hover:bg-surface-container-low font-body-md text-body-md flex justify-between items-center gap-md">
+                              <span className="truncate">{p.nombre}{p.presentacion ? <span className="text-on-surface-variant"> · {p.presentacion}</span> : null}</span>
+                              <span className="font-data-mono text-label-sm text-label-sm text-on-surface-variant shrink-0">{stock[p.id]?.stock_actual ?? 0}</span>
+                            </button>
+                          </li>
+                        ))
+                      )}
+                    </ul>
+                  )}
+                </div>
               </div>
 
               <hr className="border-outline-variant opacity-50" />

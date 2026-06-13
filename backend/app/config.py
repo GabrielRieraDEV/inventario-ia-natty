@@ -26,6 +26,13 @@ class Settings(BaseSettings):
     jwt_secret: str = "dev-secret-change-me"
     jwt_expire_minutes: int = 480
 
+    # Reglas de negocio
+    # Vida útil de una sesión de captura por QR (minutos); pasado este tiempo
+    # el token deja de aceptar fotos (RF-01, anti-abuso de la cuota de IA).
+    sesion_ttl_minutos: int = 30
+    # Anticipación con la que se avisa de un producto próximo a vencer (RF-03).
+    vencimiento_dias_alerta: int = 30
+
     # CORS
     cors_origins: str = "http://localhost:3000"
 

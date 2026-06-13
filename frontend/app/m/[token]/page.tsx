@@ -7,6 +7,38 @@ import { api } from "@/lib/api";
 
 type Estado = "iniciando" | "listo" | "enviando" | "enviado" | "error";
 
+// Lado máximo de la foto enviada: suficiente para el reconocimiento y para
+// guardarla/mostrarla en la PC sin transferir megabytes innecesarios.
+const LADO_MAX = 1280;
+
+function redimensionarArchivo(file: File): Promise<{ blob: Blob; dataUrl: string }> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const ratio = Math.min(1, LADO_MAX / Math.max(img.width, img.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(img.width * ratio);
+      canvas.height = Math.round(img.height * ratio);
+      const ctx = canvas.getContext("2d");
+      URL.revokeObjectURL(url);
+      if (!ctx) return reject(new Error("sin contexto"));
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
+      canvas.toBlob(
+        (b) => (b ? resolve({ blob: b, dataUrl }) : reject(new Error("sin blob"))),
+        "image/jpeg",
+        0.8,
+      );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("no se pudo leer la imagen"));
+    };
+    img.src = url;
+  });
+}
+
 export default function CapturaMovilPage() {
   const params = useParams<{ token: string }>();
   const token = params?.token as string;
@@ -74,22 +106,31 @@ export default function CapturaMovilPage() {
   const capturar = useCallback(() => {
     const video = videoRef.current;
     if (!video || estado !== "listo") return;
+    const vw = video.videoWidth || 720;
+    const vh = video.videoHeight || 1280;
+    const ratio = Math.min(1, LADO_MAX / Math.max(vw, vh));
     const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth || 720;
-    canvas.height = video.videoHeight || 1280;
+    canvas.width = Math.round(vw * ratio);
+    canvas.height = Math.round(vh * ratio);
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    setFoto(canvas.toDataURL("image/jpeg", 0.9));
-    canvas.toBlob((b) => b && enviar(b), "image/jpeg", 0.9);
+    setFoto(canvas.toDataURL("image/jpeg", 0.8));
+    canvas.toBlob((b) => b && enviar(b), "image/jpeg", 0.8);
   }, [estado, enviar]);
 
   // Galería: seleccionar/tomar una foto desde el explorador del teléfono.
-  function onArchivo(e: React.ChangeEvent<HTMLInputElement>) {
+  async function onArchivo(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    setFoto(URL.createObjectURL(file));
-    enviar(file);
+    try {
+      const { blob, dataUrl } = await redimensionarArchivo(file);
+      setFoto(dataUrl);
+      enviar(blob);
+    } catch {
+      setFoto(URL.createObjectURL(file));
+      enviar(file);
+    }
   }
 
   // Flash (linterna): solo en dispositivos compatibles.
