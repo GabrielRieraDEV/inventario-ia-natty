@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "./Icon";
+import { useAlerts } from "./AlertsContext";
 import { NAV_ITEMS, SETTINGS_ITEM } from "@/lib/nav";
 
 const activeCls =
@@ -10,8 +11,9 @@ const activeCls =
 const inactiveCls =
   "text-on-primary-container opacity-80 hover:bg-primary-container hover:text-surface-bright rounded-lg";
 
-export function Sidebar({ alertCount = 0 }: { alertCount?: number }) {
+export function Sidebar() {
   const pathname = usePathname();
+  const alertCount = useAlerts().alertas.length;
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
 
   return (

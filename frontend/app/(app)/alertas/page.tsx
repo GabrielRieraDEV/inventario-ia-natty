@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/Icon";
+import { useAlerts } from "@/components/AlertsContext";
 import { api } from "@/lib/api";
 
 type Alerta = {
@@ -15,6 +16,7 @@ export default function AlertasPage() {
   const [alertas, setAlertas] = useState<Alerta[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { refrescar } = useAlerts();
 
   async function cargar() {
     setCargando(true);
@@ -29,8 +31,10 @@ export default function AlertasPage() {
   useEffect(() => { cargar(); }, []);
 
   async function resolver(id: number) {
+    // Optimista: quita la alerta de la vista al instante.
+    setAlertas((prev) => prev.filter((a) => a.id !== id));
     await api.post(`/api/alertas/${id}/resolver`);
-    await cargar();
+    await Promise.all([cargar(), refrescar()]);
   }
 
   const stock = alertas.filter((a) => a.tipo === "stock_minimo");

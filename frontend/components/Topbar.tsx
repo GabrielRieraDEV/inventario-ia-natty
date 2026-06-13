@@ -4,10 +4,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "./Icon";
+import { useAlerts } from "./AlertsContext";
 import { cerrarSesion, getUsuario, type Usuario } from "@/lib/api";
 
 export function Topbar() {
   const router = useRouter();
+  const { alertas } = useAlerts();
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [menu, setMenu] = useState<"none" | "cuenta" | "notif">("none");
   const ref = useRef<HTMLDivElement>(null);
@@ -54,7 +56,11 @@ export function Topbar() {
           className="text-on-surface-variant hover:bg-surface-container-high rounded-full p-sm transition-all relative focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
           <Icon name="notifications" />
-          <span className="absolute top-1 right-2 w-2 h-2 bg-error rounded-full border border-surface" />
+          {alertas.length > 0 && (
+            <span className="absolute top-0 right-1 min-w-[16px] h-4 px-1 bg-error text-on-error text-[10px] font-data-mono rounded-full border border-surface flex items-center justify-center">
+              {alertas.length}
+            </span>
+          )}
         </button>
 
         {/* Vincular teléfono */}
@@ -76,14 +82,25 @@ export function Topbar() {
 
         {/* Menú notificaciones */}
         {menu === "notif" && (
-          <div className="absolute right-0 top-12 w-72 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg overflow-hidden">
+          <div className="absolute right-0 top-12 w-80 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg overflow-hidden">
             <div className="px-md py-sm border-b border-outline-variant flex items-center gap-sm bg-[#F8FAF9]">
               <Icon name="warning" className="text-error text-[18px]" />
-              <span className="font-label-md text-label-md text-on-surface">Alertas recientes</span>
+              <span className="font-label-md text-label-md text-on-surface">Alertas activas ({alertas.length})</span>
             </div>
-            <p className="px-md py-md font-body-sm text-body-sm text-on-surface-variant">
-              Revisa el stock crítico y los productos por vencer.
-            </p>
+            {alertas.length === 0 ? (
+              <p className="px-md py-md font-body-sm text-body-sm text-on-surface-variant text-center">
+                No hay alertas activas. 🎉
+              </p>
+            ) : (
+              <ul className="max-h-72 overflow-y-auto divide-y divide-outline-variant">
+                {alertas.slice(0, 6).map((a) => (
+                  <li key={a.id} className="px-md py-sm">
+                    <p className="font-label-sm text-label-sm text-on-surface">{a.producto?.nombre ?? "Producto"}</p>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">{a.mensaje}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
             <Link
               href="/alertas"
               onClick={() => setMenu("none")}
