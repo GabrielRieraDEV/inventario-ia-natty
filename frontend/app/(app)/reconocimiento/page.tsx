@@ -15,15 +15,6 @@ type Producto = {
 };
 type Sesion = { estado: string; resultado: { producto: Producto; tiempo_respuesta_s: number; imagen?: string } | null };
 
-function blobADataUrl(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onloadend = () => resolve(r.result as string);
-    r.onerror = reject;
-    r.readAsDataURL(blob);
-  });
-}
-
 function Contenido() {
   const router = useRouter();
   const params = useSearchParams();
@@ -38,7 +29,6 @@ function Contenido() {
   const [cantidad, setCantidad] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
-  const [procesando, setProcesando] = useState(false);
   const [ok, setOk] = useState(false);
 
   useEffect(() => {
@@ -63,22 +53,7 @@ function Contenido() {
     setGuardando(true);
     setError(null);
     try {
-      // Quita el fondo de la foto en el navegador (PNG transparente). Si falla,
-      // se confirma igual y el backend guarda la foto original.
-      let foto: string | undefined;
-      if (imagen) {
-        setProcesando(true);
-        try {
-          const { removeBackground } = await import("@imgly/background-removal");
-          const recorte = await removeBackground(imagen);
-          foto = await blobADataUrl(recorte);
-        } catch {
-          foto = undefined;
-        } finally {
-          setProcesando(false);
-        }
-      }
-      await api.post(`/api/sesiones/${token}/confirmar`, { cantidad, nombre, foto, tipo });
+      await api.post(`/api/sesiones/${token}/confirmar`, { cantidad, nombre, tipo });
       setOk(true);
       setTimeout(() => router.push("/inventario"), 1200);
     } catch (e) {
@@ -178,7 +153,7 @@ function Contenido() {
               <button onClick={confirmar} disabled={!prod || guardando || ok}
                 className="bg-primary text-on-primary hover:bg-primary/90 font-label-md text-label-md px-xl py-sm rounded-md transition-all flex items-center gap-sm disabled:opacity-70">
                 <Icon name={guardando ? "progress_activity" : "check"} className={`text-[18px] ${guardando ? "animate-spin" : ""}`} />
-                {procesando ? "Quitando fondo…" : guardando ? "Registrando…" : esSalida ? "Confirmar salida" : "Confirmar entrada"}
+                {guardando ? "Registrando…" : esSalida ? "Confirmar salida" : "Confirmar entrada"}
               </button>
             </div>
           </div>

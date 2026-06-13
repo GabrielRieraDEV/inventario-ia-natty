@@ -166,7 +166,7 @@ export default function CatalogoPage() {
                       <div className="flex items-center gap-md">
                         {p.foto_url ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={p.foto_url} alt={p.nombre} className="w-10 h-10 rounded object-contain bg-surface-bright border border-outline-variant p-0.5" />
+                          <img src={p.foto_url} alt={p.nombre} className="w-10 h-10 rounded object-cover border border-outline-variant" />
                         ) : (
                           <div className="w-10 h-10 bg-surface-variant rounded flex items-center justify-center text-primary"><Icon name="inventory_2" /></div>
                         )}

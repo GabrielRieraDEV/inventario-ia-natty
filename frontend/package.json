@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@imgly/background-removal": "^1.7.0",
     "@supabase/supabase-js": "2.47.10",
     "next": "^15.5.19",
     "qrcode.react": "4.2.0",

@@ -118,7 +118,7 @@ function Contenido() {
                         <div className="flex items-center gap-sm">
                           {f.foto_url ? (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img src={f.foto_url} alt={f.nombre} className="w-8 h-8 rounded object-contain bg-surface-bright border border-outline-variant shrink-0 p-0.5" />
+                            <img src={f.foto_url} alt={f.nombre} className="w-8 h-8 rounded object-cover border border-outline-variant shrink-0" />
                           ) : (
                             <div className="w-8 h-8 rounded bg-surface-variant flex items-center justify-center text-primary shrink-0"><Icon name="inventory_2" className="text-[18px]" /></div>
                           )}
